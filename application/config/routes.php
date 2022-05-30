@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'auth';
+$route['default_controller'] = 'auth/login_mitra';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
@@ -72,8 +72,30 @@ $route['edit_pass_mitra'] = 'auth/edit_pass_mitra';
 $route['logout'] = 'auth/logout';
 
 # USER
+// all data
+$route['data_role'] = 'actor/data_role';
+$route['data_tipe'] = 'actor/data_tipe';
+$route['data_jenis'] = 'user/data_jenis';
+$route['data_admin'] = 'actor/data_admin';
+$route['data_mitra'] = 'actor/data_mitra';
+$route['data_edukasi'] = 'user/data_edukasi';
+$route['data_setoran'] = 'trans/data_setoran';
+$route['data_penjemputan'] = 'trans/data_penjemputan';
+$route['data_pembayaran'] = 'trans/data_pembayaran';
+$route['data_penjualan'] = 'trans/data_penjualan';
+$route['data_pembeli'] = 'actor/data_pembeli';
+$route['data_sampah'] = 'user/data_sampah';
 // dashboard
-$route['dashboard'] = 'user/dashboard';
+$route['dashboard_user'] = 'user/dashboard';
+// role
+$route['add_role'] = 'actor/add_role';
+$route['edit_role'] = 'actor/edit_role';
+// tipe
+$route['add_tipe'] = 'actor/add_tipe';
+$route['edit_tipe'] = 'actor/edit_tipe';
+// jenis
+$route['add_jenis'] = 'user/add_jenis';
+$route['edit_jenis'] = 'user/edit_jenis';
 // admin
 $route['del_admin'] = 'actor/del_admin';
 $route['active_admin'] = 'actor/active_admin';
@@ -90,6 +112,7 @@ $route['edit_edukasi'] = 'user/edit_edukasi';
 $route['del_edukasi'] = 'user/del_edukasi';
 // penjualan
 $route['add_penjualan'] = 'trans/add_penjualan';
+$route['edit_penjualan'] = 'trans/edit_penjualan';
 $route['del_penjualan'] = 'trans/del_penjualan';
 $route['confirm_jual'] = 'trans/confirm_jual';
 // pembeli
@@ -100,23 +123,23 @@ $route['del_pembeli'] = 'actor/del_pembeli';
 $route['confirm_bayar'] = 'trans/confirm_bayar';
 // penjemputan
 $route['confirm_jemput'] = 'trans/confirm_jemput';
-// all data
-$route['data_setoran'] = 'user/data_setoran';
-$route['data_penjemputan'] = 'user/data_penjemputan';
-$route['data_pembayaran'] = 'user/data_pembayaran';
-$route['data_penjualan'] = 'user/data_penjualan';
-$route['data_pembeli'] = 'user/data_pembeli';
-$route['data_sampah'] = 'user/data_sampah';
 
 
 
 # MITRA
+// lihat data
+$route['setoran'] = 'mitra/setoran';
+$route['sampah'] = 'mitra/sampah';
+$route['rekening'] = 'mitra/rekening';
+$route['struktur'] = 'mitra/struktur';
+// dashboard
+$route['dashboard'] = 'mitra/dashboard';
 // rekening
 $route['edit_rek'] = 'mitra/edit_rek';
 // struktur
 $route['edit_struktur'] = 'mitra/edit_struktur';
 // edukasi
-$route['join_edukasi'] = 'mitra/join_edukasi';
+$route['edukasi'] = 'mitra/edukasi';
 // setoran
 $route['add_setoran'] = 'mitra/add_setoran';
 $route['edit_setoran'] = 'mitra/edit_setoran';
