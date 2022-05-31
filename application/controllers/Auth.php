@@ -83,6 +83,65 @@ class Auth extends CI_Controller
 	}
 	
 	/**
+	 * Process of login
+	 * @todo Processing login account
+	 * @access private
+	 * @return view dashboard and return login page if login failed
+	 */
+	private function _login_user()
+	{
+		# $session variable to save field email & username from user
+		$data = [
+			'email' => $this->input->post('email'),
+			'password' => $this->input->post('password')
+		];
+		# $user variable returns user row array data value as per email in the stored session
+		$user = $this->amodel->get_user_by_email($data['email']);
+		// var_dump($user);
+		// die;
+
+		# IF statement to check if user data exists
+		if ($user) {
+			# IF statement to check whether entered password matches user data
+			if (password_verify($data['password'], $user['password'])) {
+				# $data variable to save field email & username from $user
+				$data = [
+					'email' => $user['email'],
+					'username' => $user['username'],
+					'role' => $user['role']
+				];
+				# Add $data values to session
+				$this->session->set_userdata($data);
+
+				redirect('dashboard_user');
+			} else {
+				# If password is not matches, will be send wrong password message
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Maaf password anda salah, coba lagi!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to login page
+				redirect('login_user');
+			}
+		} else {
+			# If there is no user data, will be send email isn't registered message
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Email belum terdaftar, silahkan 
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					<a href="' . site_url('reg_user') . '" class="fw-bold">Daftar terlebih dahulu</a>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('login_user');
+		}
+	}
+	
+	/**
 	 * Navigate to login mitra page
 	 * @access public
 	 * @description Show login page if don't have 'email' session saved
@@ -127,6 +186,52 @@ class Auth extends CI_Controller
 			$this->_login_mitra();
 		}
 	}
+
+	/**
+	 * Navigate to login user page
+	 * @access public
+	 * @description Show login page if don't have 'email' session saved
+	 * @return view login page
+	 */
+	public function login_user()
+	{
+		# $amodel variable to shorten model call 'amodel'
+		$amodel = $this->amodel;
+		# $validation variable to shorten form_validation library
+		$validation = $this->form_validation;
+		# Initialize login rules with login_rules()
+		$validation->set_rules($amodel->login_rules());
+
+		# IF statement to check if there is a stored 'email' session
+		if ($this->session->userdata('email')) {
+			# If TRUE, add an wrong password alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-info alert-dismissible fade show" role="alert">
+					Anda dalam keadaan login, silahkan <a href="' . site_url('logout') . '" class="alert-link fw-bold">Logout</a> terlebih dahulu!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to dashboard page
+			redirect('dashboard_user');
+		}
+
+		$data = [
+			'project' => 'Bank Sampah Induk Rumah Harum',
+			'title' => 'Login User'
+		];
+
+		# IF statement to check form_validation not running
+		if ($validation->run() == FALSE) {
+			# If TRUE, it will be load login page
+			$this->load->view('auth/header', $data);
+			$this->load->view('auth/login_user', $data);
+			$this->load->view('auth/footer');
+		} else {
+			# If FALSE, it will be load private function _login()
+			$this->_login_user();
+		}
+	}
 	
 	/**
 	 * Navigate to registration mitra page
@@ -142,6 +247,23 @@ class Auth extends CI_Controller
 		];
 		$this->load->view('auth/header', $data);
 		$this->load->view('auth/reg_mitra');
+		$this->load->view('auth/footer');
+	}
+	
+	/**
+	 * Navigate to registration user page
+	 * @access public
+	 * @description Show login page if don't have 'email' session saved
+	 * @return view login page
+	 */
+	public function reg_user()
+	{
+		$data = [
+			'project' => 'Bank Sampah Induk Rumah Harum',
+			'title' => 'Registrasi User'
+		];
+		$this->load->view('auth/header', $data);
+		$this->load->view('auth/reg_user');
 		$this->load->view('auth/footer');
 	}
 
@@ -171,6 +293,8 @@ class Auth extends CI_Controller
 			</div>'
 		);
 		# It will be returned to login page
-		redirect('');
+		$red = redirect(($role) ? 'login_user' : '');
+		// var_dump($red);
+		// die;
 	}
 }

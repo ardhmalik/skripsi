@@ -46,4 +46,18 @@ class Auth_m extends CI_Model
 
         return $query;
     }
+    
+    /**
+     * Finds and returns a user by email
+     * @access public
+     * @param string $email Contains email
+     * @return row of user
+     */
+    public function get_user_by_email($email)
+    {
+        $sql = 'CALL tampil_profil_user(?)';
+        $query = $this->db->query($sql, $email)->row_array();
+
+        return $query;
+    }
 }
