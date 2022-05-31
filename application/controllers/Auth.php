@@ -324,47 +324,84 @@ class Auth extends CI_Controller
 	}
 	
 	/**
-	 * Navigate to registration user page
+	 * Navigate to registration mitra page
 	 * @access public
 	 * @description Show login page if don't have 'email' session saved
 	 * @return view login page
 	 */
 	public function reg_user()
 	{
+		# $amodel variable to shorten model call 'amodel'
+		$amodel = $this->amodel;
+		# $validation variable to shorten form_validation library
+		$validation = $this->form_validation;
+		# Initialize registration rules with reg_rules()
+		$validation->set_rules($amodel->reg_user_rules());
+
 		# IF condition to check if there is a stored 'email' session
 		if ($this->session->userdata('email')) {
-			if ($this->session->userdata('tipe')) {
-				# If TRUE, add an alert message to session
-				$this->session->set_flashdata(
-					'message',
-					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
-						Tidak boleh mengakses halaman!
-						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-					</div>'
-				);
-				# It will be returned to dashboard user
-				redirect('dashboard');
-			} else {
-				# If TRUE, add an alert message to session
-				$this->session->set_flashdata(
-					'message',
-					'<div class="alert alert-info alert-dismissible fade show" role="alert">
-						Anda dalam keadaan login, silahkan <a href="' . site_url('logout') . '" class="alert-link fw-bold">Logout</a> terlebih dahulu!
-						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-					</div>'
-				);
-				# It will be returned to login page
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-info alert-dismissible fade show" role="alert">
+					Anda dalam keadaan login, silahkan <a href="' . site_url('logout') . '" class="alert-link fw-bold">Logout</a> terlebih dahulu!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+
+			if ($this->session->userdata('role')) {
+				# It will be returned to user dashboard page
 				redirect('dashboard_user');
+			} else {
+				# It will be returned to user dashboard page
+				redirect('dashboard');
 			}
 		}
+		
+		# IF statement to check form_validation not running
+		if ($validation->run() == FALSE) {
+			$data = [
+				'project' => 'Bank Sampah Induk Rumah Harum',
+				'title' => 'Registrasi User',
+				'role' => $amodel->get_role_user()
+			];
 
-		$data = [
-			'project' => 'Bank Sampah Induk Rumah Harum',
-			'title' => 'Registrasi User'
-		];
-		$this->load->view('auth/header', $data);
-		$this->load->view('auth/reg_user');
-		$this->load->view('auth/footer');
+			$this->load->view('auth/header', $data);
+			$this->load->view('auth/reg_user', $data);
+			$this->load->view('auth/footer');
+		} else {
+			/**
+			 * If form_validation runs, it will save input data to variable $input
+			 * $input variable to store array of data passed to 'Auth_model'
+			 * Add @param true in post() method to avoid XSS attack
+			 * Add htmlspecialchars() method for change character to HTML entity
+			 * Add password_hash() method to create a password hash
+			 *  */
+			$input = [
+				'email' => htmlspecialchars($this->input->post('email', true)),
+				'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+				'username' => htmlspecialchars($this->input->post('username', true)),
+				'no_telp' => $this->input->post('no_telp'),
+				'id_role' => $this->input->post('id_role')
+			];
+
+			// var_dump($input);
+			// die;
+
+			# Passing $input as a parameter of createUser() function to execute adding data to database
+			$amodel->create_user($input);
+			# Add an alert message to session if createUser() process is successful
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Berhasil mendaftarkan akun, silahkan login
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+
+			redirect('login_user');
+		}
+
 	}
 
 	/**

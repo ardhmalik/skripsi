@@ -86,6 +86,52 @@ class Auth_m extends CI_Model
             ]
         ];
     }
+    
+    /**
+     * Rules of registration authentification 
+     * @access public
+     * @description Contains the registration rules that the form_validation library will load
+     * @return (string|string[])[][]
+     */
+    public function reg_user_rules()
+    {
+        return [
+            [
+                'field' => 'email',
+                'label' => 'Email',
+                'rules' => 'required|trim|valid_email|is_unique[user.email]',
+                'errors' => [
+                    'is_unique' => 'Email telah terdaftar, coba gunakan email lain!'
+                ]
+            ], [
+                'field' => 'password',
+                'label' => 'Password',
+                'rules' => 'required|min_length[5]|trim',
+                'errors' => [
+                    'min_length' => 'Masukkan password minimal 5 digit!'
+                ]
+            ], [
+                'field' => 'username',
+                'label' => 'Username',
+                'rules' => 'required|trim|is_unique[user.username]',
+                'errors' => [
+                    'is_unique' => 'Username telah terdaftar, coba username lain!'
+                ]
+            ], [
+                'field' => 'no_telp',
+                'label' => 'Nomor HP',
+                'rules' => 'required|trim|numeric|min_length[8]',
+                'errors' => [
+                    'numeric' => 'Masukkan karakter berupa angka!',
+                    'min_length' => 'Masukkan nomor HP minimal 8 digit angka!'
+                ]
+            ], [
+                'field' => 'id_role',
+                'label' => 'Role user',
+                'rules' => 'required'
+            ]
+        ];
+    }
 
     /**
      * Finds and returns a tipe mitra
@@ -95,6 +141,19 @@ class Auth_m extends CI_Model
     public function get_tipe_mitra()
     {
         $sql = $this->db->get('tipe');
+        $query = $sql->result_array();
+
+        return $query;
+    }
+    
+    /**
+     * Finds and returns a tipe mitra
+     * @access public
+     * @return array of tipe mitra
+     */
+    public function get_role_user()
+    {
+        $sql = $this->db->get('role');
         $query = $sql->result_array();
 
         return $query;
@@ -138,6 +197,21 @@ class Auth_m extends CI_Model
     public function create_mitra($data)
     {
         $sql = 'CALL tambah_mitra(?, ?, ?, ?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data);
+
+        return $query;
+    }
+    
+    /**
+     * Create and insert new user
+     * @access public
+     * @param string $data Containing an array of emails, usernames, passwords
+     * @description A function that executes a query with a stored procedure 
+     * 'addUser(email_param, username_param, password_param)'
+     */
+    public function create_user($data)
+    {
+        $sql = 'CALL tambah_user(?, ?, ?, ?, ?)';
         $query = $this->db->query($sql, $data);
 
         return $query;

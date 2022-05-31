@@ -15,12 +15,12 @@
                     </div>
                     <form action="" method="post" class="mx-4 my-4">
                         <div class="form-floating mb-4">
-                            <select class="form-select" id="role" name="role" aria-label="State">
-                                <option selected>Pilih posisi</option>
-                                <option value="1">Sekretaris</option>
-                                <option value="2">Bendahara</option>
+                            <select class="form-select" id="id_role" name="id_role" aria-label="State">
+                                <?php foreach ($role as $rl) : ?>
+                                    <option value="<?= $rl['id_role'] ?>"><?= $rl['role'] ?></option>
+                                <?php endforeach ?>
                             </select>
-                            <label for="role">Posisi</label>
+                            <label for="id_role">Posisi</label>
                         </div>
                         <div class="form-floating mb-4">
                             <input type="email" class="form-control" id="email" name="email" value="<?= set_value('email') ?>" placeholder="example@email.com" required>
