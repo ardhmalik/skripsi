@@ -43,6 +43,19 @@ class Mitra extends CI_Controller
 			);
 			# It will be returned to login page
 			redirect('login_mitra');
+		} else {
+			if ($this->session->userdata('role')) {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard_user');
+			}
 		}
 
 		$data = [

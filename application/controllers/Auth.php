@@ -166,8 +166,14 @@ class Auth extends CI_Controller
 					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>'
 			);
-			# It will be returned to dashboard page
-			redirect('dashboard');
+
+			if ($this->session->userdata('tipe')) {
+				# It will be returned to dashboard page
+				redirect('dashboard');
+			} elseif ($this->session->userdata('role')) {
+				# It will be returned to dashboard page
+				redirect('dashboard_user');
+			}
 		}
 
 		$data = [
@@ -241,6 +247,26 @@ class Auth extends CI_Controller
 	 */
 	public function reg_mitra()
 	{
+		# IF condition to check if there is a stored 'email' session
+		if ($this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-info alert-dismissible fade show" role="alert">
+					Anda dalam keadaan login, silahkan <a href="' . site_url('logout') . '" class="alert-link fw-bold">Logout</a> terlebih dahulu!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+
+			if ($this->session->userdata('role')) {
+				# It will be returned to user dashboard page
+				redirect('dashboard_user');
+			} else {
+				# It will be returned to mitra dashboard page
+				redirect('dashboard');
+			}
+		}
+
 		$data = [
 			'project' => 'Bank Sampah Induk Rumah Harum',
 			'title' => 'Registrasi Mitra'
@@ -258,6 +284,33 @@ class Auth extends CI_Controller
 	 */
 	public function reg_user()
 	{
+		# IF condition to check if there is a stored 'email' session
+		if ($this->session->userdata('email')) {
+			if ($this->session->userdata('tipe')) {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard');
+			} else {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-info alert-dismissible fade show" role="alert">
+						Anda dalam keadaan login, silahkan <a href="' . site_url('logout') . '" class="alert-link fw-bold">Logout</a> terlebih dahulu!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to login page
+				redirect('dashboard_user');
+			}
+		}
+
 		$data = [
 			'project' => 'Bank Sampah Induk Rumah Harum',
 			'title' => 'Registrasi User'
