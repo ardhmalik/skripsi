@@ -1,3 +1,8 @@
+<?php
+date_default_timezone_set("Asia/Jakarta");
+// echo date('Y-m-d T H:i:s', strtotime('tomorrow'));
+// echo date("H:i:s");
+?>
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
@@ -15,12 +20,12 @@
                     </div>
                     <form action="" method="post" class="mx-4 my-4">
                         <div class="form-floating mb-4">
-                            <select class="form-select" id="tipe_mitra" name="tipe_mitra" aria-label="State">
-                                <option selected>Pilih tipe</option>
-                                <option value="1">Bank Sampah Unit</option>
-                                <option value="2">Nasabah</option>
+                            <select class="form-select" id="id_tipe" name="id_tipe" aria-label="State">
+                                <?php foreach ($tipe as $tp) : ?>
+                                    <option value="<?= $tp['id_tipe'] ?>"><?= $tp['tipe_mitra'] ?></option>
+                                <?php endforeach ?>
                             </select>
-                            <label for="tipe_mitra">Tipe Mitra</label>
+                            <label for="id_tipe">Tipe Mitra</label>
                         </div>
                         <div class="form-floating mb-4">
                             <input type="email" class="form-control" id="email" name="email" value="<?= set_value('email') ?>" placeholder="example@email.com" required>
@@ -48,9 +53,15 @@
                             <?= form_error('no_telp', '<span class="text-danger">', '</span>') ?>
                         </div>
                         <div class="form-floating mb-4">
-                            <input type="date" class="form-control" id="jadwal_jemput" name="jadwal_jemput" placeholder="Must include string and numbers" required>
+                            <input type="date" class="form-control" id="jadwal_jemput" name="jadwal_jemput" min="<?= date('Y-m-d', strtotime('today')) ?>" max="<?= date('Y-m-d', strtotime('last day of December')) ?>" placeholder="Must include string and numbers" required>
                             <label for="jadwal_jemput">Jadwal Penjemputan</label>
                             <?= form_error('jadwal_jemput', '<span class="text-danger">', '</span>') ?>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="time" class="form-control" id="waktu_jemput" name="waktu_jemput" min="07:00" max="17:00" placeholder="Must include string and numbers" required>
+                            <label for="waktu_jemput">Waktu Penjemputan</label>
+                            <div class="fw-bold mt-2 text-end">PM=Malam  |  AM=Pagi</div>
+                            <?= form_error('waktu_jemput', '<span class="text-danger">', '</span>') ?>
                         </div>
                         <div class="d-flex bd-highlight">
                             <div class="p-2 bd-highlight">

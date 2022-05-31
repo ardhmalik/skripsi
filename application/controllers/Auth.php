@@ -247,6 +247,13 @@ class Auth extends CI_Controller
 	 */
 	public function reg_mitra()
 	{
+		# $amodel variable to shorten model call 'amodel'
+		$amodel = $this->amodel;
+		# $validation variable to shorten form_validation library
+		$validation = $this->form_validation;
+		# Initialize registration rules with reg_rules()
+		$validation->set_rules($amodel->reg_mitra_rules());
+
 		# IF condition to check if there is a stored 'email' session
 		if ($this->session->userdata('email')) {
 			# If TRUE, add an alert message to session
@@ -266,14 +273,54 @@ class Auth extends CI_Controller
 				redirect('dashboard');
 			}
 		}
+		
+		# IF statement to check form_validation not running
+		if ($validation->run() == FALSE) {
+			$data = [
+				'project' => 'Bank Sampah Induk Rumah Harum',
+				'title' => 'Registrasi Mitra',
+				'tipe' => $amodel->get_tipe_mitra()
+			];
 
-		$data = [
-			'project' => 'Bank Sampah Induk Rumah Harum',
-			'title' => 'Registrasi Mitra'
-		];
-		$this->load->view('auth/header', $data);
-		$this->load->view('auth/reg_mitra');
-		$this->load->view('auth/footer');
+			$this->load->view('auth/header', $data);
+			$this->load->view('auth/reg_mitra', $data);
+			$this->load->view('auth/footer');
+		} else {
+			/**
+			 * If form_validation runs, it will save input data to variable $input
+			 * $input variable to store array of data passed to 'Auth_model'
+			 * Add @param true in post() method to avoid XSS attack
+			 * Add htmlspecialchars() method for change character to HTML entity
+			 * Add password_hash() method to create a password hash
+			 *  */
+			$input['waktu_jemput'] = $this->input->post('waktu_jemput') . ":00";
+			$input = [
+				'email' => htmlspecialchars($this->input->post('email', true)),
+				'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+				'username' => htmlspecialchars($this->input->post('username', true)),
+				'alamat' => htmlspecialchars($this->input->post('alamat', true)),
+				'no_telp' => $this->input->post('no_telp'),
+				'jadwal_jemput' => $this->input->post('jadwal_jemput') . " " . $input['waktu_jemput'],
+				'id_tipe' => $this->input->post('id_tipe')
+			];
+
+			var_dump($input);
+			die;
+
+			# Passing $input as a parameter of createUser() function to execute adding data to database
+			$amodel->create_mitra($input);
+			# Add an alert message to session if createUser() process is successful
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Berhasil mendaftarkan akun, silahkan login
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+
+			redirect('');
+		}
+
 	}
 	
 	/**
