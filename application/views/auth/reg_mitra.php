@@ -1,8 +1,3 @@
-<?php
-date_default_timezone_set("Asia/Jakarta");
-// echo date('Y-m-d T H:i:s', strtotime('tomorrow'));
-// echo date("H:i:s");
-?>
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
