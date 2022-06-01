@@ -86,6 +86,37 @@ class Auth_m extends CI_Model
             ]
         ];
     }
+
+    /**
+     * Rules of change password 
+     * @access public
+     * @description Contains the change password rules
+     * @return string [][]
+     */
+    public function change_pass_rules()
+    {
+        return [
+            [
+                'field' => 'curr_password',
+                'label' => 'Current Password',
+                'rules' => 'required'
+            ], [
+                'field' => 'new_password',
+                'label' => 'New Password',
+                'rules' => 'required|trim|min_length[5]',
+                'errors' => [
+                    'min_length' => 'Password baru harus memiliki 5 karakter atau lebih!'
+                ]
+            ], [
+                'field' => 'renew_password',
+                'label' => 'Repeat Password',
+                'rules' => 'required|matches[new_password]',
+                'errors' => [
+                    'matches' => 'Repeat Password tidak sama dengan New Password, coba lagi!'
+                ]
+            ]
+        ];
+    }
     
     /**
      * Rules of registration authentification 
@@ -132,7 +163,7 @@ class Auth_m extends CI_Model
             ]
         ];
     }
-
+    
     /**
      * Finds and returns a tipe mitra
      * @access public
@@ -213,6 +244,36 @@ class Auth_m extends CI_Model
     {
         $sql = 'CALL tambah_user(?, ?, ?, ?, ?)';
         $query = $this->db->query($sql, $data);
+
+        return $query;
+    }
+
+    /**
+     * Update data user
+     * @access public
+     * @param string $data Containing an array of id_user, avatar, username
+     * @description A function that executes a query with a stored procedure 
+     * 'editser(id_user_param, avatar_param, username_param)'
+     */
+    public function update_user($data)
+    {
+        $sql = 'CALL ubah_profil_user(?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data);
+
+        return $query;
+    }
+
+    /**
+     * Processing change password
+     * @access public
+     * @param mixed $id_user and $new_pass
+     * @return mixed
+     */
+    public function change_pass($id_user, $new_pass)
+    {
+        $this->db->set('password', $new_pass);
+        $this->db->where('id_user', $id_user);
+        $query = $this->db->update('user');
 
         return $query;
     }

@@ -65,10 +65,8 @@ $route['login_user'] = 'auth/login_user';
 $route['login_mitra'] = 'auth/login_mitra';
 $route['profil_user'] = 'auth/profil_user';
 $route['profil_mitra'] = 'auth/profil_mitra';
-$route['edit_profil_user'] = 'auth/edit_profil_user';
-$route['edit_profil_mitra'] = 'auth/edit_profil_mitra';
-$route['edit_pass_user'] = 'auth/edit_pass_user';
-$route['edit_pass_mitra'] = 'auth/edit_pass_mitra';
+$route['edit_profil'] = 'auth/edit_profil';
+$route['change_password'] = 'auth/change_password';
 $route['logout'] = 'auth/logout';
 
 # USER

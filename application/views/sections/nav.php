@@ -195,16 +195,16 @@ $aside_user = ['Dashboard', 'User', 'User Admin', 'User Mitra', 'Transaksi', 'Se
         </li>
         <!-- Edukasi -->
         <li class="nav-item">
-            <a class="nav-link <?= (preg_match("/$aside_user[12]/i", $title)) ? '' : 'collapsed' ?>" href="<?= site_url('data_edukasi') ?>">
+            <a class="nav-link <?= (preg_match("/$aside_user[11]/i", $title)) ? '' : 'collapsed' ?>" href="<?= site_url('data_edukasi') ?>">
                 <i class="bi bi-journal-bookmark-fill"></i>
-                <span><?= $aside_user[12] ?></span>
+                <span><?= $aside_user[11] ?></span>
             </a>
         </li>
         <!-- Profil -->
         <li class="nav-item">
-            <a class="nav-link <?= ($title === $aside_user[4]) ? '' : 'collapsed' ?>" href="<?= site_url('profil_user') ?>">
+            <a class="nav-link <?= (preg_match("/$aside_user[12]/i", $title)) ? '' : 'collapsed' ?>" href="<?= site_url('profil_user') ?>">
                 <i class="bi bi-person-circle"></i>
-                <span><?= $aside_user[5] ?></span>
+                <span><?= $aside_user[12] ?></span>
             </a>
         </li>
         <!-- Logout -->

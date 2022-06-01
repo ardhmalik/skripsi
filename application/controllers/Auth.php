@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Auth is child of CI_Controller
@@ -21,8 +21,9 @@ class Auth extends CI_Controller
 		parent::__construct();
 		$this->load->library('form_validation');
 		$this->load->model('auth_m', 'amodel');
+		$this->load->model('actor_m', 'acmodel');
 	}
-	
+
 	/**
 	 * Process of login
 	 * @todo Processing login account
@@ -81,7 +82,7 @@ class Auth extends CI_Controller
 			redirect('login_mitra');
 		}
 	}
-	
+
 	/**
 	 * Process of login
 	 * @todo Processing login account
@@ -140,7 +141,7 @@ class Auth extends CI_Controller
 			redirect('login_user');
 		}
 	}
-	
+
 	/**
 	 * Navigate to login mitra page
 	 * @access public
@@ -238,7 +239,7 @@ class Auth extends CI_Controller
 			$this->_login_user();
 		}
 	}
-	
+
 	/**
 	 * Navigate to registration mitra page
 	 * @access public
@@ -273,7 +274,7 @@ class Auth extends CI_Controller
 				redirect('dashboard');
 			}
 		}
-		
+
 		# IF statement to check form_validation not running
 		if ($validation->run() == FALSE) {
 			$data = [
@@ -320,9 +321,8 @@ class Auth extends CI_Controller
 
 			redirect('');
 		}
-
 	}
-	
+
 	/**
 	 * Navigate to registration mitra page
 	 * @access public
@@ -357,7 +357,7 @@ class Auth extends CI_Controller
 				redirect('dashboard');
 			}
 		}
-		
+
 		# IF statement to check form_validation not running
 		if ($validation->run() == FALSE) {
 			$data = [
@@ -401,7 +401,274 @@ class Auth extends CI_Controller
 
 			redirect('login_user');
 		}
+	}
 
+	/**
+	 * Navigate an profil user page
+	 * @access public
+	 * @return void
+	 */
+	public function profil_user()
+	{
+		# $amodel variable to shorten model call 'amodel'
+		$amodel = $this->amodel;
+		# $validation variable to shorten form_validation library
+		$validation = $this->form_validation;
+		# $session variable to save field email & username from user
+		$sessions = [
+			'email' => $this->session->userdata('email'),
+			'username' => $this->session->userdata('username'),
+			'role' => $this->session->userdata('role')
+		];
+		# $user variable returns user row array data value as per email in stored session
+		$user = $amodel->get_user_by_email($sessions['email']);
+		# Ternary operation to set foto image for user
+		($user['foto'] == null) ? $user['foto'] = 'avatar.png' : $user['foto'];
+
+		# IF condition to check if there is a stored 'email' session
+		if (!$this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				Silahkan login terlebih dahulu sebelum mengakses konten!
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('login_user');
+		} else {
+			if ($this->session->userdata('tipe')) {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Tidak boleh mengakses halaman!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard');
+			}
+		}
+
+		# $data variable to store array of data passed to dashboard page
+		$data = [
+			'project' => 'Bank sampah Induk Rumah Harum',
+			'title' => 'Profil',
+			'user' => $user
+		];
+
+		// var_dump($data);
+		// die;
+
+		# Load view main on folder sections and pass $data variable
+		$this->load->view('sections/main', $data);
+	}
+
+	/**
+	 * Processing edit_profile
+	 * @access public
+	 * @return void
+	 */
+	public function edit_profil()
+	{
+		# $email to getting email from session
+		$email = $this->session->userdata('email');
+		# $user variable returns user row array data value as per email in the stored session
+		$user = $this->db->get_where('user', ['email' => $email])->row_array();
+		# $file_name variable to store string email without '@' and '.com'
+		$file_name = str_replace(['@', '.com'], ['_', ''], $email);
+		/**
+		 * $config variable to store settings of upload library
+		 * upload_path		=> Location to save file
+		 * allowed_types	=> Uploadable file extension
+		 * file_name		=> Saved upload file naming
+		 * overwrite		=> Allow to overwrite the same file name
+		 * max_size			=> Maximal file size on KB
+		 * max_width		=> Maximal width of file on px
+		 * max_height		=> Maximal height of file on px
+		 */
+		$config = [
+			'upload_path' => FCPATH . 'assets/img/user/',
+			'allowed_types' => 'gif|jpg|jpeg|png',
+			'file_name' => $file_name,
+			'overwrite' => true,
+			'max_size' => 1024,
+			'max_width' => 1000,
+			'max_height' => 1000
+		];
+
+		# Initialize upload library
+		$this->load->library('upload', $config);
+
+		# $old_data variable to store old user data
+		$old_data = [
+			'foto' => $user['foto'],
+			'username' => $user['username'],
+			'no_telp' => $user['no_telp']
+		];
+		# $new_data variable to save value of id_user & username from user
+		$new_data = [
+			'id_user' => $this->input->post('id_user'),
+			'username' => $this->input->post('username'),
+			'no_telp' => $this->input->post('no_telp')
+		];
+		// var_dump($new_data);
+		// die;
+
+		# IF statement to check field name on foto arrays
+		if (!empty($_FILES['foto']['name'])) {
+			# IF failed to upload foto
+			if (!$this->upload->do_upload('foto')) {
+				# $error variable to store value of error message from upload library
+				$error = $this->upload->display_errors();
+				# Send error message with session flashdata
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">'
+						. $error .
+						'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+			}
+			# ELSEIF statement to check id_user is not null
+			elseif (!is_null($new_data['id_user'])) {
+				# $uploaded_data variable to store process upload data
+				$uploaded_data = $this->upload->data();
+				# $data variable to store data to be passed to the model
+				$data = [
+					'id_user' => $new_data['id_user'],
+					'username' => $new_data['username'],
+					'no_telp' => $new_data['no_telp'],
+					'foto' => $uploaded_data['file_name']
+				];
+
+				# Passing $data as a parameter of update_user() function to update data on database
+				$this->amodel->update_user($data);
+				# Send success message with session flashdata
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Berhasil memperbarui profil-1!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+				);
+			}
+		}
+		# ELSEIF statement to check id_user is not null AND current username is not same with new username
+		elseif (!is_null($new_data['id_user']) && $old_data['username'] != $new_data['username'] || $old_data['no_telp'] != $new_data['no_telp']) {
+			# $data variable to store data to be passed to the model
+			$data = [
+				'id_user' => $new_data['id_user'],
+				'username' => $new_data['username'],
+				'no_telp' => $new_data['no_telp'],
+				'foto' => $old_data['foto']
+			];
+
+			# Passing $data as a parameter of update_user() function to update data on database
+			$this->amodel->update_user($data);
+			# Send success message with session flashdata
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Berhasil memperbarui profil-2!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		} else {
+			# Send info message with session flashdata
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-secondary alert-dismissible fade show" role="alert">
+					Tidak ada perubahan!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		}
+
+		redirect('profil_user');
+	}
+
+	/**
+	 * Processing change password
+	 * @access public
+	 * @return void
+	 */
+	public function change_password()
+	{
+		# $amodel variable to shorten model call 'amodel'
+		$amodel = $this->amodel;
+		# $sessions variable to shorten session method
+		$sessions = $this->session;
+		# $validation variable to shorten form_validation library
+		$validation = $this->form_validation;
+		# Initialize registration rules with reg_rules()
+		$validation->set_rules($amodel->change_pass_rules());
+
+		# IF statement while form_validation not run
+		if ($validation->run() == FALSE) {
+			# Send validation error message with session flashdata
+			$sessions->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">'
+					. validation_errors() .
+					'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		} else {
+			# $user variable returns user row array data value as per email in the stored session
+			$user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+			# $input variable to store value of form change password
+			$input = [
+				'id_user' => $this->input->post('id_user'),
+				'curr_password' => $this->input->post('curr_password'),
+				'new_password' => $this->input->post('new_password'),
+				'renew_password' => $this->input->post('renew_password')
+			];
+
+			# IF statement to check whether entered password matches user data
+			if (password_verify($input['curr_password'], $user['password'])) {
+				# IF statement to check the new password match with the current password
+				if ($input['new_password'] == $input['curr_password']) {
+					# Send error message with session flashdata
+					$sessions->set_flashdata(
+						'message',
+						'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							Password baru tidak boleh sama dengan password lama!
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>'
+					);
+				} else {
+					// var_dump($input['new_password']);
+					// die;
+					# $new_pass variable to store result value of hashing new password
+					$new_pass = password_hash($input['new_password'], PASSWORD_DEFAULT);
+					# Passing $data['id_user'] and $new_pass as a parameter of change_pass() function to update data on database
+					$amodel->change_pass($user['id_user'], $new_pass);
+
+					# Send error message with session flashdata
+					$sessions->set_flashdata(
+						'message',
+						'<div class="alert alert-success alert-dismissible fade show" role="alert">
+							Berhasil memperbarui password!
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>'
+					);
+				}
+			} else {
+				# Send error message with session flashdata
+				$sessions->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Password saat ini salah, coba lagi!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+			}
+		}
+
+		redirect('profil_user');
 	}
 
 	/**
