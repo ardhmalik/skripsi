@@ -408,6 +408,69 @@ class Auth extends CI_Controller
 	 * @access public
 	 * @return void
 	 */
+	public function profil_mitra()
+	{
+		# $amodel variable to shorten model call 'amodel'
+		$amodel = $this->amodel;
+		# $validation variable to shorten form_validation library
+		$validation = $this->form_validation;
+		# $session variable to save field email & username from user
+		$sessions = [
+			'email' => $this->session->userdata('email'),
+			'username' => $this->session->userdata('username'),
+			'tipe' => $this->session->userdata('tipe')
+		];
+		# $user variable returns user row array data value as per email in stored session
+		$mitra = $amodel->get_mitra_by_email($sessions['email']);
+		# Ternary operation to set foto image for mitra
+		($mitra['foto'] == null) ? $mitra['foto'] = 'avatar.png' : $mitra['foto'];
+
+		# IF condition to check if there is a stored 'email' session
+		if (!$this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Silahkan login terlebih dahulu sebelum mengakses konten!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('login_mitra');
+		} else {
+			if (!$this->session->userdata('tipe')) {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard');
+			}
+		}
+
+		# $data variable to store array of data passed to dashboard page
+		$data = [
+			'project' => 'Bank sampah Induk Rumah Harum',
+			'title' => 'Profil',
+			'mitra' => $mitra
+		];
+
+		// var_dump($data);
+		// die;
+
+		# Load view main on folder sections and pass $data variable
+		$this->load->view('sections/main', $data);
+	}
+	
+	/**
+	 * Navigate an profil user page
+	 * @access public
+	 * @return void
+	 */
 	public function profil_user()
 	{
 		# $amodel variable to shorten model call 'amodel'
@@ -473,10 +536,9 @@ class Auth extends CI_Controller
 	 */
 	public function edit_profil()
 	{
+		$sess = $this->session;
 		# $email to getting email from session
 		$email = $this->session->userdata('email');
-		# $user variable returns user row array data value as per email in the stored session
-		$user = $this->db->get_where('user', ['email' => $email])->row_array();
 		# $file_name variable to store string email without '@' and '.com'
 		$file_name = str_replace(['@', '.com'], ['_', ''], $email);
 		/**
@@ -498,22 +560,58 @@ class Auth extends CI_Controller
 			'max_width' => 1000,
 			'max_height' => 1000
 		];
-
+		
 		# Initialize upload library
 		$this->load->library('upload', $config);
+		
+		if ($this->session->userdata('role')) {
+			# $user variable returns user row array data value as per email in the stored session
+			$user = $this->db->get_where('user', ['email' => $email])->row_array();
+			# $old_data variable to store old user data
+			$old_data = [
+				'foto' => $user['foto'],
+				'username' => $user['username'],
+				'no_telp' => $user['no_telp']
+			];
+			# $new_data variable to save value of id_user & username from user
+			$new_data = [
+				'id_user' => $this->input->post('id_user'),
+				'username' => $this->input->post('username'),
+				'no_telp' => $this->input->post('no_telp')
+			];
+		} elseif ($this->session->userdata('tipe')) {
+			# $user variable returns user row array data value as per email in the stored session
+			$mitra = $this->db->get_where('mitra', ['email' => $email])->row_array();
+			# $old_data variable to store old user data
+			$old_data = [
+				'foto' => $mitra['foto'],
+				'username' => $mitra['username'],
+				'alamat' => $mitra['alamat'],
+				'no_telp' => $mitra['no_telp'],
+				'jadwal_jemput' => $mitra['jadwal_jemput']
+			];
+			$input = [
+				'jadwal_jemput' => $this->input->post('jadwal_jemput'),
+				'waktu_jemput' => ($this->input->post('waktu_jemput') != "") ? $this->input->post('waktu_jemput')  . ":00" : date('H:i:s', strtotime($old_data['jadwal_jemput']))
+			];
 
-		# $old_data variable to store old user data
-		$old_data = [
-			'foto' => $user['foto'],
-			'username' => $user['username'],
-			'no_telp' => $user['no_telp']
-		];
-		# $new_data variable to save value of id_user & username from user
-		$new_data = [
-			'id_user' => $this->input->post('id_user'),
-			'username' => $this->input->post('username'),
-			'no_telp' => $this->input->post('no_telp')
-		];
+			
+			$jadwal_empty = ($input['jadwal_jemput'] != "") ? $input['jadwal_jemput'] . " " . $input['waktu_jemput'] : date('Y-m-d', strtotime($old_data['jadwal_jemput'])) ." ". $input['waktu_jemput'];
+			// var_dump($jadwal_empty);
+			// die;
+			# $new_data variable to save value of id_user & username from user
+			$new_data = [
+				'id_mitra' => $this->input->post('id_mitra'),
+				'username' => $this->input->post('username'),
+				'alamat' => $this->input->post('alamat'),
+				'no_telp' => $this->input->post('no_telp'),
+				'jadwal_jemput' => ($input['jadwal_jemput'] != "" && $input['waktu_jemput'] != date('H:i:s', strtotime($old_data['jadwal_jemput']))) ? $input['jadwal_jemput'] . " " . $input['waktu_jemput'] : $jadwal_empty
+			];
+			
+			// var_dump($new_data['jadwal_jemput']);
+			// die;
+		}
+
 		// var_dump($new_data);
 		// die;
 
@@ -533,19 +631,38 @@ class Auth extends CI_Controller
 				);
 			}
 			# ELSEIF statement to check id_user is not null
-			elseif (!is_null($new_data['id_user'])) {
+			elseif (!is_null(($sess->userdata('role')) ? $new_data['id_user'] : $new_data['id_mitra'])) {
 				# $uploaded_data variable to store process upload data
 				$uploaded_data = $this->upload->data();
-				# $data variable to store data to be passed to the model
-				$data = [
-					'id_user' => $new_data['id_user'],
-					'username' => $new_data['username'],
-					'no_telp' => $new_data['no_telp'],
-					'foto' => $uploaded_data['file_name']
-				];
 
-				# Passing $data as a parameter of update_user() function to update data on database
-				$this->amodel->update_user($data);
+				if ($sess->userdata('role')) {
+					# $data variable to store data to be passed to the model
+					$data = [
+						'id_user' => $new_data['id_user'],
+						'username' => $new_data['username'],
+						'no_telp' => $new_data['no_telp'],
+						'foto' => $uploaded_data['file_name']
+					];
+	
+					# Passing $data as a parameter of update_user() function to update data on database
+					$this->amodel->update_user($data);
+				} elseif ($sess->userdata('tipe')) {
+					# $data variable to store data to be passed to the model
+					$data = [
+						'id_mitra' => $new_data['id_mitra'],
+						'username' => $new_data['username'],
+						'alamat' => $new_data['alamat'],
+						'no_telp' => $new_data['no_telp'],
+						'foto' => $uploaded_data['file_name'],
+						'jadwal_jemput' => $new_data['jadwal_jemput']
+					];
+					
+					// var_dump($data);
+					// die;
+					# Passing $data as a parameter of update_user() function to update data on database
+					$this->amodel->update_mitra($data);
+				}
+
 				# Send success message with session flashdata
 				$this->session->set_flashdata(
 					'message',
@@ -557,17 +674,34 @@ class Auth extends CI_Controller
 			}
 		}
 		# ELSEIF statement to check id_user is not null AND current username is not same with new username
-		elseif (!is_null($new_data['id_user']) && $old_data['username'] != $new_data['username'] || $old_data['no_telp'] != $new_data['no_telp']) {
-			# $data variable to store data to be passed to the model
-			$data = [
-				'id_user' => $new_data['id_user'],
-				'username' => $new_data['username'],
-				'no_telp' => $new_data['no_telp'],
-				'foto' => $old_data['foto']
-			];
+		elseif (!is_null(($sess->userdata('role')) ? $new_data['id_user'] && $old_data['username'] != $new_data['username'] || $old_data['no_telp'] != $new_data['no_telp'] : $new_data['id_mitra']) && $old_data['username'] != $new_data['username'] || $old_data['no_telp'] != $new_data['no_telp'] || $old_data['alamat'] != $new_data['alamat'] || $old_data['jadwal_jemput'] != $new_data['jadwal_jemput']) {
+			if ($sess->userdata('role')) {
+				# $data variable to store data to be passed to the model
+				$data = [
+					'id_user' => $new_data['id_user'],
+					'username' => $new_data['username'],
+					'no_telp' => $new_data['no_telp'],
+					'foto' => $old_data['foto']
+				];
+				# Passing $data as a parameter of update_user() function to update data on database
+				$this->amodel->update_user($data);
+			} elseif ($sess->userdata('tipe')) {
+				# $data variable to store data to be passed to the model
+				$data = [
+					'id_mitra' => $new_data['id_mitra'],
+					'username' => $new_data['username'],
+					'alamat' => $new_data['alamat'],
+					'no_telp' => $new_data['no_telp'],
+					'foto' => $old_data['foto'],
+					'jadwal_jemput' => $new_data['jadwal_jemput']
+				];
 
-			# Passing $data as a parameter of update_user() function to update data on database
-			$this->amodel->update_user($data);
+				// var_dump($data);
+				// die;
+				# Passing $data as a parameter of update_mitra() function to update data on database
+				$this->amodel->update_mitra($data);
+			}
+
 			# Send success message with session flashdata
 			$this->session->set_flashdata(
 				'message',
@@ -587,7 +721,11 @@ class Auth extends CI_Controller
 			);
 		}
 
-		redirect('profil_user');
+		if ($sess->userdata('role')) {
+			redirect('profil_user');
+		} elseif ($sess->userdata('tipe')) {
+			redirect('profil_mitra');
+		}
 	}
 
 	/**

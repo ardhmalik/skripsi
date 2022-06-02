@@ -257,7 +257,22 @@ class Auth_m extends CI_Model
      */
     public function update_user($data)
     {
-        $sql = 'CALL ubah_profil_user(?, ?, ?, ?)';
+        $sql = 'SELECT ubah_profil_user(?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data);
+
+        return $query;
+    }
+    
+    /**
+     * Update data user
+     * @access public
+     * @param string $data Containing an array of id_user, avatar, username
+     * @description A function that executes a query with a stored procedure 
+     * 'editser(id_user_param, avatar_param, username_param)'
+     */
+    public function update_mitra($data)
+    {
+        $sql = 'SELECT ubah_profil_mitra(?, ?, ?, ?, ?, ?)';
         $query = $this->db->query($sql, $data);
 
         return $query;
