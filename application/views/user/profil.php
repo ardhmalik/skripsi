@@ -44,7 +44,7 @@
                             <div class="tab-pane fade show active profile-overview" id="profile-overview">
                                 <h5 class="card-title">About</h5>
                                 <p class="small fst-italic">
-                                    Akun ini hanya dapat diakses oleh admin My This Year Plan
+                                    Akun ini hanya dapat diakses oleh admin Bank Sampah Induk Rumah Harum
                                 </p>
                                 <h5 class="card-title">Profile Details</h5>
                                 <div class="row">
