@@ -10,6 +10,9 @@ if ($this->session->userdata('tipe'))
         case 'dashboard':
             $this->load->view('mitra/dashboard');
             break;
+        case 'rekening':
+            $this->load->view('mitra/rekening');
+            break;
         case 'profil_mitra':
             $this->load->view('mitra/profil');
             break;
