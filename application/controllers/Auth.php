@@ -412,8 +412,6 @@ class Auth extends CI_Controller
 	{
 		# $amodel variable to shorten model call 'amodel'
 		$amodel = $this->amodel;
-		# $validation variable to shorten form_validation library
-		$validation = $this->form_validation;
 		# $session variable to save field email & username from user
 		$sessions = [
 			'email' => $this->session->userdata('email'),
@@ -421,7 +419,7 @@ class Auth extends CI_Controller
 			'tipe' => $this->session->userdata('tipe')
 		];
 		# $user variable returns user row array data value as per email in stored session
-		$mitra = $amodel->get_mitra_by_email($sessions['email']);
+		$mitra = $this->db->get_where('data_mitra', ['email'=>$sessions['email']])->row_array();
 		# Ternary operation to set foto image for mitra
 		($mitra['foto'] == null) ? $mitra['foto'] = 'avatar.png' : $mitra['foto'];
 
@@ -456,7 +454,8 @@ class Auth extends CI_Controller
 		$data = [
 			'project' => 'Bank sampah Induk Rumah Harum',
 			'title' => 'Profil',
-			'mitra' => $mitra
+			'mitra' => $mitra,
+			'struktur' => $this->db->get_where('struktur', ['id_mitra'=>$mitra['id_mitra']])->row_array()
 		];
 
 		// var_dump($data);
@@ -475,8 +474,6 @@ class Auth extends CI_Controller
 	{
 		# $amodel variable to shorten model call 'amodel'
 		$amodel = $this->amodel;
-		# $validation variable to shorten form_validation library
-		$validation = $this->form_validation;
 		# $session variable to save field email & username from user
 		$sessions = [
 			'email' => $this->session->userdata('email'),

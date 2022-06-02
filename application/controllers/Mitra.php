@@ -161,4 +161,48 @@ class Mitra extends CI_Controller
 
 		redirect('rekening');
 	}
+	
+	public function edit_struktur()
+	{
+		$this->form_validation->set_rules($this->mmodel->edit_struktur_rules());
+
+		# IF statement while form_validation not run
+		if ($this->form_validation->run() == FALSE) {
+			# Send validation error message with session flashdata
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">'
+				. validation_errors() .
+				'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		} else {
+			$input = [
+				'id_struktur' => $this->input->post('id_struktur'),
+				'ketua' => $this->input->post('ketua'),
+				'sekretaris' => $this->input->post('sekretaris'),
+				'bendahara' => $this->input->post('bendahara'),
+				'anggota' => $this->input->post('anggota'),
+				'total_nsb' => $this->input->post('total_nsb')
+			];
+
+			// var_dump($input);
+			// die;
+
+			$this->mmodel->update_struktur($input);
+			# Send error message with session flashdata
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Berhasil memperbarui struktur!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		}
+
+		// var_dump($input);
+		// die;
+
+		redirect('profil_mitra');
+	}
 }

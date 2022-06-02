@@ -36,6 +36,11 @@
                             <li class="nav-item">
                                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
                             </li>
+                            <?php if ($this->session->userdata('tipe') == 'Bank Sampah Unit') : ?>
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#struktur-bsu">Edit Struktur</button>
+                                </li>
+                            <?php endif ?>
                             <li class="nav-item">
                                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
                             </li>
@@ -150,6 +155,84 @@
                                     </div>
                                 </form><!-- End Profile Edit Form -->
                             </div>
+                            <?php if ($this->session->userdata('tipe') == 'Bank Sampah Unit') : ?>
+                                <div class="tab-pane fade profile-edit pt-3" id="struktur-bsu">
+                                    <div class="card-body table-responsive pt-4 align-items-center">
+                                        <table class="table table-hover table-stripped text-center">
+                                            <caption>Struktur Kepengurusan BSU <?= $mitra['username'] ?></caption>
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Ketua</th>
+                                                    <th scope="col">Sekretaris</th>
+                                                    <th scope="col">Bendahara</th>
+                                                    <th scope="col">Anggota</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><?= $struktur['ketua'] ?></td>
+                                                    <td><?= $struktur['sekretaris'] ?></td>
+                                                    <td><?= $struktur['bendahara'] ?></td>
+                                                    <td><?= $struktur['anggota'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Total Nasabah</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><?= $struktur['total_nsb'] ?></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- Profile Edit Form -->
+                                    <form action="<?= site_url('edit_struktur') ?>" method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="id_struktur" id="id_struktur" value="<?= $struktur['id_struktur'] ?>">
+                                        <div class="row mb-3">
+                                            <label for="ketua" class="col-md-4 col-lg-3 col-form-label">Ketua</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="ketua" type="text" class="form-control" id="ketua" value="<?= $struktur['ketua'] ?>" required>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="sekretaris" class="col-md-4 col-lg-3 col-form-label">Sekretaris</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="sekretaris" type="text" class="form-control" id="sekretaris" value="<?= $struktur['sekretaris'] ?>" required>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="bendahara" class="col-md-4 col-lg-3 col-form-label">Bendahara</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="bendahara" type="text" class="form-control" id="bendahara" value="<?= $struktur['bendahara'] ?>" required>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="anggota" class="col-md-4 col-lg-3 col-form-label">Anggota</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="anggota" type="text" class="form-control" id="anggota" value="<?= $struktur['anggota'] ?>" required>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="total_nsb" class="col-md-4 col-lg-3 col-form-label">Total Nasabah</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="total_nsb" type="text" class="form-control" id="total_nsb" value="<?= $struktur['total_nsb'] ?>" required>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </div>
+                                    </form><!-- End Profile Edit Form -->
+                                </div>
+                            <?php endif ?>
                             <div class="tab-pane fade pt-3" id="profile-change-password">
                                 <!-- Change Password Form -->
                                 <form action="<?= site_url('change_password') ?>" method="post">
@@ -178,12 +261,9 @@
                                 </form><!-- End Change Password Form -->
 
                             </div>
-
                         </div><!-- End Bordered Tabs -->
-
                     </div>
                 </div>
-
             </div>
         </div>
     </section>

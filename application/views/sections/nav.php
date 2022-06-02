@@ -92,18 +92,9 @@ $aside_user = ['Dashboard', 'User', 'User Admin', 'User Mitra', 'Transaksi', 'Se
                 <span><?= $aside_mitra[3] ?></span>
             </a>
         </li>
-        <?php if ($this->session->userdata('tipe') === 'Bank Sampah Unit') : ?>
-            <!-- Struktur -->
-            <li class="nav-item">
-                <a class="nav-link <?= ($title === $aside_mitra[4]) ? '' : 'collapsed' ?>" href="<?= site_url('struktur') ?>">
-                    <i class="bi bi-person-lines-fill"></i>
-                    <span><?= $aside_mitra[4] ?></span>
-                </a>
-            </li>
-        <?php endif ?>
         <!-- Profil -->
         <li class="nav-item">
-            <a class="nav-link <?= ($title === $aside_mitra[4]) ? '' : 'collapsed' ?>" href="<?= site_url('profil_mitra') ?>">
+            <a class="nav-link <?= ($title === $aside_mitra[5]) ? '' : 'collapsed' ?>" href="<?= site_url('profil_mitra') ?>">
                 <i class="bi bi-person-circle"></i>
                 <span><?= $aside_mitra[5] ?></span>
             </a>

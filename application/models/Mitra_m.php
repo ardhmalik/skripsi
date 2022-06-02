@@ -35,7 +35,29 @@ class Mitra_m extends CI_Model
             ]
         ];
     }
+    
+    public function edit_struktur_rules()
+    {
+        return [
+            [
+                'field' => 'total_nsb',
+                'label' => 'Total Nasabah',
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'numeric' => 'Masukkan nilai total nasabah berupa angka!'
+                ]
+            ]
+        ];
+    }
 
+    public function update_struktur($data)
+    {
+        $sql = 'SELECT ubah_struktur(?, ?, ?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data);
+
+        return $query;
+    }
+    
     public function get_rek_mitra($id_mitra)
     {
         $sql = 'CALL tampil_detail_rekening(?)';
