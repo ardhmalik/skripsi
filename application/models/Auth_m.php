@@ -284,11 +284,26 @@ class Auth_m extends CI_Model
      * @param mixed $id_user and $new_pass
      * @return mixed
      */
-    public function change_pass($id_user, $new_pass)
+    public function change_pass_user($id_user, $new_pass)
     {
         $this->db->set('password', $new_pass);
         $this->db->where('id_user', $id_user);
         $query = $this->db->update('user');
+
+        return $query;
+    }
+    
+    /**
+     * Processing change password
+     * @access public
+     * @param mixed $id_user and $new_pass
+     * @return mixed
+     */
+    public function change_pass_mitra($id_mitra, $new_pass)
+    {
+        $this->db->set('password', $new_pass);
+        $this->db->where('id_mitra', $id_mitra);
+        $query = $this->db->update('mitra');
 
         return $query;
     }

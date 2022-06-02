@@ -465,7 +465,7 @@ class Auth extends CI_Controller
 		# Load view main on folder sections and pass $data variable
 		$this->load->view('sections/main', $data);
 	}
-	
+
 	/**
 	 * Navigate an profil user page
 	 * @access public
@@ -560,10 +560,10 @@ class Auth extends CI_Controller
 			'max_width' => 1000,
 			'max_height' => 1000
 		];
-		
+
 		# Initialize upload library
 		$this->load->library('upload', $config);
-		
+
 		if ($this->session->userdata('role')) {
 			# $user variable returns user row array data value as per email in the stored session
 			$user = $this->db->get_where('user', ['email' => $email])->row_array();
@@ -595,8 +595,8 @@ class Auth extends CI_Controller
 				'waktu_jemput' => ($this->input->post('waktu_jemput') != "") ? $this->input->post('waktu_jemput')  . ":00" : date('H:i:s', strtotime($old_data['jadwal_jemput']))
 			];
 
-			
-			$jadwal_empty = ($input['jadwal_jemput'] != "") ? $input['jadwal_jemput'] . " " . $input['waktu_jemput'] : date('Y-m-d', strtotime($old_data['jadwal_jemput'])) ." ". $input['waktu_jemput'];
+
+			$jadwal_empty = ($input['jadwal_jemput'] != "") ? $input['jadwal_jemput'] . " " . $input['waktu_jemput'] : date('Y-m-d', strtotime($old_data['jadwal_jemput'])) . " " . $input['waktu_jemput'];
 			// var_dump($jadwal_empty);
 			// die;
 			# $new_data variable to save value of id_user & username from user
@@ -607,7 +607,7 @@ class Auth extends CI_Controller
 				'no_telp' => $this->input->post('no_telp'),
 				'jadwal_jemput' => ($input['jadwal_jemput'] != "" && $input['waktu_jemput'] != date('H:i:s', strtotime($old_data['jadwal_jemput']))) ? $input['jadwal_jemput'] . " " . $input['waktu_jemput'] : $jadwal_empty
 			];
-			
+
 			// var_dump($new_data['jadwal_jemput']);
 			// die;
 		}
@@ -643,7 +643,7 @@ class Auth extends CI_Controller
 						'no_telp' => $new_data['no_telp'],
 						'foto' => $uploaded_data['file_name']
 					];
-	
+
 					# Passing $data as a parameter of update_user() function to update data on database
 					$this->amodel->update_user($data);
 				} elseif ($sess->userdata('tipe')) {
@@ -656,7 +656,7 @@ class Auth extends CI_Controller
 						'foto' => $uploaded_data['file_name'],
 						'jadwal_jemput' => $new_data['jadwal_jemput']
 					];
-					
+
 					// var_dump($data);
 					// die;
 					# Passing $data as a parameter of update_user() function to update data on database
@@ -755,18 +755,30 @@ class Auth extends CI_Controller
 				</div>'
 			);
 		} else {
-			# $user variable returns user row array data value as per email in the stored session
-			$user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-			# $input variable to store value of form change password
-			$input = [
-				'id_user' => $this->input->post('id_user'),
-				'curr_password' => $this->input->post('curr_password'),
-				'new_password' => $this->input->post('new_password'),
-				'renew_password' => $this->input->post('renew_password')
-			];
+			if ($sessions->userdata('role')) {
+				# $user variable returns user row array data value as per email in the stored session
+				$user = $this->db->get_where('user', ['email' => $sessions->userdata('email')])->row_array();
+				# $input variable to store value of form change password
+				$input = [
+					'id_user' => $this->input->post('id_user'),
+					'curr_password' => $this->input->post('curr_password'),
+					'new_password' => $this->input->post('new_password'),
+					'renew_password' => $this->input->post('renew_password')
+				];
+			} elseif ($sessions->userdata('tipe')) {
+				# $mitra variable returns mitra row array data value as per email in the stored session
+				$mitra = $this->db->get_where('mitra', ['email' => $sessions->userdata('email')])->row_array();
+				# $input variable to store value of form change password
+				$input = [
+					'id_mitra' => $this->input->post('id_mitra'),
+					'curr_password' => $this->input->post('curr_password'),
+					'new_password' => $this->input->post('new_password'),
+					'renew_password' => $this->input->post('renew_password')
+				];
+			}
 
 			# IF statement to check whether entered password matches user data
-			if (password_verify($input['curr_password'], $user['password'])) {
+			if (password_verify($input['curr_password'], ($sessions->userdata('role')) ? $user['password'] : $mitra['password'])) {
 				# IF statement to check the new password match with the current password
 				if ($input['new_password'] == $input['curr_password']) {
 					# Send error message with session flashdata
@@ -782,8 +794,13 @@ class Auth extends CI_Controller
 					// die;
 					# $new_pass variable to store result value of hashing new password
 					$new_pass = password_hash($input['new_password'], PASSWORD_DEFAULT);
-					# Passing $data['id_user'] and $new_pass as a parameter of change_pass() function to update data on database
-					$amodel->change_pass($user['id_user'], $new_pass);
+					if ($sessions->userdata('role')) {
+						# Passing $data['id_user'] and $new_pass as a parameter of change_pass() function to update data on database
+						$amodel->change_pass_user($user['id_user'], $new_pass);
+					} elseif ($sessions->userdata('tipe')) {
+						# Passing $data['id_mitra'] and $new_pass as a parameter of change_pass() function to update data on database
+						$amodel->change_pass_mitra($mitra['id_mitra'], $new_pass);
+					}
 
 					# Send error message with session flashdata
 					$sessions->set_flashdata(
@@ -806,7 +823,11 @@ class Auth extends CI_Controller
 			}
 		}
 
-		redirect('profil_user');
+		if ($sessions->userdata('role')) {
+			redirect('profil_user');
+		} elseif ($sessions->userdata('tipe')) {
+			redirect('profil_mitra');
+		}
 	}
 
 	/**
