@@ -19,13 +19,13 @@
             <div class="col-xl-5">
                 <div class="card mb-3">
                     <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="<?= site_url('assets/img/user/') . $mitra['foto'] ?>" class="img-fluid rounded-start" alt="...">
+                        <div class="col-md-5 my-auto">
+                            <img src="<?= site_url('assets/img/user/') . $mitra['foto'] ?>" class="img-fluid rounded-start mx-2" alt="...">
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-7 text-center">
                             <div class="card-body">
                                 <div class="card-header">
-                                    <h3 class="fw-bold fst-italic text-primary fs-1"><?= $rekening['bank'] ?></h3>
+                                    <h3 class="fw-bold fs-1"><?= $rekening['bank'] ?></h3>
                                 </div>
                                 <h3 class="card-title"><?= $rekening['no_rek'] ?></h3>
                                 <p class="card-text">a.n <?= $rekening['atas_nama'] ?></p>
