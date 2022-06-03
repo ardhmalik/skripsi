@@ -15,6 +15,7 @@ class User extends CI_Controller
 		parent::__construct();
 		$this->load->library('form_validation');
 		$this->load->model('auth_m', 'amodel');
+		$this->load->model('user_m', 'umodel');
 	}
 
 	public function dashboard()
@@ -65,5 +66,57 @@ class User extends CI_Controller
 		];
 
 		$this->load->view('sections/main', $data);
+	}
+
+	public function data_edukasi()
+	{
+		$email_sess = $this->session->userdata('email');
+		$user = $this->db->get_where('user', ['email' => $email_sess])->row_array();
+		$users = $this->umodel->get_all_user();
+		$data = [
+			'project' => 'Bank sampah Induk Rumah Harum',
+			'title' => 'Edukasi',
+			'users' => $users,
+			'user' => $user,
+			'data_edu' => $this->umodel->get_data_edukasi(),
+		];
+
+		$this->load->view('sections/main', $data);
+	}
+	
+	public function add_edukasi()
+	{
+		$_mulai = $this->input->post('mulai');
+		$_selesai = $this->input->post('selesai');
+		$dates = [
+			'tgl_mulai' => date('Y-m-d ', strtotime($_mulai)),
+			'tgl_selesai' => date('Y-m-d ', strtotime($_selesai)),
+			'wkt_mulai' => date('H:i:s', strtotime($_mulai)),
+			'wkt_selesai' => date('H:i:s', strtotime($_selesai))
+		];
+		$input = [
+			'judul' => $this->input->post('judul'),
+			'tempat' => $this->input->post('tempat'),
+			'mulai' => $dates['tgl_mulai'] . $dates['wkt_mulai'],
+			'selesai' => $dates['tgl_selesai'] . $dates['wkt_selesai'],
+			'ket' => $this->input->post('ket'),
+			'id_user' => $this->input->post('pembicara')
+		];
+
+		// var_dump($input);
+		// die;
+
+		# Passing $input as a parameter of createUser() function to execute adding data to database
+		$this->umodel->add_edukasi($input);
+		# Add an alert message to session if createUser() process is successful
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil menambahkan data edukasi
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+
+		redirect('data_edukasi');
 	}
 }

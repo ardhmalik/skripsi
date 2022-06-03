@@ -30,6 +30,10 @@ elseif ($this->session->userdata('role')) {
         case 'profil_user':
             $this->load->view('user/profil');
             break;
+        case 'data_edukasi':
+            $this->load->view('user/edukasi');
+            $this->load->view('sections/modal_user');
+            break;
         default:
             $this->load->view('user/dashboard');
             break;
