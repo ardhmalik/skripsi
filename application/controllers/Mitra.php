@@ -16,6 +16,7 @@ class Mitra extends CI_Controller
 		$this->load->library('form_validation');
 		$this->load->model('auth_m', 'amodel');
 		$this->load->model('mitra_m', 'mmodel');
+		$this->load->model('user_m', 'umodel');
 	}
 
 	public function dashboard()
@@ -204,5 +205,98 @@ class Mitra extends CI_Controller
 		// die;
 
 		redirect('profil_mitra');
+	}
+
+	public function edukasi()
+	{
+		$email_sess = $this->session->userdata('email');
+		# $mitra variable returns mitra row array data value as per email in stored session
+		$mitra = $this->db->get_where('mitra', ['email' => $email_sess])->row_array();
+
+		# Ternary operation to set foto image for user
+		($mitra['foto'] == null) ? $mitra['foto'] = 'avatar.png' : $mitra['foto'];
+
+		# IF condition to check if there is a stored 'email' session
+		if (!$this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Silahkan login terlebih dahulu sebelum mengakses konten!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('login_mitra');
+		} else {
+			if ($this->session->userdata('role')) {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard_user');
+			}
+		}
+
+		$data = [
+			'project' => 'Bank Sampah Induk Rumah Harum',
+			'title' => 'Edukasi',
+			'mitra' => $mitra,
+			'data_edu' => $this->umodel->get_data_edukasi(),
+			'followers_edu' => $this->umodel->data_followers_edu(),
+		];
+
+		$this->load->view('sections/main', $data);
+	}
+
+	public function join_edukasi()
+	{
+		$input = [
+			'id_mitra' => $this->input->post('id_mitra'),
+			'id_edu' => $this->input->post('id_edu')
+		];
+
+		// var_dump($id_mitra);
+		// var_dump($id_edu);
+		// die;
+
+		# Passing $input as a parameter of createUser() function to execute adding data to database
+		$this->mmodel->join_edukasi($input);
+		# Add an alert message to session if createUser() process is successful
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil mengikuti edukasi, klik tombol <span class="badge bg-dark">Batal</span> untuk membatalkan
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+
+		redirect('edukasi');
+	}
+	
+	public function cancel_edukasi()
+	{
+		$id_mitra = $this->input->post('id_mitra');
+
+		// var_dump($id_mitra);
+		// die;
+
+		# Passing $input as a parameter of createUser() function to execute adding data to database
+		$this->mmodel->cancel_edukasi($id_mitra);
+		# Add an alert message to session if createUser() process is successful
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil batal mengikuti edukasi, klik tombol <span class="badge bg-primary">Ikut</span> untuk mengikuti edukasi
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+
+		redirect('edukasi');
 	}
 }

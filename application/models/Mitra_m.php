@@ -75,4 +75,20 @@ class Mitra_m extends CI_Model
 
         return $query;
     }
+    
+    public function join_edukasi($data)
+    {
+        $sql = 'SELECT ikut_edukasi(?, ?)';
+        $query = $this->db->query($sql, $data);
+
+        return $query;
+    }
+    
+    public function cancel_edukasi($id_mitra)
+    {
+        $sql = 'SELECT batal_edukasi(?)';
+        $query = $this->db->query($sql, $id_mitra);
+
+        return $query;
+    }
 }
