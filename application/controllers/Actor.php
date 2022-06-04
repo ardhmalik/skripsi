@@ -116,9 +116,9 @@ class Actor extends CI_Controller
 	public function off_mitra()
 	{
 		$id_mitra = $this->input->post('id_mitra');
-		$mitra = $this->db->get_where('user', ['id_user' => $id_mitra])->row_array();
+		$mitra = $this->db->get_where('mitra', ['id_mitra' => $id_mitra])->row_array();
 
-		// var_dump($id_mitra);
+		// var_dump($mitra);
 		// die;
 
 		# Passing $input as a parameter of createUser() function to execute adding data to database
