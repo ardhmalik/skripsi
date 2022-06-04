@@ -16,10 +16,26 @@ class User_m extends CI_Model
 
         return $query;
     }
+    
+    public function get_all_mitra()
+    {
+        $sql = $this->db->get('data_mitra');
+        $query = $sql->result_array();
+
+        return $query;
+    }
 
     public function get_data_edukasi()
     {
         $sql = $this->db->get('data_edukasi');
+        $query = $sql->result_array();
+
+        return $query;
+    }
+    
+    public function data_followers_edu()
+    {
+        $sql = $this->db->get('followers_edu');
         $query = $sql->result_array();
 
         return $query;

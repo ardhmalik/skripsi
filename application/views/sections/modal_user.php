@@ -24,7 +24,7 @@
                             <label for="tempat">Tempat</label>
                         </div>
                         <div class="mb-3 form-floating">
-                            <input type="text" class="form-control" name="ket" id="ket" value="" placeholder="Enter new ket"    >
+                            <input type="text" class="form-control" name="ket" id="ket" value="" placeholder="Enter new ket">
                             <label for="ket">Keterangan</label>
                         </div>
                         <div class="mb-3 form-floating">
@@ -60,3 +60,57 @@
     </div>
 </div>
 <!-- End Modal Add Edukasi -->
+
+<!-- Foreach loop to print data edus in modal -->
+<?php foreach ($data_edu as $edu) : ?>
+
+    <!-- Modal Details edu -->
+    <div class="modal fade" id="edu-<?= $edu['id_edu'] ?>" tabindex="-1" aria-labelledby="detailEdu" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailEdu">Detail Edukasi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- End Modal Header -->
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="fw-bold">
+                                    <?= $edu['judul'] ?>
+                                </h5>
+                            </div>
+                            <div class="col-12">
+                                <small class="text-muted fst-italic">
+                                    <?php
+                                    if (date('Y-m-d', strtotime($edu['selesai'])) < date('Y-m-d', strtotime('today'))) {
+                                        echo '<span class="badge rounded-pill bg-success"><i class="bi bi-check-circle me-1"></i> Success</span> | ';
+                                    }
+
+                                    foreach ($followers_edu as $fe) {
+                                        if ($edu['id_edu'] == $fe['id_edu']) {
+                                            echo '<i class="bi bi-file-person-fill"></i>' . $fe['followers'] . " mitra | ";
+                                        }
+                                    }
+                                    ?>
+                                    <i class="bi bi-clock-fill"></i> <?= $edu['selesai'] ?>
+                                    | <i class="bi bi-geo-alt-fill"></i> <?= $edu['tempat'] ?>
+                                </small>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <p class="fst-italic"> Pembicara : <b><?= $edu['pembicara'] ?></b></p>
+                                <p><?= $edu['ket'] ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Modal Body -->
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Details -->
+<?php endforeach ?>

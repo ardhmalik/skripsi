@@ -72,13 +72,14 @@ class User extends CI_Controller
 	{
 		$email_sess = $this->session->userdata('email');
 		$user = $this->db->get_where('user', ['email' => $email_sess])->row_array();
-		$users = $this->umodel->get_all_user();
 		$data = [
 			'project' => 'Bank sampah Induk Rumah Harum',
 			'title' => 'Edukasi',
-			'users' => $users,
+			'users' => $this->umodel->get_all_user(),
 			'user' => $user,
+			'mitra' => $this->umodel->get_all_mitra(),
 			'data_edu' => $this->umodel->get_data_edukasi(),
+			'followers_edu' => $this->umodel->data_followers_edu(),
 		];
 
 		$this->load->view('sections/main', $data);
