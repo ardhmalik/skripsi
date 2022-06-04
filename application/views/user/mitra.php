@@ -56,6 +56,7 @@
                                                 <?= $mtr['no_telp'] ?>
                                             </td>
                                             <td class="text-center">
+                                                <span class="d-none"><?= $mtr['status'] ?></span>
                                                 <div class="btn-group" role="group" aria-label="Aksi button">
                                                     <button type="button" class="btn btn-sm fw-bold <?= ($mtr['status'] == 1) ? 'btn-outline-danger' : 'btn-danger' ?>" <?= ($mtr['status'] == 1) ? '' : 'disabled' ?> data-bs-toggle="modal" data-bs-target="#offMtr-<?= $mtr['id_mitra'] ?>" title="Matikan akun">OFF</button>
                                                     <button type="button" class="btn btn-sm fw-bold <?= ($mtr['status'] == 0) ? 'btn-outline-primary' : 'btn-primary' ?>" <?= ($mtr['status'] == 0) ? '' : 'disabled' ?> data-bs-toggle="modal" data-bs-target="#onMtr-<?= $mtr['id_mitra'] ?>" title="Aktifkan akun">ON</button>

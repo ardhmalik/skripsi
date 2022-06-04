@@ -56,6 +56,7 @@
                                                 <?= $adm['no_telp'] ?>
                                             </td>
                                             <td class="text-center">
+                                                <span class="d-none"><?= $adm['status'] ?></span>
                                                 <div class="btn-group" role="group" aria-label="Aksi button">
                                                     <button type="button" class="btn btn-sm fw-bold <?= ($adm['status'] == 1) ? 'btn-outline-danger' : 'btn-danger' ?>" <?= ($adm['status'] == 1) ? '' : 'disabled' ?> data-bs-toggle="modal" data-bs-target="#offAdm-<?= $adm['id_user'] ?>" title="Matikan akun">OFF</button>
                                                     <button type="button" class="btn btn-sm fw-bold <?= ($adm['status'] == 0) ? 'btn-outline-primary' : 'btn-primary' ?>" <?= ($adm['status'] == 0) ? '' : 'disabled' ?> data-bs-toggle="modal" data-bs-target="#onAdm-<?= $adm['id_user'] ?>" title="Aktifkan akun">ON</button>
