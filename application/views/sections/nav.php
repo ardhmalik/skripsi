@@ -118,7 +118,7 @@ $aside_user = ['Dashboard', 'User', 'User Admin', 'User Mitra', 'Transaksi', 'Se
         </li>
         <!-- Data Pengguna -->
         <li class="nav-item">
-            <a class="nav-link <?= (preg_match("/$aside_user[1]/i", $title)) ? '' : 'collapsed' ?>" data-bs-target="#forms-nav-user" data-bs-toggle="collapse" href="#">
+            <a class="nav-link <?= ($this->uri->segment(1) == 'data_admin' || $this->uri->segment(1) == 'data_mitra') ? '' : 'collapsed' ?>" data-bs-target="#forms-nav-user" data-bs-toggle="collapse" href="#">
                 <i class="bx bxs-user-account"></i>
                 <span><?= $aside_user[1] ?></span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
