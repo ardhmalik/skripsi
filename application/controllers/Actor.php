@@ -80,6 +80,8 @@ class Actor extends CI_Controller
 		$email_sess = $this->session->userdata('email');
 		$user = $this->db->get_where('user', ['email' => $email_sess])->row_array();
 		$mitra = $this->db->get_where('mitra', ['email' => $email_sess])->row_array();
+		# Ternary operation to set foto image for user
+		($user['foto'] == null) ? $user['foto'] = 'avatar.png' : $user['foto'];
 		$data = [
 			'project' => 'Bank Sampah Induk Rumah Harum',
 			'title' => 'Data Mitra',

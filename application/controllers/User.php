@@ -72,6 +72,8 @@ class User extends CI_Controller
 	{
 		$email_sess = $this->session->userdata('email');
 		$user = $this->db->get_where('user', ['email' => $email_sess])->row_array();
+		# Ternary operation to set foto image for user
+		($user['foto'] == null) ? $user['foto'] = 'avatar.png' : $user['foto'];
 		$data = [
 			'project' => 'Bank sampah Induk Rumah Harum',
 			'title' => 'Edukasi',
