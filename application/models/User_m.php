@@ -33,6 +33,14 @@ class User_m extends CI_Model
         return $query;
     }
     
+    public function detail_edukasi($id)
+    {
+        $sql = $this->db->get_where('data_edukasi', ['id_edu'=>$id]);
+        $query = $sql->row_array();
+
+        return $query;
+    }
+    
     public function data_followers_edu()
     {
         $sql = $this->db->get('followers_edu');
@@ -44,6 +52,14 @@ class User_m extends CI_Model
     public function add_edukasi($data)
     {
         $sql = 'SELECT tambah_edukasi(?, ?, ?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
+    
+    public function update_edukasi($data)
+    {
+        $sql = 'SELECT ubah_edukasi(?, ?, ?, ?, ?, ?, ?)';
         $query = $this->db->query($sql, $data)->row_array();
 
         return $query;

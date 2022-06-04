@@ -74,16 +74,14 @@
                                                 <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#edu-<?= $edu['id_edu'] ?>" title="Detail">
                                                     <i class="bi bi-info-circle-fill"></i>
                                                 </button>
-                                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEdu" title="Edit">
+                                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEdu-<?= $edu['id_edu'] ?>" title="Edit">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>
                                                 <?php
-                                                foreach ($followers_edu as $fe) {
-                                                    if ($edu['id_edu'] == $fe['id_edu'] && $fe['followers'] < 1) {
-                                                        echo `<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delEdu" title="Hapus">
+                                                if ($edu['id_edu'] == isset($fe['id_edu'])) {
+                                                    echo `<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delEdu" title="Hapus">
                                                             <i class="bi bi-trash2-fill"></i>
                                                         </button>`;
-                                                    }
                                                 }
                                                 ?>
                                             </td>

@@ -76,6 +76,7 @@ class User extends CI_Controller
 			'project' => 'Bank sampah Induk Rumah Harum',
 			'title' => 'Edukasi',
 			'users' => $this->umodel->get_all_user(),
+			'mitra' => $this->umodel->get_all_mitra(),
 			'user' => $user,
 			'mitra' => $this->umodel->get_all_mitra(),
 			'data_edu' => $this->umodel->get_data_edukasi(),
@@ -114,6 +115,55 @@ class User extends CI_Controller
 			'message',
 			'<div class="alert alert-success alert-dismissible fade show" role="alert">
 				Berhasil menambahkan data edukasi
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+
+		redirect('data_edukasi');
+	}
+
+	public function edit_edukasi()
+	{
+		$_mulai = $this->input->post('mulai');
+		$_selesai = $this->input->post('selesai');
+		if ($_mulai != "" && $_selesai != "") {
+			$dates = [
+				'tgl_mulai' => date('Y-m-d ', strtotime($_mulai)),
+				'tgl_selesai' => date('Y-m-d ', strtotime($_selesai)),
+				'wkt_mulai' => date('H:i:s', strtotime($_mulai)),
+				'wkt_selesai' => date('H:i:s', strtotime($_selesai))
+			];
+		} else {
+			$data_edu = $this->umodel->detail_edukasi($this->input->post('id_edu'));
+			// var_dump($data_edu);
+			// die;
+			$dates = [
+				'tgl_mulai' => date('Y-m-d ', strtotime($data_edu['mulai'])),
+				'tgl_selesai' => date('Y-m-d ', strtotime($data_edu['selesai'])),
+				'wkt_mulai' => date('H:i:s', strtotime($data_edu['mulai'])),
+				'wkt_selesai' => date('H:i:s', strtotime($data_edu['selesai']))
+			];
+		}
+		$input = [
+			'id_edu' => $this->input->post('id_edu'),
+			'judul' => $this->input->post('judul'),
+			'tempat' => $this->input->post('tempat'),
+			'mulai' => $dates['tgl_mulai'] . $dates['wkt_mulai'],
+			'selesai' => $dates['tgl_selesai'] . $dates['wkt_selesai'],
+			'ket' => $this->input->post('ket'),
+			'id_user' => $this->input->post('pembicara')
+		];
+
+		// var_dump($input);
+		// die;
+
+		# Passing $input as a parameter of createUser() function to execute adding data to database
+		$this->umodel->update_edukasi($input);
+		# Add an alert message to session if createUser() process is successful
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil memperbarui data edukasi
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>'
 		);
