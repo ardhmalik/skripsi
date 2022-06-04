@@ -95,8 +95,8 @@ $route['edit_tipe'] = 'actor/edit_tipe';
 $route['add_jenis'] = 'user/add_jenis';
 $route['edit_jenis'] = 'user/edit_jenis';
 // admin
-$route['del_admin'] = 'actor/del_admin';
-$route['active_admin'] = 'actor/active_admin';
+$route['on_admin'] = 'actor/on_admin';
+$route['off_admin'] = 'actor/off_admin';
 // mitra
 $route['del_mitra'] = 'actor/del_mitra';
 $route['active_mitra'] = 'actor/active_mitra';

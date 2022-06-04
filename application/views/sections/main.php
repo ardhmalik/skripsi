@@ -27,12 +27,16 @@ elseif ($this->session->userdata('role')) {
         case 'dashboard_user':
             $this->load->view('user/dashboard');
             break;
+        case 'data_admin':
+            $this->load->view('user/admin');
+            $this->load->view('sections/modal_user');
+            break;
         case 'profil_user':
             $this->load->view('user/profil');
             break;
         case 'data_edukasi':
             $this->load->view('user/edukasi');
-            $this->load->view('sections/modal_user');
+            $this->load->view('sections/modal_edukasi');
             break;
         default:
             $this->load->view('user/dashboard');
