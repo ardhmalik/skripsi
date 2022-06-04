@@ -17,6 +17,14 @@ class Actor_m extends CI_Model
         return $query;
     }
     
+    public function get_data_mitra()
+    {
+        $sql = $this->db->get('data_mitra');
+        $query = $sql->result_array();
+
+        return $query;
+    }
+    
     public function active_admin($id)
     {
         $sql = 'SELECT aktifkan_admin(?)';
@@ -28,6 +36,22 @@ class Actor_m extends CI_Model
     public function inactive_admin($id)
     {
         $sql = 'SELECT hapus_admin(?)';
+        $query = $this->db->query($sql, $id)->row_array();
+
+        return $query;
+    }
+    
+    public function active_mitra($id)
+    {
+        $sql = 'SELECT aktifkan_mitra(?)';
+        $query = $this->db->query($sql, $id)->row_array();
+
+        return $query;
+    }
+
+    public function inactive_mitra($id)
+    {
+        $sql = 'SELECT hapus_mitra(?)';
         $query = $this->db->query($sql, $id)->row_array();
 
         return $query;

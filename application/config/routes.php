@@ -98,8 +98,8 @@ $route['edit_jenis'] = 'user/edit_jenis';
 $route['on_admin'] = 'actor/on_admin';
 $route['off_admin'] = 'actor/off_admin';
 // mitra
-$route['del_mitra'] = 'actor/del_mitra';
-$route['active_mitra'] = 'actor/active_mitra';
+$route['on_mitra'] = 'actor/on_mitra';
+$route['off_mitra'] = 'actor/off_mitra';
 // sampah
 $route['add_sampah'] = 'user/add_sampah';
 $route['edit_sampah'] = 'user/edit_sampah';

@@ -31,6 +31,10 @@ elseif ($this->session->userdata('role')) {
             $this->load->view('user/admin');
             $this->load->view('sections/modal_user');
             break;
+        case 'data_mitra':
+            $this->load->view('user/mitra');
+            $this->load->view('sections/modal_mitra');
+            break;
         case 'profil_user':
             $this->load->view('user/profil');
             break;
