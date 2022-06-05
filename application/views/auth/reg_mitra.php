@@ -38,12 +38,12 @@
                             <?= form_error('password', '<span class="text-danger">', '</span>') ?>
                         </div>
                         <div class="form-floating mb-4">
-                            <textarea class="form-control" placeholder="Address" id="alamat" name="alamat" style="height: 100px;" required></textarea>
+                            <textarea class="form-control" placeholder="Jl.Nama jalan no.x RT/RW" id="alamat" name="alamat" style="height: 100px;" required><?= set_value('alamat') ?></textarea>
                             <label for="alamat">Alamat lengkap</label>
                             <?= form_error('alamat', '<span class="text-danger">', '</span>') ?>
                         </div>
                         <div class="form-floating mb-4">
-                            <input type="text" class="form-control" id="no_telp" name="no_telp" placeholder="Must include string and numbers" required>
+                            <input type="text" class="form-control" id="no_telp" name="no_telp" value="<?= set_value('no_telp') ?>" placeholder="Must include string and numbers" required>
                             <label for="no_telp">Nomor HP</label>
                             <?= form_error('no_telp', '<span class="text-danger">', '</span>') ?>
                         </div>

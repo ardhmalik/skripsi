@@ -333,8 +333,8 @@ class Auth extends CI_Controller
 				'id_tipe' => $this->input->post('id_tipe')
 			];
 
-			var_dump($input);
-			die;
+			// var_dump($input);
+			// die;
 
 			# Passing $input as a parameter of createUser() function to execute adding data to database
 			$amodel->create_mitra($input);
