@@ -136,4 +136,90 @@ class Actor extends CI_Controller
 
 		redirect('data_mitra');
 	}
+
+
+	public function data_pembeli()
+	{
+		$email_sess = $this->session->userdata('email');
+		$user = $this->db->get_where('user', ['email' => $email_sess])->row_array();
+		# Ternary operation to set foto image for user
+		(is_null($user['foto'])) ? $user['foto'] = 'avatar.png' : $user['foto'];
+		$data = [
+			'project' => 'Bank Sampah Induk Rumah Harum',
+			'title' => 'Data Pembeli',
+			'user' => $user,
+			'data_pembeli' => $this->acmodel->get_data_pembeli(),
+		];
+
+		$this->load->view('sections/main', $data);
+	}
+
+	public function add_pembeli()
+	{
+		$this->form_validation->set_rules($this->acmodel->pembeli_rules());
+		$input = [
+			'nama' => $this->input->post('nama'),
+			'no_telp' => $this->input->post('no_telp'),
+			'alamat' => $this->input->post('alamat')
+		];
+
+		// var_dump($input);
+		// die;
+		
+		if ($this->form_validation->run() == TRUE) {
+			$this->acmodel->add_pembeli($input);
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Berhasil menambahkan pembeli <span class="badge bg-success">' . $input['nama'] . '</span>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		} else {
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">'
+					. form_error('nama') . form_error('no_telp') .
+					'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		}
+		
+		redirect('data_pembeli');
+	}
+	
+	public function edit_pembeli()
+	{
+		$this->form_validation->set_rules($this->acmodel->pembeli_rules());
+		$input = [
+			'id_pembeli' => $this->input->post('id_pembeli'),
+			'nama' => $this->input->post('nama'),
+			'no_telp' => $this->input->post('no_telp'),
+			'alamat' => $this->input->post('alamat')
+		];
+	
+		// var_dump($input);
+		// die;
+
+		if ($this->form_validation->run() == TRUE) {
+			$this->acmodel->update_pembeli($input);
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Berhasil memperbarui pembeli <span class="badge bg-success">' . $input['nama'] . '</span>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		} else {
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">'
+					. form_error('nama') . form_error('no_telp') .
+					'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		}
+
+		redirect('data_pembeli');
+	}
 }

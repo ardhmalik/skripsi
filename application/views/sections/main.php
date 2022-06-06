@@ -38,6 +38,10 @@ elseif ($this->session->userdata('role')) {
             $this->load->view('user/mitra');
             $this->load->view('sections/modal_mitra');
             break;
+        case 'data_pembeli':
+            $this->load->view('user/pembeli');
+            $this->load->view('sections/modal_pembeli');
+            break;
         case 'data_sampah':
             $this->load->view('user/sampah');
             $this->load->view('sections/modal_sampah');
