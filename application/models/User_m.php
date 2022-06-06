@@ -88,4 +88,12 @@ class User_m extends CI_Model
 
         return $query;
     }
+    
+    public function update_sampah($data)
+    {
+        $sql = 'SELECT ubah_sampah(?, ?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
 }
