@@ -57,46 +57,41 @@ $sess = [
 <!-- End Header -->
 
 <!-- ======= Sidebar ======= -->
-<?php
-$aside_mitra = ['Dashboard Mitra', 'Edukasi', 'Setoran', 'Rekening', 'Struktur', 'Profil'];
-$aside_user = ['Dashboard', 'User', 'User Admin', 'User Mitra', 'Transaksi', 'Setoran', 'Penjemputan', 'Pembayaran', 'Penjualan', 'Pembeli', 'Sampah', 'Edukasi', 'Profil'];
-// $title = 'Da';
-?>
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav <?= (($sess['tipe']) ? '' : 'd-none') ?>" id="sidebar-nav">
         <!-- Dashboard -->
         <li class="nav-item">
-            <a class="nav-link <?= ($title === $aside_mitra[0]) ? '' : 'collapsed' ?>" href="<?= site_url('dashboard') ?>">
+            <a class="nav-link <?= ($this->uri->segment(1) == 'dashboard') ? '' : 'collapsed' ?>" href="<?= site_url('dashboard') ?>">
                 <i class="bi bi-house-fill"></i>
-                <span><?= $aside_mitra[0] ?></span>
+                <span>Dashboard</span>
             </a>
         </li>
         <!-- Edukasi -->
         <li class="nav-item">
-            <a class="nav-link <?= ($title === $aside_mitra[1]) ? '' : 'collapsed' ?>" href="<?= site_url('edukasi') ?>">
+            <a class="nav-link <?= ($this->uri->segment(1) == 'edukasi') ? '' : 'collapsed' ?>" href="<?= site_url('edukasi') ?>">
                 <i class="bi bi-journal-bookmark-fill"></i>
-                <span><?= $aside_mitra[1] ?></span>
+                <span>Edukasi</span>
             </a>
         </li>
         <!-- Setoran -->
         <li class="nav-item">
-            <a class="nav-link <?= ($title === $aside_mitra[2]) ? '' : 'collapsed' ?>" href="<?= site_url('setoran') ?>">
+            <a class="nav-link <?= ($this->uri->segment(1) == 'setoran') ? '' : 'collapsed' ?>" href="<?= site_url('setoran') ?>">
                 <i class="bi bi-file-earmark-arrow-up"></i>
-                <span><?= $aside_mitra[2] ?></span>
+                <span>Setoran</span>
             </a>
         </li>
         <!-- Rekening -->
         <li class="nav-item">
-            <a class="nav-link <?= ($title === $aside_mitra[3]) ? '' : 'collapsed' ?>" href="<?= site_url('rekening') ?>">
+            <a class="nav-link <?= ($this->uri->segment(1) == 'rekening') ? '' : 'collapsed' ?>" href="<?= site_url('rekening') ?>">
                 <i class="bi bi-credit-card"></i>
-                <span><?= $aside_mitra[3] ?></span>
+                <span>Rekening</span>
             </a>
         </li>
         <!-- Profil -->
         <li class="nav-item">
-            <a class="nav-link <?= ($title === $aside_mitra[5]) ? '' : 'collapsed' ?>" href="<?= site_url('profil_mitra') ?>">
+            <a class="nav-link <?= ($this->uri->segment(1) == 'profil_mitra') ? '' : 'collapsed' ?>" href="<?= site_url('profil_mitra') ?>">
                 <i class="bi bi-person-circle"></i>
-                <span><?= $aside_mitra[5] ?></span>
+                <span>Profil</span>
             </a>
         </li>
         <!-- Logout -->
@@ -113,28 +108,28 @@ $aside_user = ['Dashboard', 'User', 'User Admin', 'User Mitra', 'Transaksi', 'Se
         <li class="nav-item">
             <a class="nav-link <?= ($this->uri->segment(1) == 'dashboard_user') ? '' : 'collapsed' ?>" href="<?= site_url('dashboard_user') ?>">
                 <i class="bi bi-house-fill"></i>
-                <span><?= $aside_user[0] ?></span>
+                <span>Dashboard</span>
             </a>
         </li>
         <!-- Data Pengguna -->
         <li class="nav-item">
             <a class="nav-link <?= ($this->uri->segment(1) == 'data_admin' || $this->uri->segment(1) == 'data_mitra') ? '' : 'collapsed' ?>" data-bs-target="#forms-nav-user" data-bs-toggle="collapse" href="#">
                 <i class="bx bxs-user-account"></i>
-                <span><?= $aside_user[1] ?></span><i class="bi bi-chevron-down ms-auto"></i>
+                <span>Data Pengguna</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="forms-nav-user" class="nav-content collapse <?= ($this->uri->segment(1) == 'data_admin' || $this->uri->segment(1) == 'data_mitra') ? 'show' : '' ?>" data-bs-parent="#sidebar-nav">
                 <?php if ($sess['role'] === 'Ketua') : ?>
                     <li>
                         <a href="<?= site_url('data_admin') ?>" class="<?= ($this->uri->segment(1) == 'data_admin') ? 'active' : '' ?>">
                             <i class="bi bi-circle"></i>
-                            <span><?= $aside_user[2] ?></span>
+                            <span>Admin</span>
                         </a>
                     </li>
                 <?php endif ?>
                 <li>
                     <a href="<?= site_url('data_mitra') ?>" class="<?= ($this->uri->segment(1) == 'data_mitra') ? 'active' : '' ?>">
                         <i class="bi bi-circle"></i>
-                        <span><?= $aside_user[3] ?></span>
+                        <span>Mitra</span>
                     </a>
                 </li>
             </ul>
@@ -143,43 +138,43 @@ $aside_user = ['Dashboard', 'User', 'User Admin', 'User Mitra', 'Transaksi', 'Se
         <li class="nav-item">
             <a class="nav-link <?= ($this->uri->segment(1) == 'data_setoran' || $this->uri->segment(1) == 'data_penjemputan' || $this->uri->segment(1) == 'data_pembayaran' || $this->uri->segment(1) == 'data_penjualan' || $this->uri->segment(1) == 'data_pembeli' || $this->uri->segment(1) == 'data_sampah') ? '' : 'collapsed' ?>" data-bs-target="#forms-nav-trans" data-bs-toggle="collapse" href="#">
                 <i class="bx bxs-user-account"></i>
-                <span><?= $aside_user[4] ?></span><i class="bi bi-chevron-down ms-auto"></i>
+                <span>Transaksi</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="forms-nav-trans" class="nav-content collapse <?= ($this->uri->segment(1) == 'data_setoran' || $this->uri->segment(1) == 'data_penjemputan' || $this->uri->segment(1) == 'data_pembayaran' || $this->uri->segment(1) == 'data_penjualan' || $this->uri->segment(1) == 'data_pembeli' || $this->uri->segment(1) == 'data_sampah') ? 'show' : '' ?>" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="<?= site_url('data_setoran') ?>" class="<?= ($this->uri->segment(1) == 'data_setoran') ? 'active' : '' ?>">
                         <i class="bi bi-circle"></i>
-                        <span><?= $aside_user[5] ?></span>
+                        <span>Setoran</span>
                     </a>
                 </li>
                 <li>
                     <a href="<?= site_url('data_penjemputan') ?>" class="<?= ($this->uri->segment(1) == 'data_penjemputan') ? 'active' : '' ?>">
                         <i class="bi bi-circle"></i>
-                        <span><?= $aside_user[6] ?></span>
+                        <span>Penjemputan</span>
                     </a>
                 </li>
                 <li>
                     <a href="<?= site_url('data_pembayaran') ?>" class="<?= ($this->uri->segment(1) == 'data_pembayaran') ? 'active' : '' ?>">
                         <i class="bi bi-circle"></i>
-                        <span><?= $aside_user[7] ?></span>
+                        <span>Pembayaran</span>
                     </a>
                 </li>
                 <li>
                     <a href="<?= site_url('data_penjualan') ?>" class="<?= ($this->uri->segment(1) == 'data_pembayaran') ? 'active' : '' ?>">
                         <i class="bi bi-circle"></i>
-                        <span><?= $aside_user[8] ?></span>
+                        <span>Pembayaran</span>
                     </a>
                 </li>
                 <li>
                     <a href="<?= site_url('data_pembeli') ?>" class="<?= ($this->uri->segment(1) == 'data_pembeli') ? 'active' : '' ?>">
                         <i class="bi bi-circle"></i>
-                        <span><?= $aside_user[9] ?></span>
+                        <span>Pembeli</span>
                     </a>
                 </li>
                 <li>
                     <a href="<?= site_url('data_sampah') ?>" class="<?= ($this->uri->segment(1) == 'data_sampah') ? 'active' : '' ?>">
                         <i class="bi bi-circle"></i>
-                        <span><?= $aside_user[10] ?></span>
+                        <span>Sampah</span>
                     </a>
                 </li>
             </ul>
@@ -188,14 +183,14 @@ $aside_user = ['Dashboard', 'User', 'User Admin', 'User Mitra', 'Transaksi', 'Se
         <li class="nav-item">
             <a class="nav-link <?= ($this->uri->segment(1) == 'data_edukasi') ? '' : 'collapsed' ?>" href="<?= site_url('data_edukasi') ?>">
                 <i class="bi bi-journal-bookmark-fill"></i>
-                <span><?= $aside_user[11] ?></span>
+                <span>Edukasi</span>
             </a>
         </li>
         <!-- Profil -->
         <li class="nav-item">
             <a class="nav-link <?= ($this->uri->segment(1) == 'profil_user') ? '' : 'collapsed' ?>" href="<?= site_url('profil_user') ?>">
                 <i class="bi bi-person-circle"></i>
-                <span><?= $aside_user[12] ?></span>
+                <span>Profil</span>
             </a>
         </li>
         <!-- Logout -->
