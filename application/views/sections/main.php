@@ -4,8 +4,7 @@ $this->load->view('sections/header');
 $this->load->view('sections/nav');
 
 # Mitra
-if ($this->session->userdata('tipe'))
-{
+if ($this->session->userdata('tipe')) {
     switch ($this->uri->segment(1)) {
         case 'dashboard':
             $this->load->view('mitra/dashboard');
@@ -39,12 +38,16 @@ elseif ($this->session->userdata('role')) {
             $this->load->view('user/mitra');
             $this->load->view('sections/modal_mitra');
             break;
-        case 'profil_user':
-            $this->load->view('user/profil');
+        case 'data_sampah':
+            $this->load->view('user/sampah');
+            $this->load->view('sections/modal_sampah');
             break;
         case 'data_edukasi':
             $this->load->view('user/edukasi');
             $this->load->view('sections/modal_edukasi');
+            break;
+        case 'profil_user':
+            $this->load->view('user/profil');
             break;
         default:
             $this->load->view('user/dashboard');

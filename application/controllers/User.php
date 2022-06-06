@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class User extends CI_Controller
 {
@@ -87,7 +87,7 @@ class User extends CI_Controller
 
 		$this->load->view('sections/main', $data);
 	}
-	
+
 	public function add_edukasi()
 	{
 		$_mulai = $this->input->post('mulai');
@@ -165,11 +165,130 @@ class User extends CI_Controller
 		$this->session->set_flashdata(
 			'message',
 			'<div class="alert alert-success alert-dismissible fade show" role="alert">
-				Berhasil memperbarui data edukasi
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			Berhasil memperbarui data edukasi
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>'
 		);
 
 		redirect('data_edukasi');
+	}
+
+	public function data_sampah()
+	{
+		$email_sess = $this->session->userdata('email');
+		$user = $this->db->get_where('user', ['email' => $email_sess])->row_array();
+		# Ternary operation to set foto image for user
+		(is_null($user['foto'])) ? $user['foto'] = 'avatar.png' : $user['foto'];
+		$data = [
+			'project' => 'Bank sampah Induk Rumah Harum',
+			'title' => 'Data Sampah',
+			'user' => $user,
+			'data_jenis' => $this->umodel->get_jenis_sampah(),
+			'data_sampah' => $this->umodel->get_data_sampah(),
+		];
+
+		$this->load->view('sections/main', $data);
+	}
+
+	public function add_sampah()
+	{
+		$file_name = str_replace(' ', '_', $this->input->post('nama'));
+		/**
+		 * $config variable to store settings of upload library
+		 * upload_path		=> Location to save file
+		 * allowed_types	=> Uploadable file extension
+		 * file_name		=> Saved upload file naming
+		 * overwrite		=> Allow to overwrite the same file name
+		 * max_size			=> Maximal file size on KB
+		 * max_width		=> Maximal width of file on px
+		 * max_height		=> Maximal height of file on px
+		 */
+		$config = [
+			'upload_path' => FCPATH . 'assets/img/sampah/',
+			'allowed_types' => 'gif|jpg|jpeg|png',
+			'file_name' => $file_name,
+			'overwrite' => true,
+			'max_size' => 1024,
+			'max_width' => 1000,
+			'max_height' => 1000
+		];
+
+		# Initialize upload library
+		$this->load->library('upload', $config);
+
+		// var_dump($_FILES);
+		// die;
+
+		if (!is_numeric($this->input->post('harga'))) {
+			# Add an alert message to session if createUser() process is successful
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Masukkan harga sampah berupa angka!
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		}
+
+		# IF statement to check field name on foto arrays
+		if (!empty($_FILES['gambar']['name'])) {
+			# IF failed to upload gambar
+			if (!$this->upload->do_upload('gambar')) {
+				# $error variable to store value of error message from upload library
+				$error = $this->upload->display_errors();
+				# Send error message with session flashdata
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">'
+						. $error .
+						'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>'
+				);
+			} else {
+				# $uploaded_data variable to store process upload data
+				$uploaded_data = $this->upload->data();
+				$input = [
+					'nama' => $this->input->post('nama'),
+					'harga' => $this->input->post('harga'),
+					'gambar' => $uploaded_data['file_name'],
+					'id_jenis' => $this->input->post('id_jenis')
+				];
+
+				// var_dump($input);
+				// die;
+
+				# Passing $input as a parameter of createUser() function to execute adding data to database
+				$this->umodel->add_sampah($input);
+				# Add an alert message to session if createUser() process is successful
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-success alert-dismissible fade show" role="alert">
+						Berhasil menambahkan <span class="badge bg-success">' . $input['nama'] . '</span> ke data sampah!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>'
+				);
+			}
+		} else {
+			$input = [
+				'nama' => $this->input->post('nama'),
+				'harga' => $this->input->post('harga'),
+				'gambar' => null,
+				'id_jenis' => $this->input->post('id_jenis')
+			];
+			// var_dump($input);
+			// die;
+			# Passing $input as a parameter of createUser() function to execute adding data to database
+			$this->umodel->add_sampah($input);
+			# Add an alert message to session if createUser() process is successful
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-success alert-dismissible fade show" role="alert">
+						Berhasil menambahkan <span class="badge bg-success">' . $input['nama'] . '</span> ke data sampah!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+			);
+		}
+
+		redirect('data_sampah');
 	}
 }

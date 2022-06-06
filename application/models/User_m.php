@@ -16,7 +16,7 @@ class User_m extends CI_Model
 
         return $query;
     }
-    
+
     public function get_all_mitra()
     {
         $sql = $this->db->get('data_mitra');
@@ -32,15 +32,31 @@ class User_m extends CI_Model
 
         return $query;
     }
-    
+
+    public function get_data_sampah()
+    {
+        $sql = $this->db->get('data_sampah');
+        $query = $sql->result_array();
+
+        return $query;
+    }
+
+    public function get_jenis_sampah()
+    {
+        $sql = $this->db->get('jenis');
+        $query = $sql->result_array();
+
+        return $query;
+    }
+
     public function detail_edukasi($id)
     {
-        $sql = $this->db->get_where('data_edukasi', ['id_edu'=>$id]);
+        $sql = $this->db->get_where('data_edukasi', ['id_edu' => $id]);
         $query = $sql->row_array();
 
         return $query;
     }
-    
+
     public function data_followers_edu()
     {
         $sql = $this->db->get('followers_edu');
@@ -56,10 +72,18 @@ class User_m extends CI_Model
 
         return $query;
     }
-    
+
     public function update_edukasi($data)
     {
         $sql = 'SELECT ubah_edukasi(?, ?, ?, ?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
+
+    public function add_sampah($data)
+    {
+        $sql = 'SELECT tambah_sampah(?, ?, ?, ?)';
         $query = $this->db->query($sql, $data)->row_array();
 
         return $query;
