@@ -305,8 +305,8 @@ class User extends CI_Controller
 
 	public function edit_sampah()
 	{
-		$sampah = $this->db->get_where('sampah', ['id_sampah'=>$this->input->post('id_sampah')])->row_array();
-		
+		$sampah = $this->db->get_where('sampah', ['id_sampah' => $this->input->post('id_sampah')])->row_array();
+
 		$file_name = $this->input->post('id_sampah');
 		/**
 		 * $config variable to store settings of upload library
@@ -327,13 +327,13 @@ class User extends CI_Controller
 			'max_width' => 1000,
 			'max_height' => 1000
 		];
-		
+
 		# Initialize upload library
 		$this->load->library('upload', $config);
-		
+
 		// var_dump($_FILES);
 		// die;
-		
+
 		if (!is_numeric($this->input->post('harga'))) {
 			# Add an alert message to session if createUser() process is successful
 			$this->session->set_flashdata(
@@ -354,15 +354,15 @@ class User extends CI_Controller
 					$this->session->set_flashdata(
 						'message',
 						'<div class="alert alert-danger alert-dismissible fade show" role="alert">'
-						. $error .
-						'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							. $error .
+							'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 						</div>'
 					);
 				} else {
 					if (!is_null($sampah['gambar'])) {
 						$this->_del_avatar($sampah['gambar']);
 					}
-					
+
 					# $uploaded_data variable to store process upload data
 					$uploaded_data = $this->upload->data();
 					$input = [
@@ -372,10 +372,10 @@ class User extends CI_Controller
 						'gambar' => $uploaded_data['file_name'],
 						'id_jenis' => $this->input->post('id_jenis')
 					];
-					
+
 					// var_dump($sampah);
 					// die;
-	
+
 					# Passing $input as a parameter of createUser() function to execute adding data to database
 					$this->umodel->update_sampah($input);
 					# Add an alert message to session if createUser() process is successful
@@ -409,6 +409,49 @@ class User extends CI_Controller
 				);
 			}
 		}
+
+		redirect('data_sampah');
+	}
+
+	public function add_jenis()
+	{
+		$input = [
+			'jenis_sampah' => $this->input->post('jenis_sampah')
+		];
+
+		// var_dump($input);
+		// die;
+
+		$this->umodel->add_jenis($input);
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil menambahkan jenis sampah <span class="badge bg-success">' . $input['jenis_sampah'] . '</span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+
+		redirect('data_sampah');
+	}
+	
+	public function edit_jenis()
+	{
+		$input = [
+			'id_jenis' => $this->input->post('id_jenis'),
+			'jenis_sampah' => $this->input->post('jenis_sampah')
+		];
+
+		// var_dump($input);
+		// die;
+
+		$this->umodel->update_jenis($input);
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil memperbarui jenis sampah <span class="badge bg-success">' . $input['jenis_sampah'] . '</span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
 
 		redirect('data_sampah');
 	}

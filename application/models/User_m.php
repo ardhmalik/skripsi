@@ -93,6 +93,22 @@ class User_m extends CI_Model
     {
         $sql = 'SELECT ubah_sampah(?, ?, ?, ?, ?)';
         $query = $this->db->query($sql, $data)->row_array();
+        
+        return $query;
+    }
+    
+    public function add_jenis($data)
+    {
+        $sql = 'SELECT tambah_jenis(?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
+    
+    public function update_jenis($data)
+    {
+        $sql = 'SELECT ubah_jenis(?, ?)';
+        $query = $this->db->query($sql, $data)->row_array();
 
         return $query;
     }
