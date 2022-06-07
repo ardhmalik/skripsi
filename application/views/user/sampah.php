@@ -77,6 +77,11 @@
                                                                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editSampah-<?= $sampah['id_sampah'] ?>" title="Edit">
                                                                     <i class="bi bi-pencil-square"></i>
                                                                 </button>
+                                                                <?php if (is_null($sampah['used_setor']) && is_null($sampah['used_jual'])) : ?>
+                                                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delSampah-<?= $sampah['id_sampah'] ?>" title="Hapus">
+                                                                        <i class="bi bi-trash2-fill"></i>
+                                                                    </button>
+                                                                <?php endif ?>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach ?>

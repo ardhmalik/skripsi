@@ -35,8 +35,8 @@ class User_m extends CI_Model
     
     public function get_data_sampah()
     {
-        $sql = $this->db->get('data_sampah');
-        $query = $sql->result_array();
+        $sql = 'SELECT data_sampah.*, used_sampah_setor.used_setor, used_sampah_jual.used_jual FROM data_sampah LEFT JOIN used_sampah_setor ON data_sampah.id_sampah=used_sampah_setor.id_sampah LEFT JOIN used_sampah_jual ON data_sampah.id_sampah=used_sampah_jual.id_sampah';
+        $query = $this->db->query($sql)->result_array();
         
         return $query;
     }
@@ -124,6 +124,14 @@ class User_m extends CI_Model
     public function del_jenis($data)
     {
         $sql = 'SELECT hapus_jenis(?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
+    
+    public function del_sampah($data)
+    {
+        $sql = 'SELECT hapus_sampah(?)';
         $query = $this->db->query($sql, $data)->row_array();
 
         return $query;
