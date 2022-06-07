@@ -27,8 +27,8 @@ class User_m extends CI_Model
 
     public function get_data_edukasi()
     {
-        $sql = $this->db->get('data_edukasi');
-        $query = $sql->result_array();
+        $sql = 'SELECT data_edukasi.*, used_edu.used_mitra FROM data_edukasi LEFT JOIN used_edu ON data_edukasi.id_edu=used_edu.id_edu';
+        $query = $this->db->query($sql)->result_array();
 
         return $query;
     }
@@ -57,9 +57,9 @@ class User_m extends CI_Model
         return $query;
     }
 
-    public function data_followers_edu()
+    public function data_used_edu()
     {
-        $sql = $this->db->get('followers_edu');
+        $sql = $this->db->get('used_edu');
         $query = $sql->result_array();
 
         return $query;
@@ -76,6 +76,14 @@ class User_m extends CI_Model
     public function update_edukasi($data)
     {
         $sql = 'SELECT ubah_edukasi(?, ?, ?, ?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
+
+    public function del_edukasi($data)
+    {
+        $sql = 'SELECT hapus_edukasi(?)';
         $query = $this->db->query($sql, $data)->row_array();
 
         return $query;

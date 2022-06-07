@@ -93,8 +93,10 @@ class User extends CI_Controller
 			'user' => $user,
 			'mitra' => $this->umodel->get_all_mitra(),
 			'data_edu' => $this->umodel->get_data_edukasi(),
-			'followers_edu' => $this->umodel->data_followers_edu(),
 		];
+
+		// var_dump($data['data_edu']);
+		// die;
 
 		$this->load->view('sections/main', $data);
 	}
@@ -133,6 +135,28 @@ class User extends CI_Controller
 		);
 
 		redirect('data_edukasi');
+	}
+	
+	public function del_edukasi()
+	{
+		$input = [
+			'id_edu' => $this->input->post('id_edu')
+		];
+
+		// var_dump($input);
+		// die;
+		
+		$this->umodel->del_edukasi($input);
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil menghapus edukasi <span class="badge bg-danger">'. $this->input->post('judul') .'</span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+	
+		redirect('data_edukasi');
+
 	}
 
 	public function edit_edukasi()

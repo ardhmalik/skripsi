@@ -248,7 +248,6 @@ class Mitra extends CI_Controller
 			'title' => 'Edukasi',
 			'mitra' => $mitra,
 			'data_edu' => $this->umodel->get_data_edukasi(),
-			'followers_edu' => $this->umodel->data_followers_edu(),
 		];
 
 		$this->load->view('sections/main', $data);

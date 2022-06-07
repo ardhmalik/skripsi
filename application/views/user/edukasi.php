@@ -78,12 +78,11 @@
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>
                                                 <?php
-                                                if ($edu['id_edu'] == isset($fe['id_edu'])) {
-                                                    echo `<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delEdu" title="Hapus">
-                                                            <i class="bi bi-trash2-fill"></i>
-                                                        </button>`;
-                                                }
-                                                ?>
+                                                if (is_null($edu['used_mitra'])) : ?>
+                                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delEdu-<?= $edu['id_edu'] ?>" title="Hapus">
+                                                        <i class="bi bi-trash2-fill"></i>
+                                                    </button>
+                                                <?php endif ?>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>

@@ -23,13 +23,9 @@
                             </div>
                             <div class="col-12">
                                 <small class="text-muted fst-italic">
-                                    <?php
-                                    foreach ($followers_edu as $fe) {
-                                        if ($edu['id_edu'] == $fe['id_edu']) {
-                                            echo '<i class="bi bi-file-person-fill"></i>' . $fe['followers'] . " mitra | ";
-                                        }
-                                    }
-                                    ?>
+                                    <?php if (!is_null($edu['used_mitra'])) : ?>
+                                        <i class="bi bi-file-person-fill"></i><?= $edu['used_mitra'] ?> mitra |
+                                    <?php endif ?>
                                     <i class="bi bi-clock-fill"></i> <?= $edu['selesai'] ?>
                                     | <i class="bi bi-geo-alt-fill"></i> <?= $edu['tempat'] ?>
                                 </small>
@@ -87,13 +83,9 @@
                                         </div>
                                         <div class="col-12">
                                             <small class="text-muted fst-italic">
-                                                <?php
-                                                foreach ($followers_edu as $fe) {
-                                                    if ($edu['id_edu'] == $fe['id_edu']) {
-                                                        echo '<i class="bi bi-file-person-fill"></i>' . $fe['followers'] . " mitra | ";
-                                                    }
-                                                }
-                                                ?>
+                                                <?php if (!is_null($edu['used_mitra'])) : ?>
+                                                    <i class="bi bi-file-person-fill"></i><?= $edu['used_mitra'] ?> mitra |
+                                                <?php endif ?>
                                                 <i class="bi bi-clock-fill"></i> <?= $edu['selesai'] ?>
                                                 | <i class="bi bi-geo-alt-fill"></i> <?= $edu['tempat'] ?>
                                             </small>
@@ -114,7 +106,7 @@
                                     <button type="button" class="btn fw-bold btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                                 </div>
                                 <div class="ms-auto p-2 bd-highlight">
-                                    <input type="submit" class="btn fw-bold btn-primary fw-bold" value="Ya, batalkan">
+                                    <input type="submit" class="btn fw-bold btn-danger fw-bold" value="Ya, batalkan">
                                 </div>
                             </div>
                         </form>
