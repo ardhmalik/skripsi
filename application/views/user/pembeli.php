@@ -58,6 +58,11 @@
                                                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editPembeli-<?= $pmb['id_pembeli'] ?>" title="Edit">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>
+                                                <?php if (is_null($pmb['used_jual'])) : ?>
+                                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delPembeli-<?= $pmb['id_pembeli'] ?>" title="Hapus">
+                                                        <i class="bi bi-trash2-fill"></i>
+                                                    </button>
+                                                <?php endif ?>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>

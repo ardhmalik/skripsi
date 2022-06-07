@@ -222,4 +222,26 @@ class Actor extends CI_Controller
 
 		redirect('data_pembeli');
 	}
+
+	public function del_pembeli()
+	{
+		$input = [
+			'id_pembeli' => $this->input->post('id_pembeli')
+		];
+
+		// var_dump($input);
+		// die;
+		
+		$this->acmodel->del_pembeli($input);
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil menghapus pembeli <span class="badge bg-danger">'. $this->input->post('nama') .'</span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+	
+		redirect('data_pembeli');
+
+	}
 }
