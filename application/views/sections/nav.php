@@ -160,9 +160,9 @@ $sess = [
                     </a>
                 </li>
                 <li>
-                    <a href="<?= site_url('data_penjualan') ?>" class="<?= ($this->uri->segment(1) == 'data_pembayaran') ? 'active' : '' ?>">
+                    <a href="<?= site_url('data_penjualan') ?>" class="<?= ($this->uri->segment(1) == 'data_penjualan') ? 'active' : '' ?>">
                         <i class="bi bi-circle"></i>
-                        <span>Pembayaran</span>
+                        <span>Penjualan</span>
                     </a>
                 </li>
                 <li>
