@@ -125,6 +125,11 @@
                                                                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editJenis-<?= $jns['id_jenis'] ?>" title="Edit">
                                                                     <i class="bi bi-pencil-square"></i>
                                                                 </button>
+                                                                <?php if (is_null($jns['used_sampah'])) : ?>
+                                                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delJenis-<?= $jns['id_jenis'] ?>" title="Hapus">
+                                                                        <i class="bi bi-trash2-fill"></i>
+                                                                    </button>
+                                                                <?php endif ?>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach ?>

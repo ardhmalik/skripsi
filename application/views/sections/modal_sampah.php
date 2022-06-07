@@ -198,4 +198,56 @@
         </div>
     </div>
     <!-- End Modal Add jenis -->
+
+
+    <!-- Modal del jenis -->
+    <div class="modal fade" id="delJenis-<?= $jenis['id_jenis'] ?>" tabindex="-1" aria-labelledby="formDelJenis" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formDelJenis">Delete Jenis Sampah</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- End Modal Header -->
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <h5 class="text-center text-bold">
+                            Anda yakin menghapus jenis ini?
+                        </h5>
+                        <div class="row">
+                            <div class="col-8 justify-content-center mx-auto">
+                                <div class="card p-3 my-3">
+                                    <div class="card-body text-center">
+                                        <h4><?= $jenis['jenis_sampah'] ?></h4>
+                                        <div class="p-2 bg-dark text-light fst-italic rounded">
+                                            <span>Sampah : <?= (is_null($jenis['used_sampah'])) ? '0' : $jenis['used_sampah'] ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Aktifkan mitra -->
+                        <form action="<?= site_url('del_jenis') ?>" method="post">
+                            <input type="hidden" name="id_jenis" id="id_jenis" value="<?= $jenis['id_jenis'] ?>">
+                            <input type="hidden" name="jenis_sampah" id="jenis_sampah" value="<?= $jenis['jenis_sampah'] ?>">
+                            <div class="d-flex bd-highlight">
+                                <div class="p-2 bd-highlight">
+                                    <button type="button" class="btn fw-bold btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                                </div>
+                                <div class="ms-auto p-2 bd-highlight">
+                                    <input type="submit" class="btn fw-bold btn-danger fw-bold" value="Ya, hapus">
+                                </div>
+                            </div>
+                        </form>
+                        <!-- End Form Aktifkan mitra -->
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Body -->
+        </div>
+    </div>
+    <!-- End Modal Add Edukasi -->
 <?php endforeach ?>

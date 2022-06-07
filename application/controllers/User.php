@@ -479,4 +479,25 @@ class User extends CI_Controller
 
 		redirect('data_sampah');
 	}
+
+	public function del_jenis()
+	{
+		$input = [
+			'id_jenis' => $this->input->post('id_jenis')
+		];
+
+		// var_dump($input);
+		// die;
+		
+		$this->umodel->del_jenis($input);
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil menghapus jenis sampah <span class="badge bg-danger">'. $this->input->post('jenis_sampah') .'</span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+	
+		redirect('data_sampah');
+	}
 }

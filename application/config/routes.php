@@ -94,6 +94,7 @@ $route['edit_tipe'] = 'actor/edit_tipe';
 // jenis
 $route['add_jenis'] = 'user/add_jenis';
 $route['edit_jenis'] = 'user/edit_jenis';
+$route['del_jenis'] = 'user/del_jenis';
 // admin
 $route['on_admin'] = 'actor/on_admin';
 $route['off_admin'] = 'actor/off_admin';
