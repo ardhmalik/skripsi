@@ -41,6 +41,25 @@ class Trans extends CI_Controller
 
 		$this->load->view('sections/main', $data);
 	}
+	
+	public function data_setoran()
+	{
+		$email_sess = $this->session->userdata('email');
+		$user = $this->db->get_where('user', ['email' => $email_sess])->row_array();
+		# Ternary operation to set foto image for user
+		($user['foto'] == null) ? $user['foto'] = 'avatar.png' : $user['foto'];
+		$data = [
+			'project' => 'Bank sampah Induk Rumah Harum',
+			'title' => 'Data Setoran',
+			'user' => $user,
+			'data_setoran' => $this->tmodel->get_data_setoran(),
+		];
+
+		// var_dump($data);
+		// die;
+
+		$this->load->view('sections/main', $data);
+	}
 
 	public function add_penjualan()
 	{

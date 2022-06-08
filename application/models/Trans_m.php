@@ -46,6 +46,14 @@ class Trans_m extends CI_Model
 
         return $query;
     }
+    
+    public function get_data_setoran()
+    {
+        $sql = $this->db->get('data_setoran');
+        $query = $sql->result_array();
+
+        return $query;
+    }
 
     public function add_penjualan($data)
     {
