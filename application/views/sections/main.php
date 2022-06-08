@@ -13,6 +13,10 @@ if ($this->session->userdata('tipe')) {
             $this->load->view('mitra/edukasi');
             $this->load->view('sections/modal_edukasi_mitra');
             break;
+        case 'setoran':
+            $this->load->view('mitra/setoran');
+            $this->load->view('sections/modal_setoran_mitra');
+            break;
         case 'rekening':
             $this->load->view('mitra/rekening');
             break;

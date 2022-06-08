@@ -54,6 +54,22 @@ class Trans_m extends CI_Model
 
         return $query;
     }
+    
+    public function get_setoran_mitra($id)
+    {
+        $sql = 'CALL tampil_setoran_mitra(?)';
+        $query = $this->db->query($sql, $id)->result_array();
+
+        return $query;
+    }
+
+    public function add_setoran($data)
+    {
+        $sql = 'SELECT tambah_setoran(?, ?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
 
     public function add_penjualan($data)
     {
