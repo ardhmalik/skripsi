@@ -128,7 +128,6 @@ $route['confirm_jemput'] = 'trans/confirm_jemput';
 # MITRA
 // lihat data
 $route['setoran'] = 'mitra/setoran';
-$route['add_setoran'] = 'mitra/add_setoran';
 $route['sampah'] = 'mitra/sampah';
 $route['rekening'] = 'mitra/rekening';
 $route['struktur'] = 'mitra/struktur';
