@@ -70,12 +70,20 @@ class Trans_m extends CI_Model
 
         return $query;
     }
+    
+    public function update_setoran($data)
+    {
+        $sql = 'SELECT ubah_setoran(?, ?, ?, ?, ?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
 
     public function add_penjualan($data)
     {
         $sql = 'SELECT tambah_penjualan(?, ?, ?, ?, ?, ?)';
         $query = $this->db->query($sql, $data)->row_array();
-
+        
         return $query;
     }
     
@@ -98,6 +106,14 @@ class Trans_m extends CI_Model
     public function del_penjualan($data)
     {
         $sql = 'SELECT hapus_penjualan(?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
+    
+    public function del_setoran($data)
+    {
+        $sql = 'SELECT hapus_setoran(?)';
         $query = $this->db->query($sql, $data)->row_array();
 
         return $query;

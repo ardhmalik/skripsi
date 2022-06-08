@@ -314,15 +314,125 @@ class Mitra extends CI_Controller
 			$this->tmodel->add_setoran($data);
 			# Add an alert message to session if createUser() process is successful
 			$this->session->set_flashdata(
-			'message',
-			'<div class="alert alert-success alert-dismissible fade show" role="alert">
-				Berhasil menambah data setoran sampah <span class="badge bg-success">'. $input['nama_sampah'] .'</span>
-				dengan subtotal <span class="badge bg-success">'. "Rp " . number_format($data['subtotal'], 2, ',', '.') .'</span>
+				'message',
+				'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil menambah data setoran sampah <span class="badge bg-success">' . $input['nama_sampah'] . '</span>
+				dengan subtotal <span class="badge bg-success">' . "Rp " . number_format($data['subtotal'], 2, ',', '.') . '</span>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>'
 			);
 		}
 
+		redirect('setoran');
+	}
+
+	public function edit_setoran()
+	{
+		$email_sess = $this->session->userdata('email');
+		$mitra = $this->db->get_where('mitra', ['email' => $email_sess])->row_array();
+
+		$sampah = explode('_', $this->input->post('sampah'));
+		$input['id_sampah'] = $sampah[0];
+		$input['harga'] = $sampah[1];
+		$input['nama_sampah'] = $sampah[2];
+		$input['berat'] = $this->input->post('berat');
+		$input['jadwal_jemput'] = (empty($this->input->post('jadwal_jemput'))) ? null : $this->input->post('jadwal_jemput') . " " . $this->input->post('waktu_jemput') . ":00";
+
+
+		// Current data
+		$curr = [
+			'id_sampah' => $this->input->post('curr_id_sampah'),
+			'jadwal_jemput' => $this->input->post('curr_jadwal_jemput'),
+			'berat' => $this->input->post('curr_berat')
+		];
+
+		// var_dump(is_null($input['jadwal_jemput']));
+		// var_dump($input['jadwal_decission']);
+		// die;
+
+		// New data
+		$new = [
+			'id_sampah' => $input['id_sampah'],
+			'jadwal_jemput' => (is_null($input['jadwal_jemput'])) ? $curr['jadwal_jemput'] : $input['jadwal_jemput'],
+			'berat' => $input['berat']
+		];
+
+		// var_dump($curr, $new);
+		// die;
+
+		if (empty(array_diff($curr, $new))) {
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-info alert-dismissible fade show" role="alert">
+					Tidak melakukan perubahan apapun
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		} else {
+			if (!is_numeric($input['berat'])) {
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Masukkan nilai berat berupa angka!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+			} elseif ($input['berat'] <= 0) {
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Masukkan nilai berat lebih dari 0!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+			} else {
+				$data = [
+					'id_setor' => $this->input->post('id_setor'),
+					'berat' => $new['berat'],
+					'subtotal' => $new['berat'] * $input['harga'],
+					'id_sampah' => $input['id_sampah'],
+					'jadwal_jemput' => $new['jadwal_jemput'],
+				];
+
+				// var_dump($data);
+				// die;
+
+				# Passing $input as a parameter of createUser() function to execute adding data to database
+				$this->tmodel->update_setoran($data);
+				# Add an alert message to session if createUser() process is successful
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Berhasil menambah data setoran sampah <span class="badge bg-primary">' . $input['nama_sampah'] . '</span>
+					dengan subtotal <span class="badge bg-primary">' . "Rp " . number_format($data['subtotal'], 2, ',', '.') . '</span>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+				);
+			}
+		}
+
+		redirect('setoran');
+	}
+
+	public function del_setoran()
+	{
+		$input = [
+			'id_setor' => $this->input->post('id_setor')
+		];
+
+		// var_dump($input);
+		// die;
+		
+		$this->tmodel->del_setoran($input);
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil menghapus data setoran sampah <span class="badge bg-danger">'. $this->input->post('nama_sampah') .'</span>
+				dengan subtotal <span class="badge bg-danger">'. $this->input->post('subtotal') .'</span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+	
 		redirect('setoran');
 	}
 
