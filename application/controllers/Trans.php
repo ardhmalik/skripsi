@@ -20,6 +20,28 @@ class Trans extends CI_Controller
 		$this->load->model('user_m', 'umodel');
 	}
 
+	private function _add_data_bayar($data)
+	{
+		$jemput = $this->db->get_where('data_penjemputan', ['id_jemput'=>$data['id_jemput']])->row_array();
+		$setor = $this->db->get_where('data_setoran', ['id_setor'=>$jemput['id_setor']])->row_array();
+		$mitra = $this->db->get_where('data_mitra', ['id_mitra'=>$jemput['id_mitra']])->row_array();
+		$rekening = $this->db->get_where('rekening', ['id_rek'=>$mitra['id_rek']])->row_array();
+		
+		// var_dump(($mitra));
+		// var_dump($rekening);
+		// die;
+		$data = [
+			'total_bayar' => $setor['subtotal'],
+			'bank' => $rekening['bank'],
+			'rek_tujuan' => $rekening['no_rek'],
+			'status' => 0,
+			'id_jemput' => $data['id_jemput']
+		];
+		// var_dump($data);
+		// die;
+		return $this->tmodel->add_pembayaran($data);
+	}
+
 	public function data_penjualan()
 	{
 		$email_sess = $this->session->userdata('email');
@@ -243,6 +265,9 @@ class Trans extends CI_Controller
 		// var_dump($input);
 		// die;
 		
+		// Automatic add data to pembayaran table
+		$this->_add_data_bayar($input);
+
 		$this->tmodel->confirm_penjemputan($input);
 		$this->session->set_flashdata(
 			'message',

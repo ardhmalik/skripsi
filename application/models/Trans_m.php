@@ -118,6 +118,15 @@ class Trans_m extends CI_Model
 
         return $query;
     }
+    
+    public function add_pembayaran($data)
+    {
+        // $sql = 'INSERT INTO pembayaran(total_bayar, rek_tujuan, status, id_jemput) VALUES (?, ?, ?, ?)';
+        $sql = 'pembayaran';
+        $query = $this->db->insert($sql, $data);
+
+        return $query;
+    }
 
     public function del_penjualan($data)
     {
