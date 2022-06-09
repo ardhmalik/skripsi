@@ -55,6 +55,14 @@ class Trans_m extends CI_Model
         return $query;
     }
     
+    public function get_data_penjemputan()
+    {
+        $sql = $this->db->get('data_penjemputan');
+        $query = $sql->result_array();
+
+        return $query;
+    }
+    
     public function get_setoran_mitra($id)
     {
         $sql = 'CALL tampil_setoran_mitra(?)';
@@ -98,6 +106,14 @@ class Trans_m extends CI_Model
     public function confirm_penjualan($data)
     {
         $sql = 'SELECT konfirmasi_penjualan(?)';
+        $query = $this->db->query($sql, $data)->row_array();
+
+        return $query;
+    }
+    
+    public function confirm_penjemputan($data)
+    {
+        $sql = 'SELECT konfirmasi_penjemputan(?, ?)';
         $query = $this->db->query($sql, $data)->row_array();
 
         return $query;

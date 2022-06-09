@@ -60,6 +60,25 @@ class Trans extends CI_Controller
 
 		$this->load->view('sections/main', $data);
 	}
+	
+	public function data_penjemputan()
+	{
+		$email_sess = $this->session->userdata('email');
+		$user = $this->db->get_where('user', ['email' => $email_sess])->row_array();
+		# Ternary operation to set foto image for user
+		($user['foto'] == null) ? $user['foto'] = 'avatar.png' : $user['foto'];
+		$data = [
+			'project' => 'Bank sampah Induk Rumah Harum',
+			'title' => 'Data penjemputan',
+			'user' => $user,
+			'data_penjemputan' => $this->tmodel->get_data_penjemputan(),
+		];
+
+		// var_dump($data);
+		// die;
+
+		$this->load->view('sections/main', $data);
+	}
 
 	public function add_penjualan()
 	{
@@ -212,6 +231,29 @@ class Trans extends CI_Controller
 		);
 	
 		redirect('data_penjualan');
+	}
+	
+	public function confirm_jemput()
+	{
+		$input = [
+			'id_jemput' => $this->input->post('id_jemput'),
+			'id_setor' => $this->input->post('id_setor')
+		];
+
+		// var_dump($input);
+		// die;
+		
+		$this->tmodel->confirm_penjemputan($input);
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible fade show" role="alert">
+				Berhasil mengkonfirmasi data penjemputan sampah <span class="badge bg-success">'. $this->input->post('nama_sampah') .'</span>
+				dengan berat <span class="badge bg-success">'. $this->input->post('berat') .' kg</span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>'
+		);
+	
+		redirect('data_penjemputan');
 	}
 	
 	public function del_penjualan()
