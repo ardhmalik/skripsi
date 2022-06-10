@@ -80,6 +80,8 @@ class User extends CI_Controller
 			'setoran' => $this->tmodel->get_data_setoran(),
 			'penjualan' => $this->tmodel->get_data_penjualan(),
 			'mitra' => $this->umodel->get_all_mitra(),
+			'top_penjualan' => $this->tmodel->top_penjualan(),
+			'top_setoran' => $this->tmodel->top_setoran(),
 			// jml_setor = [tunggu_jemput, tunggu_bayar, setor_sukses, total_setor]
 			'jml_setor' => $this->tmodel->jumlah_setoran(),
 			// jml_penjualan = [tunggu_jual, sukses_jual, total_jual]
@@ -95,7 +97,7 @@ class User extends CI_Controller
 		];
 
 		// var_dump($data['setor_today']);
-		// var_dump($data['setor_yesterday']);
+		// var_dump($data['top_penjualan']);
 		// die;
 
 		# Looping to insert array data to $data['new_setor']

@@ -35,7 +35,7 @@
                                     <div class="ps-3">
                                         <h6><?= $setor_today ?></h6>
                                         <?php
-                                        $percent = round((($setor_today - $setor_yesterday) / $setor_yesterday) * 100/100, 2);
+                                        $percent = round((($setor_today - $setor_yesterday) / $setor_yesterday) * 100 / 100, 2);
                                         $crease = ($percent >= 0) ? 'increase' : 'decrease';
                                         $text_fmt = ($percent >= 0) ? 'text-success' : 'text-danger';
 
@@ -76,7 +76,7 @@
                                         <?php
                                         // var_dump($pendapatan_today);
                                         // var_dump($total_pendapatan);
-                                        $percent = round((($pendapatan_today - $pendapatan_yesterday) / $pendapatan_yesterday) * 100/100, 2);
+                                        $percent = round((($pendapatan_today - $pendapatan_yesterday) / $pendapatan_yesterday) * 100 / 100, 2);
                                         $crease = ($percent >= 0) ? 'increase' : 'decrease';
                                         $text_fmt = ($percent >= 0) ? 'text-success' : 'text-danger';
 
@@ -114,7 +114,7 @@
                                     <div class="ps-3">
                                         <h6><?= $mitra_today ?></h6>
                                         <?php
-                                        $percent = round((($mitra_today - $mitra_yesterday) / $mitra_yesterday) * 100/100, 2);
+                                        $percent = round((($mitra_today - $mitra_yesterday) / $mitra_yesterday) * 100 / 100, 2);
                                         $crease = ($percent >= 0) ? 'increase' : 'decrease';
                                         $text_fmt = ($percent >= 0) ? 'text-success' : 'text-danger';
 
@@ -402,55 +402,44 @@
 
                 <!-- Top 5 Penjualan Sampah -->
                 <div class="card top-selling overflow-auto">
-
                     <div class="card-body pb-0">
                         <h5 class="card-title">Top 5 Penjualan Sampah <span>| Total</span></h5>
-
-                        <table class="table table-borderless">
+                        <!-- <?= $top_penjualan ?> -->
+                        <table class="table table-borderless text-center">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Nama</th>
-                                    <th scope="col">Berat</th>
-                                    <th scope="col">Harga</th>
+                                    <th scope="col">Jenis</th>
+                                    <th scope="col">Berat(kg)</th>
+                                    <th scope="col">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Ut inventore ipsa voluptas nulla</td>
-                                    <td class="fw-bold">124</td>
-                                    <td>$5,828</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Exercitationem similique doloremque</td>
-                                    <td class="fw-bold">98</td>
-                                    <td>$4,508</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Doloribus nisi exercitationem</td>
-                                    <td class="fw-bold">74</td>
-                                    <td>$4,366</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">4</th>
-                                    <td>Officiis quaerat sint rerum error</td>
-                                    <td class="fw-bold">63</td>
-                                    <td>$2,016</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">5</th>
-                                    <td>Sit unde debitis delectus repellendus</td>
-                                    <td class="fw-bold">41</td>
-                                    <td>$3,239</td>
-                                </tr>
+                                <?php
+                                $no = 0;
+                                for ($i = 0; $i < 5; $i++) : ?>
+                                    <tr>
+                                        <th scope="row">
+                                            <?= ++$no ?>
+                                        </th>
+                                        <td class="text-start">
+                                            <?= $top_penjualan[$i]['nama_sampah'] ?>
+                                        </td>
+                                        <td>
+                                            <?= $top_penjualan[$i]['jenis_sampah'] ?>
+                                        </td>
+                                        <td>
+                                            <?= $top_penjualan[$i]['berat'] ?>
+                                        </td>
+                                        <td class="fw-bold text-end">
+                                            Rp <?= number_format($top_penjualan[$i]['subtotal'], 0, '.', ',') ?>
+                                        </td>
+                                    </tr>
+                                <?php endfor ?>
                             </tbody>
                         </table>
-
                     </div>
-
                 </div>
                 <!-- End Top 5 Penjualan Sampah -->
 
@@ -460,46 +449,38 @@
                     <div class="card-body pb-0">
                         <h5 class="card-title">Top 5 Setoran Sampah <span>| Total</span></h5>
 
-                        <table class="table table-borderless">
+                        <table class="table table-borderless text-center">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Nama</th>
-                                    <th scope="col">Berat</th>
-                                    <th scope="col">Harga</th>
+                                    <th scope="col">Jenis</th>
+                                    <th scope="col">Berat(kg)</th>
+                                    <th scope="col">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Ut inventore ipsa voluptas nulla</td>
-                                    <td class="fw-bold">124</td>
-                                    <td>$5,828</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Exercitationem similique doloremque</td>
-                                    <td class="fw-bold">98</td>
-                                    <td>$4,508</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Doloribus nisi exercitationem</td>
-                                    <td class="fw-bold">74</td>
-                                    <td>$4,366</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">4</th>
-                                    <td>Officiis quaerat sint rerum error</td>
-                                    <td class="fw-bold">63</td>
-                                    <td>$2,016</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">5</th>
-                                    <td>Sit unde debitis delectus repellendus</td>
-                                    <td class="fw-bold">41</td>
-                                    <td>$3,239</td>
-                                </tr>
+                                <?php
+                                $no = 0;
+                                for ($i = 0; $i < 5; $i++) : ?>
+                                    <tr>
+                                        <th scope="row">
+                                            <?= ++$no ?>
+                                        </th>
+                                        <td class="text-start">
+                                            <?= $top_setoran[$i]['nama_sampah'] ?>
+                                        </td>
+                                        <td>
+                                            <?= $top_setoran[$i]['jenis_sampah'] ?>
+                                        </td>
+                                        <td>
+                                            <?= $top_setoran[$i]['berat'] ?>
+                                        </td>
+                                        <td class="fw-bold text-end">
+                                            Rp <?= number_format($top_setoran[$i]['subtotal'], 0, '.', ',') ?>
+                                        </td>
+                                    </tr>
+                                <?php endfor ?>
                             </tbody>
                         </table>
 

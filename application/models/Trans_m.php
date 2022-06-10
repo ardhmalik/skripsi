@@ -175,4 +175,20 @@ class Trans_m extends CI_Model
 
         return $query;
     }
+    
+    public function top_penjualan()
+    {
+        $sql = $this->db->get('top_penjualan');
+        $query = $sql->result_array();
+
+        return $query;
+    }
+
+    public function top_setoran()
+    {
+        $sql = $this->db->get('top_setoran');
+        $query = $sql->result_array();
+
+        return $query;
+    }
 }
