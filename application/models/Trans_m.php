@@ -159,4 +159,20 @@ class Trans_m extends CI_Model
 
         return $query;
     }
+
+    public function jumlah_setoran()
+    {
+        $sql = $this->db->get('jumlah_setoran');
+        $query = $sql->row_array();
+
+        return $query;
+    }
+    
+    public function jumlah_penjualan()
+    {
+        $sql = $this->db->get('jumlah_penjualan');
+        $query = $sql->row_array();
+
+        return $query;
+    }
 }

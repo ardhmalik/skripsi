@@ -136,4 +136,12 @@ class User_m extends CI_Model
 
         return $query;
     }
+    
+    public function jumlah_mitra()
+    {
+        $sql = $this->db->get('jumlah_mitra');
+        $query = $sql->row_array();
+
+        return $query;
+    }
 }

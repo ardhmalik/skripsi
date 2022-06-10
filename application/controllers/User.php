@@ -16,6 +16,7 @@ class User extends CI_Controller
 		$this->load->library('form_validation');
 		$this->load->model('auth_m', 'amodel');
 		$this->load->model('user_m', 'umodel');
+		$this->load->model('trans_m', 'tmodel');
 	}
 
 	/**
@@ -31,6 +32,8 @@ class User extends CI_Controller
 
 	public function dashboard()
 	{
+		// var_dump($this->session->userdata());
+		// die;
 		# $session variable to save field email & username from user
 		$sessions = [
 			'email' => $this->session->userdata('email'),
@@ -73,8 +76,73 @@ class User extends CI_Controller
 		$data = [
 			'project' => 'Bank Sampah Induk Rumah Harum',
 			'title' => 'Dashboard',
-			'user' => $user
+			'user' => $user,
+			'setoran' => $this->tmodel->get_data_setoran(),
+			'penjualan' => $this->tmodel->get_data_penjualan(),
+			'mitra' => $this->umodel->get_all_mitra(),
+			// jml_setor = [tunggu_jemput, tunggu_bayar, setor_sukses, total_setor]
+			'jml_setor' => $this->tmodel->jumlah_setoran(),
+			// jml_penjualan = [tunggu_jual, sukses_jual, total_jual]
+			'jml_jual' => $this->tmodel->jumlah_penjualan(),
+			// jml_mitra = [mitra_bsu, mitra_nsb, total_mitra]
+			'jml_mitra' => $this->umodel->jumlah_mitra(),
+			'new_data_pendapatan' => [],
+			'new_total_pendapatan' => [],
+			'new_data_setor' => [],
+			'new_data_mitra' => [],
 		];
+		
+		// var_dump($data['penjualan'][0]);
+		// die;
+		
+		# Looping to insert array data to $data['new_setor']
+		for ($i = 0; $i < count($data['setoran']); $i++) {
+			# $now variable to store current time on format date('Y-m-d)
+			$now = date('Y-m-d', time());
+			# $exp variable to store created on format date('Y-m-d)
+			$created = date('Y-m-d', strtotime($data['setoran'][$i]['tanggal']));
+			
+			if ($created == $now) {
+				# push array to $data['new_setor'] when user created is equal now
+				array_push($data['new_data_setor'], $data['setoran'][$i]);
+			}
+		}
+		
+		# Looping to insert array data to $data['new_jual']
+		for ($i = 0; $i < count($data['penjualan']); $i++) {
+			# $now variable to store current time on format date('Y-m-d)
+			$now = date('Y-m-d', time());
+			# $exp variable to store created on format date('Y-m-d)
+			$created = date('Y-m-d', strtotime($data['penjualan'][$i]['tanggal']));
+			
+			if ($created == $now && $data['penjualan'][$i]['status'] == 1) {
+				# push array to $data['new_jual'] when user created is equal now
+				array_push($data['new_data_pendapatan'], $data['penjualan'][$i]['subtotal']);
+			}
+			array_push($data['new_total_pendapatan'], $data['penjualan'][$i]['subtotal']);
+		}
+
+		# Looping to insert array data to $data['new_mitra']
+		for ($i = 0; $i < count($data['mitra']); $i++) {
+			# $now variable to store current time on format date('Y-m-d)
+			$now = date('Y-m-d', time());
+			# $exp variable to store created on format date('Y-m-d)
+			$created = date('Y-m-d', strtotime($data['mitra'][$i]['tgl_daftar']));
+			
+			if ($created == $now) {
+				# push array to $data['new_mitra'] when user created is equal now
+				array_push($data['new_data_mitra'], $data['mitra'][$i]);
+			}
+		}
+
+		$data['new_setor'] = count($data['new_data_setor']);
+		$data['new_pendapatan'] = array_sum($data['new_data_pendapatan']);
+		$data['new_mitra'] = count($data['new_data_mitra']);
+		$data['total_pendapatan'] = array_sum($data['new_total_pendapatan']);
+
+		// var_dump($data['new_jual']);
+		// var_dump($data['new_total_pendapatan']);
+		// die;
 
 		$this->load->view('sections/main', $data);
 	}
