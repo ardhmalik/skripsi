@@ -11,7 +11,9 @@
     <?= $this->session->flashdata('message') ?>
 
     <section class="section dashboard">
-        <!-- New Setor: <?= $new_setor ?> | New Mitra: <?= $new_mitra ?> | New Pendapatan: <?= $new_pendapatan ?> -->
+        <!-- New Setor: <?= $setor_today ?> | Yesterday Setor: <?= $setor_yesterday ?> | 
+        New Mitra: <?= $mitra_today ?> | Yesterday Mitra: <?= $mitra_yesterday ?> |  
+        New Pendapatan: <?= $pendapatan_today ?> | Yesterday Pendapatan: <?= $pendapatan_yesterday ?>  -->
         <div class="row">
 
             <!-- Left side columns -->
@@ -31,17 +33,17 @@
                                         <i class="bi bi-cart4"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6><?= $new_setor ?></h6>
+                                        <h6><?= $setor_today ?></h6>
                                         <?php
-                                        $percent = round((($new_setor / $jml_setor['total_setor']) * 100), 2);
+                                        $percent = round((($setor_today - $setor_yesterday) / $setor_yesterday) * 100/100, 2);
                                         $crease = ($percent >= 0) ? 'increase' : 'decrease';
                                         $text_fmt = ($percent >= 0) ? 'text-success' : 'text-danger';
 
-                                        switch ($new_setor) {
-                                            case $new_setor >= 0:
+                                        switch ($setor_today) {
+                                            case $setor_today >= 0:
                                                 echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
                                                 break;
-                                            case $new_setor < 0:
+                                            case $setor_today < 0:
                                                 echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
                                                 break;
                                             default:
@@ -70,19 +72,19 @@
                                         <i class="bi bi-cash-stack"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6><?= 'Rp ' . number_format($new_pendapatan, 0, ',', '.') ?></h6>
+                                        <h6><?= 'Rp ' . number_format($pendapatan_today, 0, ',', '.') ?></h6>
                                         <?php
-                                        // var_dump($new_pendapatan);
+                                        // var_dump($pendapatan_today);
                                         // var_dump($total_pendapatan);
-                                        $percent = round((($new_pendapatan / ($total_pendapatan)) * 100), 2);
+                                        $percent = round((($pendapatan_today - $pendapatan_yesterday) / $pendapatan_yesterday) * 100/100, 2);
                                         $crease = ($percent >= 0) ? 'increase' : 'decrease';
                                         $text_fmt = ($percent >= 0) ? 'text-success' : 'text-danger';
 
-                                        switch ($new_pendapatan) {
-                                            case $new_pendapatan >= 0:
+                                        switch ($pendapatan_today) {
+                                            case $pendapatan_today >= 0:
                                                 echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
                                                 break;
-                                            case $new_pendapatan < 0:
+                                            case $pendapatan_today < 0:
                                                 echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
                                                 break;
                                             default:
@@ -110,17 +112,17 @@
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6><?= $new_mitra ?></h6>
+                                        <h6><?= $mitra_today ?></h6>
                                         <?php
-                                        $percent = round((($new_mitra / $jml_mitra['total_mitra']) * 100), 2);
+                                        $percent = round((($mitra_today - $mitra_yesterday) / $mitra_yesterday) * 100/100, 2);
                                         $crease = ($percent >= 0) ? 'increase' : 'decrease';
                                         $text_fmt = ($percent >= 0) ? 'text-success' : 'text-danger';
 
-                                        switch ($new_mitra) {
-                                            case $new_mitra >= 0:
+                                        switch ($mitra_today) {
+                                            case $mitra_today >= 0:
                                                 echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
                                                 break;
-                                            case $new_mitra < 0:
+                                            case $mitra_today < 0:
                                                 echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
                                                 break;
                                             default:

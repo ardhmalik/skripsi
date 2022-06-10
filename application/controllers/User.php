@@ -86,62 +86,83 @@ class User extends CI_Controller
 			'jml_jual' => $this->tmodel->jumlah_penjualan(),
 			// jml_mitra = [mitra_bsu, mitra_nsb, total_mitra]
 			'jml_mitra' => $this->umodel->jumlah_mitra(),
-			'new_data_pendapatan' => [],
-			'new_total_pendapatan' => [],
-			'new_data_setor' => [],
-			'new_data_mitra' => [],
+			'pendapatan_today' => [],
+			'pendapatan_yesterday' => [],
+			'setor_today' => [],
+			'setor_yesterday' => [],
+			'mitra_today' => [],
+			'mitra_yesterday' => [],
 		];
-		
-		// var_dump($data['penjualan'][0]);
+
+		// var_dump($data['setor_today']);
+		// var_dump($data['setor_yesterday']);
 		// die;
-		
+
 		# Looping to insert array data to $data['new_setor']
 		for ($i = 0; $i < count($data['setoran']); $i++) {
-			# $now variable to store current time on format date('Y-m-d)
-			$now = date('Y-m-d', time());
+			# $today variable to store current time on format date('Y-m-d)
+			$today = date('Y-m-d');
+			# $yesterday variable to store yesterday time on format date('Y-m-d)
+			$yesterday = date('Y-m-d', strtotime("-1 day", strtotime(date("Y-m-d"))));
 			# $exp variable to store created on format date('Y-m-d)
 			$created = date('Y-m-d', strtotime($data['setoran'][$i]['tanggal']));
-			
-			if ($created == $now) {
-				# push array to $data['new_setor'] when user created is equal now
-				array_push($data['new_data_setor'], $data['setoran'][$i]);
+
+			if ($created == $today) {
+				# push array to $data['setor_today'] when user created is equal now
+				array_push($data['setor_today'], $data['setoran'][$i]);
+			} elseif ($created == $yesterday) {
+				# push array to $data['setor_yesterday'] when user created is equal now
+				array_push($data['setor_yesterday'], $data['setoran'][$i]);
 			}
 		}
-		
+
 		# Looping to insert array data to $data['new_jual']
 		for ($i = 0; $i < count($data['penjualan']); $i++) {
-			# $now variable to store current time on format date('Y-m-d)
-			$now = date('Y-m-d', time());
+			# $today variable to store current time on format date('Y-m-d)
+			$today = date('Y-m-d');
+			# $yesterday variable to store yesterday time on format date('Y-m-d)
+			$yesterday = date('Y-m-d', strtotime("-1 day", strtotime(date("Y-m-d"))));
 			# $exp variable to store created on format date('Y-m-d)
 			$created = date('Y-m-d', strtotime($data['penjualan'][$i]['tanggal']));
-			
-			if ($created == $now && $data['penjualan'][$i]['status'] == 1) {
-				# push array to $data['new_jual'] when user created is equal now
-				array_push($data['new_data_pendapatan'], $data['penjualan'][$i]['subtotal']);
+
+			if ($created == $today && $data['penjualan'][$i]['status'] == 1) {
+				# push array to $data['pendapatan_today'] when user created is equal now
+				array_push($data['pendapatan_today'], $data['penjualan'][$i]['subtotal']);
+			} elseif ($created == $yesterday && $data['penjualan'][$i]['status'] == 1) {
+				# push array to $data['pendapatan_yesterday'] when user created is equal now
+				array_push($data['pendapatan_yesterday'], $data['penjualan'][$i]['subtotal']);
 			}
-			array_push($data['new_total_pendapatan'], $data['penjualan'][$i]['subtotal']);
 		}
 
 		# Looping to insert array data to $data['new_mitra']
 		for ($i = 0; $i < count($data['mitra']); $i++) {
-			# $now variable to store current time on format date('Y-m-d)
-			$now = date('Y-m-d', time());
+			# $today variable to store current time on format date('Y-m-d)
+			$today = date('Y-m-d');
+			# $yesterday variable to store yesterday time on format date('Y-m-d)
+			$yesterday = date('Y-m-d', strtotime("-1 day", strtotime(date("Y-m-d"))));
 			# $exp variable to store created on format date('Y-m-d)
 			$created = date('Y-m-d', strtotime($data['mitra'][$i]['tgl_daftar']));
-			
-			if ($created == $now) {
-				# push array to $data['new_mitra'] when user created is equal now
-				array_push($data['new_data_mitra'], $data['mitra'][$i]);
+
+			if ($created == $today) {
+				# push array to $data['mitra_today'] when user created is equal now
+				array_push($data['mitra_today'], $data['mitra'][$i]);
+			} elseif ($created == $yesterday) {
+				# push array to $data['mitra_yesterday'] when user created is equal now
+				array_push($data['mitra_yesterday'], $data['mitra'][$i]);
 			}
 		}
 
-		$data['new_setor'] = count($data['new_data_setor']);
-		$data['new_pendapatan'] = array_sum($data['new_data_pendapatan']);
-		$data['new_mitra'] = count($data['new_data_mitra']);
-		$data['total_pendapatan'] = array_sum($data['new_total_pendapatan']);
+		$data['setor_today'] = count($data['setor_today']);
+		$data['setor_yesterday'] = count($data['setor_yesterday']);
+		$data['mitra_today'] = count($data['mitra_today']);
+		$data['mitra_yesterday'] = count($data['mitra_yesterday']);
+		$data['pendapatan_today'] = array_sum($data['pendapatan_today']);
+		$data['pendapatan_yesterday'] = array_sum($data['pendapatan_yesterday']);
 
 		// var_dump($data['new_jual']);
-		// var_dump($data['new_total_pendapatan']);
+		// var_dump($data['setor_today']);
+		// var_dump($data['setor_yesterday']);
+		// var_dump($data);
 		// die;
 
 		$this->load->view('sections/main', $data);
@@ -204,7 +225,7 @@ class User extends CI_Controller
 
 		redirect('data_edukasi');
 	}
-	
+
 	public function del_edukasi()
 	{
 		$input = [
@@ -213,18 +234,17 @@ class User extends CI_Controller
 
 		// var_dump($input);
 		// die;
-		
+
 		$this->umodel->del_edukasi($input);
 		$this->session->set_flashdata(
 			'message',
 			'<div class="alert alert-success alert-dismissible fade show" role="alert">
-				Berhasil menghapus edukasi <span class="badge bg-danger">'. $this->input->post('judul') .'</span>
+				Berhasil menghapus edukasi <span class="badge bg-danger">' . $this->input->post('judul') . '</span>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>'
 		);
-	
-		redirect('data_edukasi');
 
+		redirect('data_edukasi');
 	}
 
 	public function edit_edukasi()
@@ -525,7 +545,7 @@ class User extends CI_Controller
 
 		redirect('data_sampah');
 	}
-	
+
 	public function edit_jenis()
 	{
 		$input = [
@@ -556,16 +576,16 @@ class User extends CI_Controller
 
 		// var_dump($input);
 		// die;
-		
+
 		$this->umodel->del_jenis($input);
 		$this->session->set_flashdata(
 			'message',
 			'<div class="alert alert-success alert-dismissible fade show" role="alert">
-				Berhasil menghapus jenis sampah <span class="badge bg-danger">'. $this->input->post('jenis_sampah') .'</span>
+				Berhasil menghapus jenis sampah <span class="badge bg-danger">' . $this->input->post('jenis_sampah') . '</span>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>'
 		);
-	
+
 		redirect('data_sampah');
 	}
 
@@ -577,16 +597,16 @@ class User extends CI_Controller
 
 		// var_dump($input);
 		// die;
-		
+
 		$this->umodel->del_sampah($input);
 		$this->session->set_flashdata(
 			'message',
 			'<div class="alert alert-success alert-dismissible fade show" role="alert">
-				Berhasil menghapus sampah <span class="badge bg-danger">'. $this->input->post('nama') .'</span>
+				Berhasil menghapus sampah <span class="badge bg-danger">' . $this->input->post('nama') . '</span>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>'
 		);
-	
+
 		redirect('data_sampah');
 	}
 }
