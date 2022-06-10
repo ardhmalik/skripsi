@@ -881,7 +881,7 @@ class Auth extends CI_Controller
 			</div>'
 		);
 		# It will be returned to login page
-		$red = redirect(($role) ? 'login_user' : '');
+		redirect(($role) ? 'login_user' : '');
 		// var_dump($red);
 		// die;
 	}
