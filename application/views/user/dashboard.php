@@ -267,8 +267,7 @@
                                                         if ($selesai_per_month[$i] < $setor_per_month[$i]) {
                                                             echo "$tab_2 strokeWidth: 5,\n";
                                                             echo "$tab_2 strokeHeight: 10,\n";
-                                                        }
-                                                        elseif ($selesai_per_month[$i] > $setor_per_month[$i]) {
+                                                        } elseif ($selesai_per_month[$i] > $setor_per_month[$i]) {
                                                             echo "$tab_2 strokeWidth: 10,\n";
                                                             echo "$tab_2 strokeHeight: 0,\n";
                                                             echo "$tab_2 strokeLineCap: 'round',\n";
@@ -332,24 +331,32 @@
                 <div class="card">
 
                     <div class="card-body pb-0">
-                        <h5 class="card-title">Stok Sampah <span>| Total</span></h5>
-
-                        <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
-
+                        <h5 class="card-title">Stok Sampah (kg) <span>| Total</span></h5>
+                        <!-- <= var_dump($jenis_sampah) ?> -->
+                        <!-- <= var_dump($stok_sampah_masuk) ?> -->
+                        <div id="sampahChart" style="min-height: 450px;" class="echart"></div>
                         <script>
                             document.addEventListener("DOMContentLoaded", () => {
-                                echarts.init(document.querySelector("#trafficChart")).setOption({
+                                echarts.init(document.querySelector("#sampahChart")).setOption({
                                     tooltip: {
                                         trigger: 'item'
                                     },
                                     legend: {
-                                        top: '5%',
+                                        top: 'top',
                                         left: 'center'
                                     },
+                                    toolbox: {
+                                        show: true,
+                                        feature: {
+                                            saveAsImage: {
+                                                show: true
+                                            }
+                                        }
+                                    },
                                     series: [{
-                                        name: 'Access From',
+                                        name: 'Jenis Sampah',
                                         type: 'pie',
-                                        radius: ['40%', '70%'],
+                                        radius: ['30%', '70%'],
                                         avoidLabelOverlap: false,
                                         label: {
                                             show: false,
@@ -359,32 +366,43 @@
                                             label: {
                                                 show: true,
                                                 fontSize: '18',
-                                                fontWeight: 'bold'
+                                                fontWeight: 'bold',
                                             }
                                         },
                                         labelLine: {
                                             show: false
                                         },
-                                        data: [{
-                                                value: 1048,
-                                                name: 'Search Engine'
-                                            },
-                                            {
-                                                value: 735,
-                                                name: 'Direct'
-                                            },
-                                            {
-                                                value: 580,
-                                                name: 'Email'
-                                            },
-                                            {
-                                                value: 484,
-                                                name: 'Union Ads'
-                                            },
-                                            {
-                                                value: 300,
-                                                name: 'Video Ads'
+                                        data: [
+                                            <?php
+                                            for ($i = 0; $i < count($jenis_sampah); $i++) {
+                                                echo "{\n";
+                                                echo "value: " . round(($stok_sampah_masuk[$i] - $stok_sampah_keluar[$i]), 2) . ",\n";
+                                                echo "name: '" . $jenis_sampah[$i]['jenis_sampah'] . "'\n";
+                                                echo "}\n";
+                                                echo ($i < (count($jenis_sampah) - 1)) ? "," : "";
                                             }
+                                            ?>
+
+                                            // {
+                                            //     value: 1048,
+                                            //     name: 'Search Engine'
+                                            // },
+                                            // {
+                                            //     value: 735,
+                                            //     name: 'Direct'
+                                            // },
+                                            // {
+                                            //     value: 580,
+                                            //     name: 'Email'
+                                            // },
+                                            // {
+                                            //     value: 484,
+                                            //     name: 'Union Ads'
+                                            // },
+                                            // {
+                                            //     value: 300,
+                                            //     name: 'Video Ads'
+                                            // }
                                         ]
                                     }]
                                 });

@@ -86,6 +86,8 @@ class User extends CI_Controller
 			'penjualan' => $this->tmodel->get_data_penjualan(),
 			'pembayaran' => $this->tmodel->get_data_pembayaran(),
 			'mitra' => $this->umodel->get_all_mitra(),
+			'jenis_sampah' => $this->umodel->get_jenis_sampah(),
+			'sampah' => $this->umodel->get_data_sampah(),
 			'top_penjualan' => $this->tmodel->top_penjualan(),
 			'top_setoran' => $this->tmodel->top_setoran(),
 			'month' => $this->db->get('month')->result_array(),
@@ -109,11 +111,15 @@ class User extends CI_Controller
 			'bayar_per_month' => [],
 			'setor_per_month' => [],
 			'selesai_per_month' => [],
+
+			# ACCOMODATE DONUT CHART DATA
+			'stok_sampah_keluar' => [],
+			'stok_sampah_masuk' => [],
 		];
 
 		// $month = date('m', strtotime('+1 month', strtotime('first month of year')));
-		// var_dump($data['setor_today']);
 		// var_dump('-' . $data['month'][0]['month_number'] . '-');
+		// var_dump($data['jenis_sampah']);
 		// die;
 
 		# Looping to insert array data to $data['new_setor']
@@ -164,7 +170,7 @@ class User extends CI_Controller
 			$penjualan = $this->db->get()->result_array();
 			$subtotal = [];
 
-			for ($j=0; $j < count($penjualan); $j++) { 
+			for ($j = 0; $j < count($penjualan); $j++) {
 				# $count_user variable to store number of penjualan
 				$total = $penjualan[$j]['subtotal'];
 				# push array to $
@@ -172,7 +178,7 @@ class User extends CI_Controller
 			}
 			# push array to $data['jual_per_month']
 			array_push($data['jual_per_month'], array_sum($subtotal));
-		
+
 			/**
 			 * Logic for insert array count to $data['bayar_per_month']
 			 */
@@ -182,8 +188,8 @@ class User extends CI_Controller
 			$this->db->from('pembayaran');
 			$pembayaran = $this->db->get()->result_array();
 			$total_bayar = [];
-			
-			for ($l=0; $l < count($pembayaran); $l++) { 
+
+			for ($l = 0; $l < count($pembayaran); $l++) {
 				# $count_user variable to store number of penjualan
 				$total = $pembayaran[$l]['total_bayar'];
 				# push array to $
@@ -192,18 +198,18 @@ class User extends CI_Controller
 			# DATA FOR PEMBAYARAN ON AREA CHART
 			# push array to $data['jual_per_month']
 			array_push($data['bayar_per_month'], array_sum($total_bayar));
-			
+
 			# DATA FOR SELESAI ON BAR CHART
-			
+
 			/**
 			 * Logic for insert array count to $data['bayar_per_month']
 			 */
 			# $pembayaran variable to store result array of bayar per month
 			$this->db->like('jadwal_jemput', '-' . $data['month'][$i]['month_number'] . '-');
-			$selesai_setor = $this->db->get_where('setoran', ['status'=>'Selesai'])->result_array();
+			$selesai_setor = $this->db->get_where('setoran', ['status' => 'Selesai'])->result_array();
 			$this->db->like('tanggal', '-' . $data['month'][$i]['month_number'] . '-');
 			$total_setor = $this->db->get('setoran')->result_array();
-			
+
 			// var_dump($selesai_setor);
 			// die;
 			# push array to $data['selesai_per_month']
@@ -212,6 +218,34 @@ class User extends CI_Controller
 			array_push($data['setor_per_month'], count($total_setor));
 			// var_dump($subtotal);
 			// die;
+		}
+
+		for ($i = 0; $i < count($data['jenis_sampah']); $i++) {
+			# PENGURANGAN STOK
+			$sampah_out = [];
+			for ($j = 0; $j < count($data['penjualan']); $j++) {
+				if ($data['penjualan'][$j]['jenis_sampah'] == $data['jenis_sampah'][$i]['jenis_sampah']) {
+					array_push($sampah_out, $data['penjualan'][$j]['berat']);
+				}
+			}
+			# push array to $data['stok_sampah_keluar']
+			array_push($data['stok_sampah_keluar'], round(array_sum($sampah_out), 2));
+			// var_dump(round(array_sum($sampah_out), 2));
+			// die;
+
+			# PENAMBAHAN STOK
+			$sampah_in = [];
+			for ($l = 0; $l < count($data['setoran']); $l++) {
+				if ($data['setoran'][$l]['jenis_sampah'] == $data['jenis_sampah'][$i]['jenis_sampah']) {
+					array_push($sampah_in, $data['setoran'][$l]['berat']);
+				}
+			}
+
+			// var_dump(round(array_sum($sampah_in), 2));
+			// die;
+
+			# push array to $data['stok_sampah_masuk']
+			array_push($data['stok_sampah_masuk'], round(array_sum($sampah_in), 2));
 		}
 
 		# Looping to insert array data to $data['new_mitra']
@@ -243,7 +277,8 @@ class User extends CI_Controller
 		// var_dump($data['setor_today']);
 		// var_dump($data['setor_yesterday']);
 		// var_dump($data['jual_per_month']);
-		// var_dump($data['setor_per_month']);
+		// var_dump($data['stok_sampah_keluar']);
+		// var_dump($data['stok_sampah_masuk']);
 		// die;
 
 		$this->load->view('sections/main', $data);
