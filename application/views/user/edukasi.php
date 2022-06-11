@@ -17,6 +17,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Data Edukasi</h5>
                         <p>Berisi daftar kegiatan edukasi mitra</p>
+                        <?php if ($this->session->userdata('role') == "Ketua" || $this->session->userdata('role') == "Sekretaris") : ?>
                         <div class="row">
                             <div class="col-auto ms-auto">
                                 <div class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#addEdu">
@@ -24,7 +25,8 @@
                                 </div>
                             </div>
                         </div>
-
+                        <?php endif ?>
+                        
                         <!-- Table with stripped rows -->
                         <div class="table-responsive">
                             <table class="table datatable table-hover">
@@ -74,14 +76,15 @@
                                                 <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#edu-<?= $edu['id_edu'] ?>" title="Detail">
                                                     <i class="bi bi-info-circle-fill"></i>
                                                 </button>
-                                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEdu-<?= $edu['id_edu'] ?>" title="Edit">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </button>
-                                                <?php
-                                                if (is_null($edu['used_mitra'])) : ?>
-                                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delEdu-<?= $edu['id_edu'] ?>" title="Hapus">
-                                                        <i class="bi bi-trash2-fill"></i>
+                                                <?php if ($this->session->userdata('role') == "Ketua" || $this->session->userdata('role') == "Sekretaris") : ?>
+                                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEdu-<?= $edu['id_edu'] ?>" title="Edit">
+                                                        <i class="bi bi-pencil-square"></i>
                                                     </button>
+                                                    <?php if (is_null($edu['used_mitra'])) : ?>
+                                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delEdu-<?= $edu['id_edu'] ?>" title="Hapus">
+                                                            <i class="bi bi-trash2-fill"></i>
+                                                        </button>
+                                                    <?php endif ?>
                                                 <?php endif ?>
                                             </td>
                                         </tr>

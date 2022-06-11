@@ -28,6 +28,33 @@ class Actor extends CI_Controller
 			'data_admin' => $this->acmodel->get_data_admin()
 		];
 
+		# IF condition to check if there is a stored 'email' session
+		if (!$this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Silahkan login terlebih dahulu sebelum mengakses konten!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('login_user');
+		} else {
+			if ($this->session->userdata('tipe') || $this->session->userdata('role') != "Ketua") {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard');
+			}
+		}
+
 		$this->load->view('sections/main', $data);
 	}
 
@@ -90,6 +117,33 @@ class Actor extends CI_Controller
 			'data_mitra' => $this->acmodel->get_data_mitra()
 		];
 
+		# IF condition to check if there is a stored 'email' session
+		if (!$this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Silahkan login terlebih dahulu sebelum mengakses konten!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('login_user');
+		} else {
+			if ($this->session->userdata('tipe')) {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard');
+			}
+		}
+
 		$this->load->view('sections/main', $data);
 	}
 
@@ -150,6 +204,33 @@ class Actor extends CI_Controller
 			'user' => $user,
 			'data_pembeli' => $this->acmodel->get_data_pembeli(),
 		];
+
+		# IF condition to check if there is a stored 'email' session
+		if (!$this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Silahkan login terlebih dahulu sebelum mengakses konten!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('login_user');
+		} else {
+			if ($this->session->userdata('tipe') || $this->session->userdata('role') == "Driver") {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard');
+			}
+		}
 
 		$this->load->view('sections/main', $data);
 	}

@@ -57,10 +57,14 @@
                                             </td>
                                             <td class="text-center">
                                                 <span class="d-none"><?= $mtr['status'] ?></span>
-                                                <div class="btn-group" role="group" aria-label="Aksi button">
-                                                    <button type="button" class="btn btn-sm fw-bold <?= ($mtr['status'] == 1) ? 'btn-outline-danger' : 'btn-danger' ?>" <?= ($mtr['status'] == 1) ? '' : 'disabled' ?> data-bs-toggle="modal" data-bs-target="#offMtr-<?= $mtr['id_mitra'] ?>" title="Matikan akun">OFF</button>
-                                                    <button type="button" class="btn btn-sm fw-bold <?= ($mtr['status'] == 0) ? 'btn-outline-primary' : 'btn-primary' ?>" <?= ($mtr['status'] == 0) ? '' : 'disabled' ?> data-bs-toggle="modal" data-bs-target="#onMtr-<?= $mtr['id_mitra'] ?>" title="Aktifkan akun">ON</button>
-                                                </div>
+                                                <?php if ($this->session->userdata('role') == "Ketua" || $this->session->userdata('role') == "Sekretaris") : ?>
+                                                    <div class="btn-group" role="group" aria-label="Aksi button">
+                                                        <button type="button" class="btn btn-sm fw-bold <?= ($mtr['status'] == 1) ? 'btn-outline-danger' : 'btn-danger' ?>" <?= ($mtr['status'] == 1) ? '' : 'disabled' ?> data-bs-toggle="modal" data-bs-target="#offMtr-<?= $mtr['id_mitra'] ?>" title="Matikan akun">OFF</button>
+                                                        <button type="button" class="btn btn-sm fw-bold <?= ($mtr['status'] == 0) ? 'btn-outline-primary' : 'btn-primary' ?>" <?= ($mtr['status'] == 0) ? '' : 'disabled' ?> data-bs-toggle="modal" data-bs-target="#onMtr-<?= $mtr['id_mitra'] ?>" title="Aktifkan akun">ON</button>
+                                                    </div>
+                                                <?php elseif ($this->session->userdata('role') == "Bendahara" || $this->session->userdata('role') == "Driver") : ?>
+                                                    <span class="badge rounded-pill bg-<?= ($mtr['status'] == 1) ? "success" : "danger" ?>"><i class="bi bi-check-circle me-1"></i> <?= ($mtr['status'] == 1) ? "Aktif" : "Tidak Aktif" ?></span>
+                                                <?php endif ?>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>

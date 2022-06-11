@@ -300,6 +300,33 @@ class User extends CI_Controller
 			'data_edu' => $this->umodel->get_data_edukasi(),
 		];
 
+		# IF condition to check if there is a stored 'email' session
+		if (!$this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Silahkan login terlebih dahulu sebelum mengakses konten!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('login_user');
+		} else {
+			if ($this->session->userdata('tipe')) {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard');
+			}
+		}
+
 		// var_dump($data['data_edu']);
 		// die;
 
@@ -425,6 +452,33 @@ class User extends CI_Controller
 			'data_jenis' => $this->umodel->get_jenis_sampah(),
 			'data_sampah' => $this->umodel->get_data_sampah(),
 		];
+
+		# IF condition to check if there is a stored 'email' session
+		if (!$this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Silahkan login terlebih dahulu sebelum mengakses konten!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('login_user');
+		} else {
+			if ($this->session->userdata('tipe')) {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard');
+			}
+		}
 
 		$this->load->view('sections/main', $data);
 	}

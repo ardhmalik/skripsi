@@ -159,18 +159,20 @@ $sess = [
                         <span>Pembayaran</span>
                     </a>
                 </li>
-                <li>
-                    <a href="<?= site_url('data_penjualan') ?>" class="<?= ($this->uri->segment(1) == 'data_penjualan') ? 'active' : '' ?>">
-                        <i class="bi bi-circle"></i>
-                        <span>Penjualan</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('data_pembeli') ?>" class="<?= ($this->uri->segment(1) == 'data_pembeli') ? 'active' : '' ?>">
-                        <i class="bi bi-circle"></i>
-                        <span>Pembeli</span>
-                    </a>
-                </li>
+                <?php if ($this->session->userdata('role') != "Driver") : ?>
+                    <li>
+                        <a href="<?= site_url('data_penjualan') ?>" class="<?= ($this->uri->segment(1) == 'data_penjualan') ? 'active' : '' ?>">
+                            <i class="bi bi-circle"></i>
+                            <span>Penjualan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= site_url('data_pembeli') ?>" class="<?= ($this->uri->segment(1) == 'data_pembeli') ? 'active' : '' ?>">
+                            <i class="bi bi-circle"></i>
+                            <span>Pembeli</span>
+                        </a>
+                    </li>
+                <?php endif ?>
                 <li>
                     <a href="<?= site_url('data_sampah') ?>" class="<?= ($this->uri->segment(1) == 'data_sampah') ? 'active' : '' ?>">
                         <i class="bi bi-circle"></i>
