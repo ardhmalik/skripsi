@@ -18,7 +18,6 @@
                         <h5 class="card-title"><?= $title ?></h5>
                         <p>Berisi daftar pembayaran untuk setoran mitra</p>
 
-                        <?= var_dump($this->session->userdata('role')) ?>
                         <!-- Table with stripped rows -->
                         <div class="table-responsive">
                             <table class="table datatable table-hover">
