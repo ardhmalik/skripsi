@@ -73,6 +73,13 @@ $sess = [
                 <span>Edukasi</span>
             </a>
         </li>
+        <!-- Sampah -->
+        <li class="nav-item">
+            <a class="nav-link <?= ($this->uri->segment(1) == 'sampah') ? '' : 'collapsed' ?>" href="<?= site_url('sampah') ?>">
+                <i class="bi bi-trash2-fill"></i>
+                <span>Sampah</span>
+            </a>
+        </li>
         <!-- Setoran -->
         <li class="nav-item">
             <a class="nav-link <?= ($this->uri->segment(1) == 'setoran') ? '' : 'collapsed' ?>" href="<?= site_url('setoran') ?>">

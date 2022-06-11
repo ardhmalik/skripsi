@@ -208,6 +208,50 @@ class Mitra extends CI_Controller
 		redirect('profil_mitra');
 	}
 
+	public function sampah()
+	{
+		$email_sess = $this->session->userdata('email');
+		$mitra = $this->db->get_where('mitra', ['email' => $email_sess])->row_array();
+		# Ternary operation to set foto image for mitra
+		(is_null($mitra['foto'])) ? $mitra['foto'] = 'avatar.png' : $mitra['foto'];
+		$data = [
+			'project' => 'Bank sampah Induk Rumah Harum',
+			'title' => 'Data Sampah',
+			'mitra' => $mitra,
+			'data_jenis' => $this->umodel->get_jenis_sampah(),
+			'data_sampah' => $this->umodel->get_data_sampah(),
+		];
+
+		# IF condition to check if there is a stored 'email' session
+		if (!$this->session->userdata('email')) {
+			# If TRUE, add an alert message to session
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					Silahkan login terlebih dahulu sebelum mengakses konten!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+			# It will be returned to login page
+			redirect('');
+		} else {
+			if ($this->session->userdata('role')) {
+				# If TRUE, add an alert message to session
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Tidak boleh mengakses halaman!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+				# It will be returned to dashboard user
+				redirect('dashboard_user');
+			}
+		}
+
+		$this->load->view('sections/main', $data);
+	}
+
 	public function setoran()
 	{
 		$email_sess = $this->session->userdata('email');
