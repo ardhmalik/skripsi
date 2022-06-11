@@ -73,15 +73,24 @@ class User extends CI_Controller
 			}
 		}
 
+		// var_dump($month);
+		// die;
+
 		$data = [
 			'project' => 'Bank Sampah Induk Rumah Harum',
 			'title' => 'Dashboard',
 			'user' => $user,
+
+			# GET ALL DATA
 			'setoran' => $this->tmodel->get_data_setoran(),
 			'penjualan' => $this->tmodel->get_data_penjualan(),
+			'pembayaran' => $this->tmodel->get_data_pembayaran(),
 			'mitra' => $this->umodel->get_all_mitra(),
 			'top_penjualan' => $this->tmodel->top_penjualan(),
 			'top_setoran' => $this->tmodel->top_setoran(),
+			'month' => $this->db->get('month')->result_array(),
+
+			# ACCOMODATE DATA
 			// jml_setor = [tunggu_jemput, tunggu_bayar, setor_sukses, total_setor]
 			'jml_setor' => $this->tmodel->jumlah_setoran(),
 			// jml_penjualan = [tunggu_jual, sukses_jual, total_jual]
@@ -94,10 +103,15 @@ class User extends CI_Controller
 			'setor_yesterday' => [],
 			'mitra_today' => [],
 			'mitra_yesterday' => [],
+
+			# ACCOMODATE CHART DATA
+			'jual_per_month' => [],
+			'bayar_per_month' => [],
 		];
 
+		// $month = date('m', strtotime('+1 month', strtotime('first month of year')));
 		// var_dump($data['setor_today']);
-		// var_dump($data['top_penjualan']);
+		// var_dump($data['month']);
 		// die;
 
 		# Looping to insert array data to $data['new_setor']
@@ -136,6 +150,50 @@ class User extends CI_Controller
 			}
 		}
 
+		# Looping to insert array data to $data['new_jual']
+		for ($i = 0; $i < count($data['month']); $i++) {
+			/**
+			 * Logic for insert array count to $data['jual_per_month']
+			 */
+			# $penjualan variable to store result array of jual per month
+			$this->db->like('tanggal', '-' . $data['month'][$i]['month_number'] . '-');
+			$this->db->select('subtotal');
+			$this->db->from('penjualan');
+			$penjualan = $this->db->get()->result_array();
+			$subtotal = [];
+
+			for ($j=0; $j < count($penjualan); $j++) { 
+				# $count_user variable to store number of penjualan
+				$total = $penjualan[$j]['subtotal'];
+				# push array to $
+				array_push($subtotal, $total);
+			}
+			# push array to $data['jual_per_month']
+			array_push($data['jual_per_month'], array_sum($subtotal));
+		
+			/**
+			 * Logic for insert array count to $data['bayar_per_month']
+			 */
+			# $pembayaran variable to store result array of bayar per month
+			$this->db->like('tanggal', '-' . $data['month'][$i]['month_number'] . '-');
+			$this->db->select('total_bayar');
+			$this->db->from('pembayaran');
+			$pembayaran = $this->db->get()->result_array();
+			$total_bayar = [];
+
+			for ($l=0; $l < count($pembayaran); $l++) { 
+				# $count_user variable to store number of penjualan
+				$total = $pembayaran[$l]['total_bayar'];
+				# push array to $
+				array_push($total_bayar, $total);
+			}
+			# push array to $data['jual_per_month']
+			array_push($data['bayar_per_month'], array_sum($total_bayar));
+			
+			// var_dump($subtotal);
+			// die;
+		}
+
 		# Looping to insert array data to $data['new_mitra']
 		for ($i = 0; $i < count($data['mitra']); $i++) {
 			# $today variable to store current time on format date('Y-m-d)
@@ -164,7 +222,8 @@ class User extends CI_Controller
 		// var_dump($data['new_jual']);
 		// var_dump($data['setor_today']);
 		// var_dump($data['setor_yesterday']);
-		// var_dump($data);
+		// var_dump($data['jual_per_month']);
+		// var_dump($data['bayar_per_month']);
 		// die;
 
 		$this->load->view('sections/main', $data);

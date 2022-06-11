@@ -153,16 +153,36 @@
                                         new ApexCharts(document.querySelector("#laporanKeuangan"), {
                                             series: [{
                                                 name: 'Pemasukan',
-                                                data: [31, 40, 28, 51, 42, 82, 56],
+                                                data: [
+                                                    <?php
+                                                    for ($i = 0; $i < count($jual_per_month); $i++) {
+                                                        if ($i == count($jual_per_month) - 1) {
+                                                            echo $jual_per_month[$i];
+                                                        } else {
+                                                            echo "$jual_per_month[$i], ";
+                                                        }
+                                                    }
+                                                    ?>
+                                                ],
                                             }, {
                                                 name: 'Pengeluaran',
-                                                data: [11, 32, 45, 32, 34, 52, 41]
+                                                data: [
+                                                    <?php
+                                                    for ($i = 0; $i < count($bayar_per_month); $i++) {
+                                                        if ($i == count($bayar_per_month) - 1) {
+                                                            echo $bayar_per_month[$i];
+                                                        } else {
+                                                            echo "$bayar_per_month[$i], ";
+                                                        }
+                                                    }
+                                                    ?>
+                                                ]
                                             }],
                                             chart: {
                                                 height: 350,
                                                 type: 'area',
                                                 toolbar: {
-                                                    show: false
+                                                    show: true
                                                 },
                                             },
                                             markers: {
@@ -185,9 +205,25 @@
                                                 curve: 'smooth',
                                                 width: 2
                                             },
+                                            yaxis: {
+                                                labels: {
+                                                    formatter: function(value) {
+                                                        return "Rp " + value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                                                    }
+                                                },
+                                            },
                                             xaxis: {
-                                                type: 'datetime',
-                                                categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+                                                type: 'month',
+                                                categories: [<?php
+                                                                foreach ($month as $mn) {
+                                                                    $txt = substr($mn['month_name'], 0, 3);
+                                                                    if ($mn['id'] < 12) {
+                                                                        echo "'" . $txt . "', ";
+                                                                    } else {
+                                                                        echo "'" . $txt . "'";
+                                                                    }
+                                                                }
+                                                                ?>]
                                             },
                                             tooltip: {
                                                 x: {
