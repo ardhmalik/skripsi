@@ -107,11 +107,13 @@ class User extends CI_Controller
 			# ACCOMODATE CHART DATA
 			'jual_per_month' => [],
 			'bayar_per_month' => [],
+			'setor_per_month' => [],
+			'selesai_per_month' => [],
 		];
 
 		// $month = date('m', strtotime('+1 month', strtotime('first month of year')));
 		// var_dump($data['setor_today']);
-		// var_dump($data['month']);
+		// var_dump('-' . $data['month'][0]['month_number'] . '-');
 		// die;
 
 		# Looping to insert array data to $data['new_setor']
@@ -180,16 +182,34 @@ class User extends CI_Controller
 			$this->db->from('pembayaran');
 			$pembayaran = $this->db->get()->result_array();
 			$total_bayar = [];
-
+			
 			for ($l=0; $l < count($pembayaran); $l++) { 
 				# $count_user variable to store number of penjualan
 				$total = $pembayaran[$l]['total_bayar'];
 				# push array to $
 				array_push($total_bayar, $total);
 			}
+			# DATA FOR PEMBAYARAN ON AREA CHART
 			# push array to $data['jual_per_month']
 			array_push($data['bayar_per_month'], array_sum($total_bayar));
 			
+			# DATA FOR SELESAI ON BAR CHART
+			
+			/**
+			 * Logic for insert array count to $data['bayar_per_month']
+			 */
+			# $pembayaran variable to store result array of bayar per month
+			$this->db->like('jadwal_jemput', '-' . $data['month'][$i]['month_number'] . '-');
+			$selesai_setor = $this->db->get_where('setoran', ['status'=>'Selesai'])->result_array();
+			$this->db->like('tanggal', '-' . $data['month'][$i]['month_number'] . '-');
+			$total_setor = $this->db->get('setoran')->result_array();
+			
+			// var_dump($selesai_setor);
+			// die;
+			# push array to $data['selesai_per_month']
+			array_push($data['selesai_per_month'], count($selesai_setor));
+			# push array to $data['setor_per_month']
+			array_push($data['setor_per_month'], count($total_setor));
 			// var_dump($subtotal);
 			// die;
 		}
@@ -223,7 +243,7 @@ class User extends CI_Controller
 		// var_dump($data['setor_today']);
 		// var_dump($data['setor_yesterday']);
 		// var_dump($data['jual_per_month']);
-		// var_dump($data['bayar_per_month']);
+		// var_dump($data['setor_per_month']);
 		// die;
 
 		$this->load->view('sections/main', $data);

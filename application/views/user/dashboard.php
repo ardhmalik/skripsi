@@ -248,85 +248,43 @@
 
                                 <!-- Bar Chart -->
                                 <div id="barChart"></div>
-
                                 <script>
                                     document.addEventListener("DOMContentLoaded", () => {
                                         new ApexCharts(document.querySelector("#barChart"), {
                                             series: [{
                                                 name: 'Selesai',
-                                                data: [{
-                                                        x: 'Jan',
-                                                        y: 14,
-                                                        goals: [{
-                                                            name: 'Setoran',
-                                                            value: 14,
-                                                            strokeWidth: 2,
-                                                            strokeDashArray: 2,
-                                                            strokeColor: '#775DD0'
-                                                        }]
-                                                    },
-                                                    {
-                                                        x: 'Feb',
-                                                        y: 44,
-                                                        goals: [{
-                                                            name: 'Setoran',
-                                                            value: 54,
-                                                            strokeWidth: 5,
-                                                            strokeHeight: 10,
-                                                            strokeColor: '#775DD0'
-                                                        }]
-                                                    },
-                                                    {
-                                                        x: 'March',
-                                                        y: 54,
-                                                        goals: [{
-                                                            name: 'Setoran',
-                                                            value: 52,
-                                                            strokeWidth: 10,
-                                                            strokeHeight: 0,
-                                                            strokeLineCap: 'round',
-                                                            strokeColor: '#775DD0'
-                                                        }]
-                                                    },
-                                                    {
-                                                        x: 'Apr',
-                                                        y: 66,
-                                                        goals: [{
-                                                            name: 'Setoran',
-                                                            value: 61,
-                                                            strokeWidth: 10,
-                                                            strokeHeight: 0,
-                                                            strokeLineCap: 'round',
-                                                            strokeColor: '#775DD0'
-                                                        }]
-                                                    },
-                                                    {
-                                                        x: 'May',
-                                                        y: 81,
-                                                        goals: [{
-                                                            name: 'Setoran',
-                                                            value: 66,
-                                                            strokeWidth: 10,
-                                                            strokeHeight: 0,
-                                                            strokeLineCap: 'round',
-                                                            strokeColor: '#775DD0'
-                                                        }]
-                                                    },
-                                                    {
-                                                        x: 'Jun',
-                                                        y: 67,
-                                                        goals: [{
-                                                            name: 'Setoran',
-                                                            value: 70,
-                                                            strokeWidth: 5,
-                                                            strokeHeight: 10,
-                                                            strokeColor: '#775DD0'
-                                                        }]
+                                                data: [
+                                                    <?php
+                                                    $tab_1 = "\t\t\t\t\t\t\t\t\t\t\t\t\t";
+                                                    $tab_2 = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
+                                                    for ($i = 0; $i < count($month); $i++) {
+                                                        echo "$tab_1 {\n";
+                                                        echo "$tab_1 x: '" . $month[$i]['month_name'] . "',\n";
+                                                        echo "$tab_1 y: " . $selesai_per_month[$i] . ",\n";
+                                                        echo "$tab_1 goals: [{\n";
+                                                        echo "$tab_2 name: 'Setoran',\n";
+                                                        echo "$tab_2 value: " . $setor_per_month[$i] . ",\n";
+                                                        if ($selesai_per_month[$i] < $setor_per_month[$i]) {
+                                                            echo "$tab_2 strokeWidth: 5,\n";
+                                                            echo "$tab_2 strokeHeight: 10,\n";
+                                                        }
+                                                        elseif ($selesai_per_month[$i] > $setor_per_month[$i]) {
+                                                            echo "$tab_2 strokeWidth: 10,\n";
+                                                            echo "$tab_2 strokeHeight: 0,\n";
+                                                            echo "$tab_2 strokeLineCap: 'round',\n";
+                                                        } elseif ($selesai_per_month[$i] == $setor_per_month[$i]) {
+                                                            echo "$tab_2 strokeWidth: 2,\n";
+                                                            echo "$tab_2 strokeDashArray: 2,\n";
+                                                        }
+                                                        echo "$tab_2 strokeColor: '#775DD0'\n";
+                                                        echo "$tab_1 }]\n}\n";
+                                                        echo ($i < count($month) - 1) ? "$tab_1 ,\n" : "";
                                                     }
+                                                    ?>
                                                 ]
                                             }],
                                             chart: {
-                                                height: 350,
+                                                height: 600,
                                                 type: 'bar'
                                             },
                                             plotOptions: {
