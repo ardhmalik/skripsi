@@ -16,9 +16,13 @@
                     <div class="container-fluid">
                         <!-- Form Edit Edukasi -->
                         <form action="<?= site_url('confirm_bayar') ?>" method="post" enctype="multipart/form-data" class="mx-3 my-3">
-                            <?php foreach ($data_penjemputan as $jemput) : ?>
-                                <input type="hidden" name="id_setor" id="id_setor" value="<?= ($jemput['id_jemput'] == $bayar['id_jemput']) ? $jemput['id_setor'] : null ?>">
-                            <?php endforeach ?>
+                            <!-- <= var_dump($data_jemput) ?> -->
+                            <?php
+                            for ($i = 0; $i < count($data_jemput); $i++) {
+                                if ($data_jemput[$i]['id_jemput'] == $bayar['id_jemput']) {
+                                    echo '<input type="hidden" name="id_setor" id="id_setor" value="'. $data_jemput[$i]['id_setor'] .'">';
+                                }
+                            } ?>
                             <input type="hidden" name="id_bayar" id="id_bayar" value="<?= $bayar['id_bayar'] ?>">
                             <input type="hidden" name="total_bayar" id="total_bayar" value="<?= $bayar['total_bayar'] ?>">
                             <div class="mb-3 form-floating">

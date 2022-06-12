@@ -187,7 +187,7 @@ class Trans extends CI_Controller
 			'project' => 'Bank sampah Induk Rumah Harum',
 			'title' => 'Data Pembayaran',
 			'user' => $user,
-			'data_penjemputan' => $this->tmodel->get_data_penjemputan(),
+			'data_jemput' => $this->tmodel->get_data_penjemputan(),
 			'data_bayar' => $this->tmodel->get_data_pembayaran(),
 		];
 
@@ -459,9 +459,9 @@ class Trans extends CI_Controller
 				];
 
 				$setor = $this->db->get_where('setoran', ['id_setor'=>$input['id_setor']])->row_array();
-		
-				var_dump($input);
-				die;
+				
+				// var_dump($input);
+				// die;
 		
 				$this->tmodel->confirm_pembayaran($input);
 				$this->session->set_flashdata(
