@@ -51,7 +51,7 @@
                                                 <?= ++$no ?>
                                             </th>
                                             <td>
-                                                <?= $jual['tanggal'] ?>
+                                                <?= $jual['tgl_jual'] ?>
                                             </td>
                                             <td>
                                                 <?= $jual['nama_pembeli'] ?>

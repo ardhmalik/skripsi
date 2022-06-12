@@ -147,13 +147,15 @@ class User extends CI_Controller
 			# $yesterday variable to store yesterday time on format date('Y-m-d)
 			$yesterday = date('Y-m-d', strtotime("-1 day", strtotime(date("Y-m-d"))));
 			# $exp variable to store created on format date('Y-m-d)
-			$created = date('Y-m-d', strtotime($data['penjualan'][$i]['tanggal']));
+			$confirmed = (!is_null($data['penjualan'][$i]['tgl_konfirmasi'])) ? date('Y-m-d', strtotime($data['penjualan'][$i]['tgl_konfirmasi'])) : '';
+			// var_dump($confirmed);
+			// die;
 
-			if ($created == $today && $data['penjualan'][$i]['status'] == 1) {
-				# push array to $data['pendapatan_today'] when user created is equal now
+			if ($confirmed == $today && $data['penjualan'][$i]['status'] == 1) {
+				# push array to $data['pendapatan_today'] when user confirmed is equal now
 				array_push($data['pendapatan_today'], $data['penjualan'][$i]['subtotal']);
-			} elseif ($created == $yesterday && $data['penjualan'][$i]['status'] == 1) {
-				# push array to $data['pendapatan_yesterday'] when user created is equal now
+			} elseif ($confirmed == $yesterday && $data['penjualan'][$i]['status'] == 1) {
+				# push array to $data['pendapatan_yesterday'] when user confirmed is equal now
 				array_push($data['pendapatan_yesterday'], $data['penjualan'][$i]['subtotal']);
 			}
 		}
@@ -164,7 +166,7 @@ class User extends CI_Controller
 			 * Logic for insert array count to $data['jual_per_month']
 			 */
 			# $penjualan variable to store result array of jual per month
-			$this->db->like('tanggal', '-' . $data['month'][$i]['month_number'] . '-');
+			$this->db->like('tgl_konfirmasi', '-' . $data['month'][$i]['month_number'] . '-');
 			$this->db->select('subtotal');
 			$this->db->from('penjualan');
 			$penjualan = $this->db->get()->result_array();
@@ -278,7 +280,7 @@ class User extends CI_Controller
 		// var_dump($data['setor_yesterday']);
 		// var_dump($data['jual_per_month']);
 		// var_dump($data['stok_sampah_keluar']);
-		// var_dump($data['stok_sampah_masuk']);
+		// var_dump($data['pendapatan_today']);
 		// die;
 
 		$this->load->view('sections/main', $data);

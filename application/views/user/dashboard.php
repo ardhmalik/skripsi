@@ -11,9 +11,9 @@
     <?= $this->session->flashdata('message') ?>
 
     <section class="section dashboard">
-        <!-- New Setor: <?= $setor_today ?> | Yesterday Setor: <?= $setor_yesterday ?> | 
-        New Mitra: <?= $mitra_today ?> | Yesterday Mitra: <?= $mitra_yesterday ?> |  
-        New Pendapatan: <?= $pendapatan_today ?> | Yesterday Pendapatan: <?= $pendapatan_yesterday ?>  -->
+        <!-- New Setor: <?= $setor_today ?> | Yesterday Setor: <?= $setor_yesterday ?> |
+        New Mitra: <?= $mitra_today ?> | Yesterday Mitra: <?= $mitra_yesterday ?> |
+        New Pendapatan: <?= $pendapatan_today ?> | Yesterday Pendapatan: <?= $pendapatan_yesterday ?> -->
         <div class="row">
 
             <!-- Left side columns -->
@@ -35,22 +35,18 @@
                                     <div class="ps-3">
                                         <h6><?= $setor_today ?></h6>
                                         <?php
-                                        $percent = round((($setor_today - $setor_yesterday) / $setor_yesterday) * 100 / 100, 2);
-                                        $crease = ($percent >= 0) ? 'increase' : 'decrease';
-                                        $text_fmt = ($percent >= 0) ? 'text-success' : 'text-danger';
+                                        // var_dump((($setor_today+1) - ($setor_yesterday+1)) / 1);
+                                        // die;
+                                        $percent = ($setor_yesterday == 0 || $setor_today == 0) ? ($setor_yesterday == 0 && $setor_today > 0 || $setor_yesterday > 0 && $setor_today == 0) ? round(((($setor_today+1) - ($setor_yesterday+1)) / ($setor_yesterday+1)) * 100 / 100, 2) : 0 : round((($setor_today - $setor_yesterday) / $setor_yesterday) * 100 / 100, 2);
 
-                                        switch ($setor_today) {
-                                            case $setor_today >= 0:
-                                                echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
-                                                break;
-                                            case $setor_today < 0:
-                                                echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
-                                                break;
-                                            default:
-                                                echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
-                                                # code...
-                                                break;
-                                        } ?>
+                                        if ($setor_today < $setor_yesterday) {
+                                            echo '<span class="text-danger small pt-1 fw-bold">' . number_format($percent, 2, ',', '.') . '%</span> <span class="text-muted small pt-2 ps-1"> Menurun</span>';
+                                        } elseif ($setor_today > $setor_yesterday) {
+                                            echo '<span class="text-success small pt-1 fw-bold">' . number_format($percent, 2, ',', '.') . '%</span> <span class="text-muted small pt-2 ps-1"> Meningkat</span>';
+                                        } else {
+                                            echo '<span class="text-secondary small pt-1 fw-bold">' . number_format($percent, 2, ',', '.') . '%</span> <span class="text-muted small pt-2 ps-1"> Konstan</span>';
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -75,22 +71,16 @@
                                         <h6><?= 'Rp ' . number_format($pendapatan_today, 0, ',', '.') ?></h6>
                                         <?php
                                         // var_dump($pendapatan_today);
-                                        // var_dump($total_pendapatan);
-                                        $percent = round((($pendapatan_today - $pendapatan_yesterday) / $pendapatan_yesterday) * 100 / 100, 2);
-                                        $crease = ($percent >= 0) ? 'increase' : 'decrease';
-                                        $text_fmt = ($percent >= 0) ? 'text-success' : 'text-danger';
+                                        // var_dump($pendapatan_yesterday);
+                                        // var_dump($pendapatan_yesterday == 0 && $pendapatan_today == 0);
+                                        $percent = ($pendapatan_yesterday == 0 || $pendapatan_today == 0) ? ($pendapatan_yesterday == 0 && $pendapatan_today > 0 || $pendapatan_yesterday > 0 && $pendapatan_today == 0) ? round(((($pendapatan_today+1) - ($pendapatan_yesterday+1)) / ($pendapatan_yesterday+1)) * 100 / 100, 2) : 0 : round((($pendapatan_today - $pendapatan_yesterday) / $pendapatan_yesterday) * 100 / 100, 2);
 
-                                        switch ($pendapatan_today) {
-                                            case $pendapatan_today >= 0:
-                                                echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
-                                                break;
-                                            case $pendapatan_today < 0:
-                                                echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
-                                                break;
-                                            default:
-                                                echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
-                                                # code...
-                                                break;
+                                        if ($pendapatan_today < $pendapatan_yesterday) {
+                                            echo '<span class="text-danger small pt-1 fw-bold">' . number_format($percent, 2, ',', '.') . '%</span> <span class="text-muted small pt-2 ps-1"> Menurun</span>';
+                                        } elseif ($pendapatan_today > $pendapatan_yesterday) {
+                                            echo '<span class="text-success small pt-1 fw-bold">' . number_format($percent, 2, ',', '.') . '%</span> <span class="text-muted small pt-2 ps-1"> Meningkat</span>';
+                                        } else {
+                                            echo '<span class="text-secondary small pt-1 fw-bold">' . number_format($percent, 2, ',', '.') . '%</span> <span class="text-muted small pt-2 ps-1"> Konstan</span>';
                                         } ?>
                                     </div>
                                 </div>
@@ -114,21 +104,14 @@
                                     <div class="ps-3">
                                         <h6><?= $mitra_today ?></h6>
                                         <?php
-                                        $percent = round((($mitra_today - $mitra_yesterday) / $mitra_yesterday) * 100 / 100, 2);
-                                        $crease = ($percent >= 0) ? 'increase' : 'decrease';
-                                        $text_fmt = ($percent >= 0) ? 'text-success' : 'text-danger';
+                                        $percent = ($mitra_yesterday == 0 || $mitra_today == 0) ? ($mitra_yesterday == 0 && $mitra_today > 0 || $mitra_yesterday > 0 && $mitra_today == 0) ? round(((($mitra_today+1) - ($mitra_yesterday+1)) / ($mitra_yesterday+1)) * 100 / 100, 2) : 0 : round((($mitra_today - $mitra_yesterday) / $mitra_yesterday) * 100 / 100, 2);
 
-                                        switch ($mitra_today) {
-                                            case $mitra_today >= 0:
-                                                echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
-                                                break;
-                                            case $mitra_today < 0:
-                                                echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
-                                                break;
-                                            default:
-                                                echo '<span class="' . $text_fmt . ' small pt-1 fw-bold">' . $percent . '%</span> <span class="text-muted small pt-2 ps-1">' . $crease . '</span>';
-                                                # code...
-                                                break;
+                                        if ($mitra_today < $mitra_yesterday) {
+                                            echo '<span class="text-danger small pt-1 fw-bold">' . number_format($percent, 2, ',', '.') . '%</span> <span class="text-muted small pt-2 ps-1"> Menurun</span>';
+                                        } elseif ($mitra_today > $mitra_yesterday) {
+                                            echo '<span class="text-success small pt-1 fw-bold">' . number_format($percent, 2, ',', '.') . '%</span> <span class="text-muted small pt-2 ps-1"> Meningkat</span>';
+                                        } else {
+                                            echo '<span class="text-secondary small pt-1 fw-bold">' . number_format($percent, 2, ',', '.') . '%</span> <span class="text-muted small pt-2 ps-1"> Konstan</span>';
                                         } ?>
                                     </div>
                                 </div>
