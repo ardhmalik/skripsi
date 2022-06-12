@@ -29,7 +29,9 @@ class Mitra extends CI_Controller
 			'tipe' => $this->session->userdata('tipe')
 		];
 		# $mitra variable returns mitra row array data value as per email in stored session
-		$mitra = $this->amodel->get_mitra_by_email($sessions['email']);
+		$mitra = $this->db->get_where('mitra', ['email' => $sessions['email']])->row_array();
+		// var_dump($mitra);
+		// die;
 
 		# Ternary operation to set foto image for user
 		($mitra['foto'] == null) ? $mitra['foto'] = 'avatar.png' : $mitra['foto'];
@@ -64,8 +66,52 @@ class Mitra extends CI_Controller
 		$data = [
 			'project' => 'Bank Sampah Induk Rumah Harum',
 			'title' => 'Dashboard Mitra',
-			'mitra' => $mitra
+			'mitra' => $mitra,
+			'month' => $this->db->get('month')->result_array(),
+			'setoran' => $this->tmodel->get_data_setoran(),
+			'top_setoran' => $this->tmodel->top_setoran(),
+			'setor_per_month' => []
 		];
+
+		# Looping to insert array data to $data['new_setor']
+		for ($i = 0; $i < count($data['setoran']); $i++) {
+			/**
+			 * Logic for insert array count to $data['jual_per_month']
+			 */
+			# $penjualan variable to store result array of jual per month
+			$this->db->select('subtotal, status');
+			$this->db->where('id_mitra', $mitra['id_mitra']);
+			$this->db->from('setoran');
+			$setoran = $this->db->get()->result_array();
+			$subtotal = [];
+			// var_dump($setoran);
+			// die;
+			# push array to $data['jual_per_month']
+			$data['total_setoran'] = count($setoran);
+			for ($j=0; $j < count($setoran); $j++) { 
+				if ($setoran[$j]['status'] == "Selesai") {
+					array_push($subtotal, $setoran[$j]['subtotal']);
+				}
+			}
+			# push array to $data['jual_per_month']
+			$data['total_pendapatan'] = array_sum($subtotal);
+		}
+
+		# Looping to insert array data to $data['new_jual']
+		for ($i = 0; $i < count($data['month']); $i++) {
+			/**
+			 * Logic for insert array count to $data['jual_per_month']
+			 */
+			# $penjualan variable to store result array of jual per month
+			$this->db->like('tanggal', '-' . $data['month'][$i]['month_number'] . '-');
+			$this->db->select('status');
+			$this->db->where('id_mitra', $mitra['id_mitra']);
+			$this->db->from('setoran');
+			$setoran = $this->db->get()->result_array();
+
+			# push array to $data['jual_per_month']
+			array_push($data['setor_per_month'], count($setoran));
+		}
 
 		$this->load->view('sections/main', $data);
 	}
@@ -466,17 +512,17 @@ class Mitra extends CI_Controller
 
 		// var_dump($input);
 		// die;
-		
+
 		$this->tmodel->del_setoran($input);
 		$this->session->set_flashdata(
 			'message',
 			'<div class="alert alert-success alert-dismissible fade show" role="alert">
-				Berhasil menghapus data setoran sampah <span class="badge bg-danger">'. $this->input->post('nama_sampah') .'</span>
-				dengan subtotal <span class="badge bg-danger">'. $this->input->post('subtotal') .'</span>
+				Berhasil menghapus data setoran sampah <span class="badge bg-danger">' . $this->input->post('nama_sampah') . '</span>
+				dengan subtotal <span class="badge bg-danger">' . $this->input->post('subtotal') . '</span>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>'
 		);
-	
+
 		redirect('setoran');
 	}
 
