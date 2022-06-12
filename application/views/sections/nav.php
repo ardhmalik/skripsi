@@ -83,14 +83,14 @@ $sess = [
         <!-- Setoran -->
         <li class="nav-item">
             <a class="nav-link <?= ($this->uri->segment(1) == 'setoran') ? '' : 'collapsed' ?>" href="<?= site_url('setoran') ?>">
-                <i class="bi bi-file-earmark-arrow-up"></i>
+                <i class="bi bi-box"></i>
                 <span>Setoran</span>
             </a>
         </li>
         <!-- Rekening -->
         <li class="nav-item">
             <a class="nav-link <?= ($this->uri->segment(1) == 'rekening') ? '' : 'collapsed' ?>" href="<?= site_url('rekening') ?>">
-                <i class="bi bi-credit-card"></i>
+                <i class="bi bi-credit-card-fill"></i>
                 <span>Rekening</span>
             </a>
         </li>
