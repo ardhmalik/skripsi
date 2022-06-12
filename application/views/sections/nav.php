@@ -144,7 +144,8 @@ $sess = [
         <!-- Data Transaksi -->
         <li class="nav-item">
             <a class="nav-link <?= ($this->uri->segment(1) == 'data_setoran' || $this->uri->segment(1) == 'data_penjemputan' || $this->uri->segment(1) == 'data_pembayaran' || $this->uri->segment(1) == 'data_penjualan' || $this->uri->segment(1) == 'data_pembeli' || $this->uri->segment(1) == 'data_sampah') ? '' : 'collapsed' ?>" data-bs-target="#forms-nav-trans" data-bs-toggle="collapse" href="#">
-                <i class="bx bxs-user-account"></i>
+                <!-- <i class="bx bxs-user-account"></i> -->
+                <i class="bi bi-arrow-left-right"></i>
                 <span>Transaksi</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="forms-nav-trans" class="nav-content collapse <?= ($this->uri->segment(1) == 'data_setoran' || $this->uri->segment(1) == 'data_penjemputan' || $this->uri->segment(1) == 'data_pembayaran' || $this->uri->segment(1) == 'data_penjualan' || $this->uri->segment(1) == 'data_pembeli' || $this->uri->segment(1) == 'data_sampah') ? 'show' : '' ?>" data-bs-parent="#sidebar-nav">
