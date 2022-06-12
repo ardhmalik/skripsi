@@ -94,12 +94,13 @@ $route['edit_tipe'] = 'actor/edit_tipe';
 // jenis
 $route['add_jenis'] = 'user/add_jenis';
 $route['edit_jenis'] = 'user/edit_jenis';
+$route['del_jenis'] = 'user/del_jenis';
 // admin
-$route['del_admin'] = 'actor/del_admin';
-$route['active_admin'] = 'actor/active_admin';
+$route['on_admin'] = 'actor/on_admin';
+$route['off_admin'] = 'actor/off_admin';
 // mitra
-$route['del_mitra'] = 'actor/del_mitra';
-$route['active_mitra'] = 'actor/active_mitra';
+$route['on_mitra'] = 'actor/on_mitra';
+$route['off_mitra'] = 'actor/off_mitra';
 // sampah
 $route['add_sampah'] = 'user/add_sampah';
 $route['edit_sampah'] = 'user/edit_sampah';
@@ -138,6 +139,8 @@ $route['edit_rek'] = 'mitra/edit_rek';
 $route['edit_struktur'] = 'mitra/edit_struktur';
 // edukasi
 $route['edukasi'] = 'mitra/edukasi';
+$route['join_edukasi'] = 'mitra/join_edukasi';
+$route['cancel_edukasi'] = 'mitra/cancel_edukasi';
 // setoran
 $route['add_setoran'] = 'mitra/add_setoran';
 $route['edit_setoran'] = 'mitra/edit_setoran';

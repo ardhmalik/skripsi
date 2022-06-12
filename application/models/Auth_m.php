@@ -47,6 +47,7 @@ class Auth_m extends CI_Model
                 'label' => 'Email',
                 'rules' => 'required|trim|valid_email|is_unique[mitra.email]',
                 'errors' => [
+                    'valid_email' => 'Masukkan format email yang benar, contoh: <i>example@email.com</i>!',
                     'is_unique' => 'Email telah terdaftar, coba gunakan email lain!'
                 ]
             ], [
@@ -117,7 +118,7 @@ class Auth_m extends CI_Model
             ]
         ];
     }
-    
+
     /**
      * Rules of registration authentification 
      * @access public
@@ -132,6 +133,7 @@ class Auth_m extends CI_Model
                 'label' => 'Email',
                 'rules' => 'required|trim|valid_email|is_unique[user.email]',
                 'errors' => [
+                    'valid_email' => 'Masukkan format email yang benar!',
                     'is_unique' => 'Email telah terdaftar, coba gunakan email lain!'
                 ]
             ], [
@@ -163,7 +165,7 @@ class Auth_m extends CI_Model
             ]
         ];
     }
-    
+
     /**
      * Finds and returns a tipe mitra
      * @access public
@@ -176,7 +178,7 @@ class Auth_m extends CI_Model
 
         return $query;
     }
-    
+
     /**
      * Finds and returns a tipe mitra
      * @access public
@@ -203,7 +205,7 @@ class Auth_m extends CI_Model
 
         return $query;
     }
-    
+
     /**
      * Finds and returns a user by email
      * @access public
@@ -212,8 +214,8 @@ class Auth_m extends CI_Model
      */
     public function get_user_by_email($email)
     {
-        $sql = 'CALL tampil_profil_user(?)';
-        $query = $this->db->query($sql, $email)->row_array();
+        $sql = $this->db->get_where('data_user', ['email'=>$email]);
+        $query = $sql->row_array();
 
         return $query;
     }
@@ -232,7 +234,22 @@ class Auth_m extends CI_Model
 
         return $query;
     }
-    
+
+    /**
+     * Create and insert new user
+     * @access public
+     * @param string $data Containing an array of emails, usernames, passwords
+     * @description A function that executes a query with a stored procedure 
+     * 'addUser(email_param, username_param, password_param)'
+     */
+    public function create_struktur($data)
+    {
+        $sql = $this->db->insert('struktur', $data);
+        $query = $sql;
+
+        return $query;
+    }
+
     /**
      * Create and insert new user
      * @access public
@@ -262,7 +279,7 @@ class Auth_m extends CI_Model
 
         return $query;
     }
-    
+
     /**
      * Update data user
      * @access public
@@ -292,7 +309,7 @@ class Auth_m extends CI_Model
 
         return $query;
     }
-    
+
     /**
      * Processing change password
      * @access public

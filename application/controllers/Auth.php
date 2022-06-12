@@ -44,24 +44,38 @@ class Auth extends CI_Controller
 
 		# IF statement to check if user data exists
 		if ($mitra) {
-			# IF statement to check whether entered password matches user data
-			if (password_verify($data['password'], $mitra['password'])) {
-				# $data variable to save field email & username from $mitra
-				$data = [
-					'email' => $mitra['email'],
-					'username' => $mitra['username'],
-					'tipe' => $mitra['tipe_mitra']
-				];
-				# Add $data values to session
-				$this->session->set_userdata($data);
-
-				redirect('dashboard');
+			if ($mitra['status'] == 1) {
+				# IF statement to check whether entered password matches user data
+				if (password_verify($data['password'], $mitra['password'])) {
+					# $data variable to save field email & username from $mitra
+					$data = [
+						'email' => $mitra['email'],
+						'username' => $mitra['username'],
+						'tipe' => $mitra['tipe_mitra']
+					];
+					# Add $data values to session
+					$this->session->set_userdata($data);
+	
+					redirect('dashboard');
+				} else {
+					# If password is not matches, will be send wrong password message
+					$this->session->set_flashdata(
+						'message',
+						'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							Maaf password anda salah, coba lagi!
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>'
+					);
+					# It will be returned to login page
+					redirect('login_mitra');
+				}
 			} else {
 				# If password is not matches, will be send wrong password message
 				$this->session->set_flashdata(
 					'message',
 					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
-						Maaf password anda salah, coba lagi!
+						Maaf akun anda telah di <span class="badge bg-danger">Non Aktif</span> kan,
+						silahkan hubungi pihak Bank Sampah Induk Rumah Harum untuk proses pengaktifan kembali!
 						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>'
 				);
@@ -103,24 +117,38 @@ class Auth extends CI_Controller
 
 		# IF statement to check if user data exists
 		if ($user) {
-			# IF statement to check whether entered password matches user data
-			if (password_verify($data['password'], $user['password'])) {
-				# $data variable to save field email & username from $user
-				$data = [
-					'email' => $user['email'],
-					'username' => $user['username'],
-					'role' => $user['role']
-				];
-				# Add $data values to session
-				$this->session->set_userdata($data);
-
-				redirect('dashboard_user');
+			if ($user['status'] == 1) {
+				# IF statement to check whether entered password matches user data
+				if (password_verify($data['password'], $user['password'])) {
+					# $data variable to save field email & username from $user
+					$data = [
+						'email' => $user['email'],
+						'username' => $user['username'],
+						'role' => $user['role']
+					];
+					# Add $data values to session
+					$this->session->set_userdata($data);
+	
+					redirect('dashboard_user');
+				} else {
+					# If password is not matches, will be send wrong password message
+					$this->session->set_flashdata(
+						'message',
+						'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							Maaf password anda salah, coba lagi!
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>'
+					);
+					# It will be returned to login page
+					redirect('login_user');
+				}
 			} else {
 				# If password is not matches, will be send wrong password message
 				$this->session->set_flashdata(
 					'message',
 					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
-						Maaf password anda salah, coba lagi!
+						Maaf akun anda telah di <span class="badge bg-danger">Non Aktif</span> kan,
+						silahkan hubungi ketua Bank Sampah Induk Rumah Harum untuk proses pengaktifan kembali!
 						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>'
 				);
@@ -305,8 +333,8 @@ class Auth extends CI_Controller
 				'id_tipe' => $this->input->post('id_tipe')
 			];
 
-			var_dump($input);
-			die;
+			// var_dump($input);
+			// die;
 
 			# Passing $input as a parameter of createUser() function to execute adding data to database
 			$amodel->create_mitra($input);
@@ -412,8 +440,6 @@ class Auth extends CI_Controller
 	{
 		# $amodel variable to shorten model call 'amodel'
 		$amodel = $this->amodel;
-		# $validation variable to shorten form_validation library
-		$validation = $this->form_validation;
 		# $session variable to save field email & username from user
 		$sessions = [
 			'email' => $this->session->userdata('email'),
@@ -421,7 +447,7 @@ class Auth extends CI_Controller
 			'tipe' => $this->session->userdata('tipe')
 		];
 		# $user variable returns user row array data value as per email in stored session
-		$mitra = $amodel->get_mitra_by_email($sessions['email']);
+		$mitra = $this->db->get_where('data_mitra', ['email'=>$sessions['email']])->row_array();
 		# Ternary operation to set foto image for mitra
 		($mitra['foto'] == null) ? $mitra['foto'] = 'avatar.png' : $mitra['foto'];
 
@@ -456,7 +482,8 @@ class Auth extends CI_Controller
 		$data = [
 			'project' => 'Bank sampah Induk Rumah Harum',
 			'title' => 'Profil',
-			'mitra' => $mitra
+			'mitra' => $mitra,
+			'struktur' => $this->db->get_where('struktur', ['id_mitra'=>$mitra['id_mitra']])->row_array()
 		];
 
 		// var_dump($data);
@@ -475,8 +502,6 @@ class Auth extends CI_Controller
 	{
 		# $amodel variable to shorten model call 'amodel'
 		$amodel = $this->amodel;
-		# $validation variable to shorten form_validation library
-		$validation = $this->form_validation;
 		# $session variable to save field email & username from user
 		$sessions = [
 			'email' => $this->session->userdata('email'),
@@ -856,7 +881,7 @@ class Auth extends CI_Controller
 			</div>'
 		);
 		# It will be returned to login page
-		$red = redirect(($role) ? 'login_user' : '');
+		redirect(($role) ? 'login_user' : '');
 		// var_dump($red);
 		// die;
 	}

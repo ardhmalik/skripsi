@@ -30,15 +30,6 @@
                                     <div class="card-body">
                                         <h5 class="card-title">Data Sampah</h5>
                                         <p>Berisi daftar sampah yang bisa disetorkan</p>
-                                        <?php if ($this->session->userdata('role') != "Driver") : ?>
-                                        <div class="row">
-                                            <div class="col-auto ms-auto">
-                                                <div class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#addSampah">
-                                                    <i class="bi bi-plus-square-fill"></i> Tambah Sampah
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <?php endif ?>
 
                                         <!-- Table with stripped rows -->
                                         <div class="table-responsive">
@@ -50,9 +41,6 @@
                                                         <th scope="col">Nama Sampah</th>
                                                         <th scope="col">Jenis</th>
                                                         <th scope="col">Harga</th>
-                                                        <?php if ($this->session->userdata('role') != "Driver") : ?>
-                                                            <th scope="col">Aksi</th>
-                                                        <?php endif ?>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -77,18 +65,6 @@
                                                             <td>
                                                                 <?= "Rp " . number_format($sampah['harga'], 0, ',', '.')  ?>
                                                             </td>
-                                                            <?php if ($this->session->userdata('role') != "Driver") : ?>
-                                                                <td class="text-center">
-                                                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editSampah-<?= $sampah['id_sampah'] ?>" title="Edit">
-                                                                        <i class="bi bi-pencil-square"></i>
-                                                                    </button>
-                                                                    <?php if (is_null($sampah['used_setor']) && is_null($sampah['used_jual'])) : ?>
-                                                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delSampah-<?= $sampah['id_sampah'] ?>" title="Hapus">
-                                                                            <i class="bi bi-trash2-fill"></i>
-                                                                        </button>
-                                                                    <?php endif ?>
-                                                                </td>
-                                                            <?php endif ?>
                                                         </tr>
                                                     <?php endforeach ?>
                                                 </tbody>
@@ -103,15 +79,6 @@
                                     <div class="card-body">
                                         <h5 class="card-title">Data Jenis Sampah</h5>
                                         <p>Berisi jenis sampah yang bisa disetorkan</p>
-                                        <?php if ($this->session->userdata('role') != "Driver") : ?>
-                                        <div class="row">
-                                            <div class="col-auto ms-auto">
-                                                <div class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#addJenis">
-                                                    <i class="bi bi-plus-square-fill"></i> Tambah Jenis
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <?php endif ?>
 
                                         <!-- Table with stripped rows -->
                                         <div class="table-responsive">
@@ -120,9 +87,6 @@
                                                     <tr>
                                                         <th scope="col">#</th>
                                                         <th scope="col">Nama Jenis</th>
-                                                        <?php if ($this->session->userdata('role') != "Driver") : ?>
-                                                            <th scope="col">Aksi</th>
-                                                        <?php endif ?>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -136,18 +100,6 @@
                                                             <td>
                                                                 <?= $jns['jenis_sampah'] ?>
                                                             </td>
-                                                            <?php if ($this->session->userdata('role') != "Driver") : ?>
-                                                                <td class="text-center">
-                                                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editJenis-<?= $jns['id_jenis'] ?>" title="Edit">
-                                                                        <i class="bi bi-pencil-square"></i>
-                                                                    </button>
-                                                                    <?php if (is_null($jns['used_sampah'])) : ?>
-                                                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delJenis-<?= $jns['id_jenis'] ?>" title="Hapus">
-                                                                            <i class="bi bi-trash2-fill"></i>
-                                                                        </button>
-                                                                    <?php endif ?>
-                                                                </td>
-                                                            <?php endif ?>
                                                         </tr>
                                                     <?php endforeach ?>
                                                 </tbody>
