@@ -121,7 +121,7 @@ class Trans_m extends CI_Model
     
     public function confirm_penjemputan($data)
     {
-        $sql = 'SELECT konfirmasi_penjemputan(?, ?)';
+        $sql = 'SELECT konfirmasi_penjemputan(?, ?, ?)';
         $query = $this->db->query($sql, $data)->row_array();
 
         return $query;

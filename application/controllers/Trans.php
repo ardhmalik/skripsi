@@ -376,9 +376,11 @@ class Trans extends CI_Controller
 	
 	public function confirm_jemput()
 	{
+		$user = $this->db->get_where('user', ['email'=>$this->session->userdata('email')])->row_array();
 		$input = [
 			'id_jemput' => $this->input->post('id_jemput'),
-			'id_setor' => $this->input->post('id_setor')
+			'id_setor' => $this->input->post('id_setor'),
+			'id_user' => $user['id_user']
 		];
 
 		// var_dump($input);
@@ -455,10 +457,11 @@ class Trans extends CI_Controller
 					'id_setor' => $this->input->post('id_setor'),
 					'id_user' => $user['id_user'],
 				];
+
 				$setor = $this->db->get_where('setoran', ['id_setor'=>$input['id_setor']])->row_array();
 		
-				// var_dump($input);
-				// die;
+				var_dump($input);
+				die;
 		
 				$this->tmodel->confirm_pembayaran($input);
 				$this->session->set_flashdata(
