@@ -16,9 +16,11 @@
                     <form action="" method="post" class="mx-4 my-4">
                         <div class="form-floating mb-4">
                             <select class="form-select" id="id_role" name="id_role" aria-label="State">
-                                <?php foreach ($role as $rl) : ?>
+                                <?php foreach ($role as $rl) :
+                                    if ($rl['id_role'] != 2) : ?>
                                     <option value="<?= $rl['id_role'] ?>"><?= $rl['role'] ?></option>
-                                <?php endforeach ?>
+                                <?php endif;
+                                endforeach; ?>
                             </select>
                             <label for="id_role">Posisi</label>
                         </div>
