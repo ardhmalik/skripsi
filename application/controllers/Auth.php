@@ -692,7 +692,7 @@ class Auth extends CI_Controller
 				$this->session->set_flashdata(
 					'message',
 					'<div class="alert alert-success alert-dismissible fade show" role="alert">
-					Berhasil memperbarui profil-1!
+					Berhasil memperbarui profil!
 					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>'
 				);
@@ -731,7 +731,7 @@ class Auth extends CI_Controller
 			$this->session->set_flashdata(
 				'message',
 				'<div class="alert alert-success alert-dismissible fade show" role="alert">
-					Berhasil memperbarui profil-2!
+					Berhasil memperbarui profil!
 					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>'
 			);
