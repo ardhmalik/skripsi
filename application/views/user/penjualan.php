@@ -77,10 +77,10 @@
                                                 <?php endif ?>
                                             </td>
                                             <td>
-                                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editJual-<?= $jual['id_jual'] ?>" title="Edit">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </button>
                                                 <?php if ($jual['status'] == 0) : ?>
+                                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editJual-<?= $jual['id_jual'] ?>" title="Edit">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </button>
                                                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmJual-<?= $jual['id_jual'] ?>" title="Selesai">
                                                         <i class="bi bi-patch-check-fill"></i>
                                                     </button>
