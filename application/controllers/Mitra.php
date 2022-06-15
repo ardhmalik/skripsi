@@ -336,7 +336,7 @@ class Mitra extends CI_Controller
 
 		$data = [
 			'project' => 'Bank Sampah Induk Rumah Harum',
-			'title' => 'Edukasi',
+			'title' => 'Setoran',
 			'mitra' => $mitra,
 			'data_sampah' => $this->umodel->get_data_sampah(),
 			'setoran' => $this->tmodel->get_setoran_mitra($mitra['id_mitra']),
