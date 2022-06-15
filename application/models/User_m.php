@@ -9,6 +9,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class User_m extends CI_Model
 {
+    public function add_jenis_rules()
+    {
+        return [
+            [
+                'field' => 'jenis_sampah',
+                'label' => 'Nama Jenis',
+                'rules' => 'required|trim|is_unique[jenis.jenis_sampah]',
+                'errors' => [
+                    'is_unique' => 'Jenis Sampah telah tersedia, coba tambahkan jenis sampah lain!'
+                ]
+            ]
+        ];
+    }
+
     public function get_all_user()
     {
         $sql = $this->db->get('data_user');

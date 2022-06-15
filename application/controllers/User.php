@@ -514,17 +514,6 @@ class User extends CI_Controller
 		// var_dump($_FILES);
 		// die;
 
-		if (!is_numeric($this->input->post('harga'))) {
-			# Add an alert message to session if createUser() process is successful
-			$this->session->set_flashdata(
-				'message',
-				'<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					Masukkan harga sampah berupa angka!
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>'
-			);
-		}
-
 		# IF statement to check field name on foto arrays
 		if (!empty($_FILES['gambar']['name'])) {
 			# IF failed to upload gambar
@@ -535,53 +524,92 @@ class User extends CI_Controller
 				$this->session->set_flashdata(
 					'message',
 					'<div class="alert alert-danger alert-dismissible fade show" role="alert">'
-						. $error .
-						'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-						</div>'
+					. $error .
+					'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
 				);
 			} else {
-				# $uploaded_data variable to store process upload data
-				$uploaded_data = $this->upload->data();
+				if (!is_numeric($this->input->post('harga'))) {
+					# Add an alert message to session if createUser() process is successful
+					$this->session->set_flashdata(
+						'message',
+						'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							Masukkan harga sampah berupa angka!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>'
+					);
+				} elseif (is_numeric($this->input->post('harga')) && $this->input->post('harga') <= 0) {
+					$this->session->set_flashdata(
+						'message',
+						'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							Masukkan harga sampah lebih dari 0!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>'
+					);
+				} else {
+					# $uploaded_data variable to store process upload data
+					$uploaded_data = $this->upload->data();
+					$input = [
+						'nama' => $this->input->post('nama'),
+						'harga' => $this->input->post('harga'),
+						'gambar' => $uploaded_data['file_name'],
+						'id_jenis' => $this->input->post('id_jenis')
+					];
+					
+					// var_dump($input);
+					// die;
+					
+					# Passing $input as a parameter of createUser() function to execute adding data to database
+					$this->umodel->add_sampah($input);
+					# Add an alert message to session if createUser() process is successful
+					$this->session->set_flashdata(
+						'message',
+						'<div class="alert alert-success alert-dismissible fade show" role="alert">
+						Berhasil menambahkan <span class="badge bg-success">' . $input['nama'] . '</span> ke data sampah!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>'
+					);
+				}
+				
+			}
+		} else {
+			if (!is_numeric($this->input->post('harga'))) {
+				# Add an alert message to session if createUser() process is successful
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Masukkan harga sampah berupa angka!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+			} elseif (is_numeric($this->input->post('harga')) && $this->input->post('harga') <= 0) {
+				$this->session->set_flashdata(
+					'message',
+					'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						Masukkan harga sampah lebih dari 0!
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>'
+				);
+			} else {
 				$input = [
 					'nama' => $this->input->post('nama'),
 					'harga' => $this->input->post('harga'),
-					'gambar' => $uploaded_data['file_name'],
+					'gambar' => null,
 					'id_jenis' => $this->input->post('id_jenis')
 				];
-
 				// var_dump($input);
 				// die;
-
 				# Passing $input as a parameter of createUser() function to execute adding data to database
 				$this->umodel->add_sampah($input);
 				# Add an alert message to session if createUser() process is successful
 				$this->session->set_flashdata(
 					'message',
 					'<div class="alert alert-success alert-dismissible fade show" role="alert">
-						Berhasil menambahkan <span class="badge bg-success">' . $input['nama'] . '</span> ke data sampah!
+							Berhasil menambahkan <span class="badge bg-success">' . $input['nama'] . '</span> ke data sampah!
 						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 						</div>'
 				);
 			}
-		} else {
-			$input = [
-				'nama' => $this->input->post('nama'),
-				'harga' => $this->input->post('harga'),
-				'gambar' => null,
-				'id_jenis' => $this->input->post('id_jenis')
-			];
-			// var_dump($input);
-			// die;
-			# Passing $input as a parameter of createUser() function to execute adding data to database
-			$this->umodel->add_sampah($input);
-			# Add an alert message to session if createUser() process is successful
-			$this->session->set_flashdata(
-				'message',
-				'<div class="alert alert-success alert-dismissible fade show" role="alert">
-						Berhasil menambahkan <span class="badge bg-success">' . $input['nama'] . '</span> ke data sampah!
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-					</div>'
-			);
 		}
 
 		redirect('data_sampah');
@@ -699,21 +727,30 @@ class User extends CI_Controller
 
 	public function add_jenis()
 	{
+		$this->form_validation->set_rules($this->umodel->add_jenis_rules());
 		$input = [
 			'jenis_sampah' => $this->input->post('jenis_sampah')
 		];
 
-		// var_dump($input);
-		// die;
-
-		$this->umodel->add_jenis($input);
-		$this->session->set_flashdata(
-			'message',
-			'<div class="alert alert-success alert-dismissible fade show" role="alert">
-				Berhasil menambahkan jenis sampah <span class="badge bg-success">' . $input['jenis_sampah'] . '</span>
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>'
-		);
+		if ($this->form_validation->run() == FALSE) {
+			# Send validation error message with session flashdata
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-danger alert-dismissible fade show" role="alert">'
+					. validation_errors() .
+					'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		} else {
+			$this->umodel->add_jenis($input);
+			$this->session->set_flashdata(
+				'message',
+				'<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Berhasil menambahkan jenis sampah <span class="badge bg-success">' . $input['jenis_sampah'] . '</span>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>'
+			);
+		}
 
 		redirect('data_sampah');
 	}
