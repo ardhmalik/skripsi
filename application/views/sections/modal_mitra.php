@@ -14,7 +14,7 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <h5 class="text-center text-bold">
-                            <?= var_dump($mtr['id_mitra']) ?>
+                            <!-- <= var_dump($mtr['id_mitra']) ?> -->
                             Yakin menonaktifkan akun mitra ini?
                         </h5>
                         <div class="row">

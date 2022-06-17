@@ -269,13 +269,15 @@ class Trans extends CI_Controller
 				// var_dump($data);
 				// die;
 		
+				$sampah = $this->db->get_where('sampah', ['id_sampah'=>$data['id_sampah']])->row_array();
 				# Passing $input as a parameter of createUser() function to execute adding data to database
 				$this->tmodel->add_penjualan($data);
 				# Add an alert message to session if createUser() process is successful
 				$this->session->set_flashdata(
 					'message',
 					'<div class="alert alert-success alert-dismissible fade show" role="alert">
-						Berhasil menambahkan data penjualan
+						Berhasil menambahkan data penjualan <span class="badge bg-success">'. $sampah['nama'] .'</span>
+						dengan subtotal <span class="badge bg-success">Rp '. number_format($data['subtotal'], 2, ',', '.') .'</span>
 						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>'
 				);

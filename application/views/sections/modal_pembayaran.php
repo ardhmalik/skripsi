@@ -43,7 +43,7 @@
                                         <input type="file" name="bukti" id="bukti" class="form-control" title="Pilih gambar bukti pembayaran" accept="image/png, image/jpeg, image/jpg">
                                         <label class="input-group-text me-2" for="bukti"><i class="bi bi-upload"></i></label>
                                     </div>
-                                    <small class="text-muted fst-italic">Max: 1MB (1800x1800 px) *.(png,jpg,jpeg)</small>
+                                    <small class="text-muted fst-italic">Max: 1MB (1000x1000 px) *.(png,jpg,jpeg)</small>
                                 </div>
                             </div>
                             <div class="d-flex bd-highlight">
