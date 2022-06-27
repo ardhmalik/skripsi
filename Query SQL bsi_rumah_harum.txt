@@ -1,0 +1,364 @@
+-> TABLE
+	CREATE TABLE month(id int NOT NULL PRIMARY KEY, month_number varchar(2) NOT NULL, month_name varchar(20));
+	CREATE TABLE role(id_role int NOT NULL AUTO_INCREMENT PRIMARY KEY, role varchar(50) NOT NULL);
+	CREATE TABLE tipe(id_tipe int NOT NULL AUTO_INCREMENT PRIMARY KEY, tipe_mitra varchar(50) NOT NULL);
+	CREATE TABLE jenis(id_jenis int NOT NULL AUTO_INCREMENT PRIMARY KEY, jenis_sampah varchar(50) NOT NULL);
+	CREATE TABLE user(id_user int NOT NULL AUTO_INCREMENT PRIMARY KEY, email varchar(50) NOT NULL, password varchar(256) NOT NULL, username varchar(50) NOT NULL, tgl_daftar datetime NOT NULL, no_telp varchar(12) NOT NULL, foto varchar(50), status bool NOT NULL, id_role int NOT NULL, FOREIGN KEY(id_role) REFERENCES role(id_role));
+	CREATE TABLE edukasi(id_edu int NOT NULL AUTO_INCREMENT PRIMARY KEY, judul varchar(150) NOT NULL, tempat text NOT NULL, mulai datetime NOT NULL, selesai datetime NOT NULL, ket text, id_user int NOT NULL, FOREIGN KEY(id_user) REFERENCES user(id_user));
+	CREATE TABLE mitra(id_mitra int NOT NULL AUTO_INCREMENT PRIMARY KEY, email varchar(50) NOT NULL, password varchar(256) NOT NULL, username varchar(50) NOT NULL, tgl_daftar datetime NOT NULL, alamat text NOT NULL, no_telp varchar(12) NOT NULL, foto varchar(50), status bool NOT NULL, jadwal_jemput datetime NOT NULL, id_edu int, id_tipe int NOT NULL, FOREIGN KEY(id_edu) REFERENCES edukasi(id_edu), FOREIGN KEY(id_tipe) REFERENCES tipe(id_tipe));
+	CREATE TABLE rekening(id_rek int NOT NULL AUTO_INCREMENT PRIMARY KEY, bank varchar(50), atas_nama varchar(100) NOT NULL, no_rek varchar(20), id_mitra int NOT NULL, FOREIGN KEY(id_mitra) REFERENCES mitra(id_mitra));
+	CREATE TABLE struktur(id_struktur int NOT NULL AUTO_INCREMENT PRIMARY KEY, ketua varchar(50), sekretaris varchar(50), bendahara varchar(50), anggota text, total_nsb int(5), id_mitra int NOT NULL, FOREIGN KEY(id_mitra) REFERENCES mitra(id_mitra));
+	CREATE TABLE pembeli(id_pembeli int NOT NULL AUTO_INCREMENT PRIMARY KEY, nama varchar(50) NOT NULL, no_telp varchar(12) NOT NULL, alamat text NOT NULL);
+	CREATE TABLE sampah(id_sampah int NOT NULL AUTO_INCREMENT PRIMARY KEY, nama varchar(50) NOT NULL, harga int(5) NOT NULL, gambar varchar(50), id_jenis int NOT NULL, FOREIGN KEY(id_jenis) REFERENCES jenis(id_jenis));
+	CREATE TABLE setoran(id_setor int NOT NULL AUTO_INCREMENT PRIMARY KEY, tanggal datetime NOT NULL, berat float NOT NULL, subtotal float NOT NULL, status enum("Penjemputan", "Pembayaran", "Selesai") NOT NULL, jadwal_jemput datetime NOT NULL, id_sampah int NOT NULL, id_mitra int NOT NULL, FOREIGN KEY(id_sampah) REFERENCES sampah(id_sampah), FOREIGN KEY(id_mitra) REFERENCES mitra(id_mitra));
+	CREATE TABLE penjemputan(id_jemput int NOT NULL AUTO_INCREMENT PRIMARY KEY, tanggal datetime, status bool NOT NULL, jadwal_jemput datetime NOT NULL, id_user int, id_setor int NOT NULL, FOREIGN KEY(id_user) REFERENCES user(id_user), FOREIGN KEY(id_setor) REFERENCES setoran(id_setor));
+	CREATE TABLE pembayaran(id_bayar int NOT NULL AUTO_INCREMENT PRIMARY KEY, total_bayar float NOT NULL, tanggal datetime, bank varchar(50) NOT NULL, rek_tujuan varchar(20) NOT NULL, status bool NOT NULL, bukti varchar(50), id_user int, id_jemput int NOT NULL, FOREIGN KEY(id_user) REFERENCES user(id_user), FOREIGN KEY(id_jemput) REFERENCES penjemputan(id_jemput));
+	CREATE TABLE penjualan(id_jual int NOT NULL AUTO_INCREMENT PRIMARY KEY, harga int(5) NOT NULL, berat float NOT NULL, subtotal float NOT NULL, tgl_jual datetime NOT NULL, tgl_konfirmasi datetime, status bool NOT NULL, id_sampah int NOT NULL, id_pembeli int NOT NULL, id_user int NOT NULL, FOREIGN KEY(id_sampah) REFERENCES sampah(id_sampah), FOREIGN KEY(id_pembeli) REFERENCES pembeli(id_pembeli), FOREIGN KEY(id_user) REFERENCES user(id_user));
+
+-> INDEX
+	CREATE INDEX idx_role ON role(id_role);
+ 	CREATE INDEX idx_tipe ON tipe(id_tipe);
+ 	CREATE INDEX idx_jenis ON jenis(id_jenis);
+ 	CREATE INDEX idx_user ON user(id_user, id_role);
+ 	CREATE INDEX idx_edukasi ON edukasi(id_edu, id_user);
+ 	CREATE INDEX idx_mitra ON mitra(id_tipe, id_edu);
+ 	CREATE INDEX idx_rekening ON rekening(id_rek, id_mitra);
+ 	CREATE INDEX idx_struktur ON struktur(id_struktur, id_mitra);
+ 	CREATE INDEX idx_pembeli ON pembeli(id_pembeli);
+ 	CREATE INDEX idx_sampah ON sampah(id_sampah);
+ 	CREATE INDEX idx_setoran ON setoran(id_setor, id_mitra, id_sampah);
+ 	CREATE INDEX idx_penjemputan ON penjemputan(id_jemput, id_setor, id_user);
+ 	CREATE INDEX idx_pembayaran ON pembayaran(id_bayar, id_jemput, id_user);
+ 	CREATE INDEX idx_penjualan ON penjualan(id_jual, id_pembeli, id_sampah, id_user);
+
+-> VIEW
+	CREATE VIEW data_user AS SELECT id_user, role.role, email, username, password, tgl_daftar, foto, no_telp, status FROM user INNER JOIN role ON user.id_role=role.id_role;
+	CREATE VIEW data_admin AS SELECT * FROM data_user WHERE role!="Ketua";
+	CREATE VIEW data_mitra AS SELECT mitra.id_mitra, tgl_daftar, email, username, password, tipe.tipe_mitra, alamat, no_telp, foto, status, jadwal_jemput, rekening.id_rek FROM mitra INNER JOIN tipe ON mitra.id_tipe=tipe.id_tipe INNER JOIN rekening ON mitra.id_mitra=rekening.id_mitra GROUP BY mitra.id_mitra;
+	CREATE VIEW used_edu AS SELECT id_edu, COUNT(id_mitra) AS used_mitra FROM mitra GROUP BY id_edu;
+	CREATE VIEW used_pembeli AS SELECT id_pembeli, COUNT(id_jual) AS used_jual FROM penjualan GROUP BY id_pembeli;
+	CREATE VIEW used_jenis AS SELECT id_jenis, COUNT(id_sampah) AS used_sampah FROM sampah GROUP BY id_jenis;
+	CREATE VIEW used_sampah_setor AS SELECT id_sampah, COUNT(id_setor) AS used_setor FROM setoran GROUP BY id_sampah;
+	CREATE VIEW used_sampah_jual AS SELECT id_sampah, COUNT(id_jual) AS used_jual FROM penjualan GROUP BY id_sampah;
+	CREATE VIEW data_edukasi AS SELECT id_edu, judul, tempat, mulai, selesai, ket, edukasi.id_user AS id_pem, user.username AS pembicara FROM edukasi INNER JOIN user ON edukasi.id_user=user.id_user ORDER BY selesai DESC;
+	CREATE VIEW proses_edukasi AS SELECT * FROM data_edukasi WHERE selesai<=NOW();
+	CREATE VIEW sukses_edukasi AS SELECT * FROM data_edukasi WHERE selesai>NOW();
+	CREATE VIEW data_sampah AS SELECT id_sampah, jenis.jenis_sampah, nama, harga, gambar FROM sampah INNER JOIN jenis ON sampah.id_jenis=jenis.id_jenis GROUP BY id_sampah;
+	CREATE VIEW data_setoran AS SELECT id_setor, tanggal, berat, subtotal, setoran.jadwal_jemput, setoran.status, setoran.id_sampah, data_sampah.jenis_sampah, data_sampah.nama AS nama_sampah, data_sampah.harga, setoran.id_mitra, data_mitra.username AS nama_mitra, data_mitra.tipe_mitra, data_mitra.alamat, data_mitra.no_telp FROM setoran INNER JOIN data_mitra ON setoran.id_mitra=data_mitra.id_mitra INNER JOIN data_sampah ON setoran.id_sampah=data_sampah.id_sampah GROUP BY id_setor;
+	CREATE VIEW data_penjemputan AS SELECT penjemputan.id_jemput, penjemputan.jadwal_jemput, penjemputan.tanggal AS waktu_jemput, penjemputan.status, data_setoran.id_setor, data_setoran.jenis_sampah, data_setoran.nama_sampah, data_setoran.berat, data_setoran.id_mitra, data_setoran.nama_mitra, data_setoran.alamat, data_setoran.no_telp, data_setoran.tipe_mitra FROM penjemputan INNER JOIN data_setoran ON penjemputan.id_setor=data_setoran.id_setor GROUP BY penjemputan.id_jemput;
+	CREATE VIEW data_pembayaran AS SELECT pembayaran.id_bayar, pembayaran.tanggal, pembayaran.total_bayar, pembayaran.bank, pembayaran.rek_tujuan, rekening.atas_nama, pembayaran.status, pembayaran.bukti, data_penjemputan.id_mitra, pembayaran.id_jemput FROM pembayaran INNER JOIN data_penjemputan ON pembayaran.id_jemput=data_penjemputan.id_jemput INNER JOIN rekening ON data_penjemputan.id_mitra=rekening.id_mitra GROUP BY pembayaran.id_bayar ORDER BY status;
+	CREATE VIEW data_penjualan AS SELECT id_jual, tgl_jual, tgl_konfirmasi, data_sampah.jenis_sampah, data_sampah.nama AS nama_sampah, penjualan.harga, berat, subtotal, pembeli.nama AS nama_pembeli, pembeli.no_telp, pembeli.alamat, status FROM penjualan INNER JOIN data_sampah ON penjualan.id_sampah=data_sampah.id_sampah INNER JOIN pembeli ON penjualan.id_pembeli=pembeli.id_pembeli GROUP BY id_jual;
+	CREATE VIEW jumlah_mitra AS SELECT NOW() AS tanggal, (SELECT COUNT(*) FROM mitra WHERE id_tipe=1) AS mitra_bsu, (SELECT COUNT(*) FROM mitra WHERE id_tipe=2) AS mitra_nsb, (SELECT COUNT(*) FROM mitra) AS total_mitra;
+	CREATE VIEW jumlah_setoran AS SELECT NOW() AS tanggal, (SELECT COUNT(*) FROM data_setoran WHERE status="Penjemputan") AS tunggu_jemput, (SELECT COUNT(*) FROM data_setoran WHERE status="Pembayaran") AS tunggu_bayar, (SELECT COUNT(*) FROM data_setoran WHERE status="Selesai") AS setor_sukses, (SELECT COUNT(*) FROM data_setoran) AS total_setor;
+	CREATE VIEW top_penjualan AS SELECT tgl_jual, nama_sampah, jenis_sampah, berat, subtotal FROM data_penjualan WHERE status=1 ORDER BY subtotal DESC;
+	CREATE VIEW top_setoran AS SELECT tanggal, nama_sampah, jenis_sampah, berat, subtotal FROM data_setoran WHERE status=1 ORDER BY subtotal DESC;
+	CREATE VIEW jumlah_penjemputan AS SELECT NOW() AS tanggal, (SELECT COUNT(*) FROM data_penjemputan WHERE status=0) AS tunggu_jemput, (SELECT COUNT(*) FROM data_penjemputan WHERE status=1) AS sukses_jemput, (SELECT COUNT(*) FROM data_penjemputan) AS total_jemput;
+	CREATE VIEW jumlah_pembayaran AS SELECT NOW() AS tanggal, (SELECT COUNT(*) FROM data_pembayaran WHERE status=0) AS tunggu_bayar, (SELECT COUNT(*) FROM data_pembayaran WHERE status=1) AS sukses_bayar, (SELECT COUNT(*) FROM data_pembayaran) AS total_bayar;
+	CREATE VIEW jumlah_penjualan AS SELECT NOW() AS tanggal, (SELECT COUNT(*) FROM data_penjualan WHERE status=0) AS tunggu_jual, (SELECT COUNT(*) FROM data_penjualan WHERE status=1) AS sukses_jual, (SELECT COUNT(*) FROM data_penjualan) AS total_jual;
+	
+
+-> FUNCTION
+	DELIMITER $$
+	CREATE FUNCTION tambah_jenis(jenis_sampah_param varchar(100))
+	RETURNS INT
+	BEGIN
+	INSERT INTO jenis(jenis_sampah) VALUES (jenis_sampah_param);
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION tambah_edukasi(judul_param varchar(256), tempat_param text, mulai_param datetime, selesai_param datetime, ket_param text, id_user_param int)
+	RETURNS INT
+	BEGIN
+	INSERT INTO edukasi(judul, tempat, mulai, selesai, ket, id_user) VALUES (judul_param, tempat_param, mulai_param, selesai_param, ket_param, id_user_param);
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION tambah_sampah(nama_param varchar(100), harga_param int(5), gambar_param varchar(100), id_jenis_param int)
+	RETURNS INT
+	BEGIN
+	INSERT INTO sampah(nama, harga, gambar, id_jenis) VALUES (nama_param, harga_param, gambar_param, id_jenis_param);
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION tambah_pembeli(nama_param varchar(100), no_telp_param varchar(12), alamat_param text)
+	RETURNS INT
+	BEGIN
+	INSERT INTO pembeli(nama, no_telp, alamat) VALUES (nama_param, no_telp_param, alamat_param);
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION tambah_penjualan(harga_param int(6), berat_param float, subtotal_param float, id_sampah_param int, id_pembeli_param int, id_user_param int)
+	RETURNS INT
+	BEGIN
+	INSERT INTO penjualan(harga, berat, subtotal, tgl_jual, status, id_sampah, id_pembeli, id_user) VALUES (harga_param, berat_param, subtotal_param, NOW(), 0, id_sampah_param, id_pembeli_param, id_user_param);
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION tambah_setoran(berat_param float, subtotal_param float, id_sampah_param int, id_mitra_param int, jadwal_jemput_param datetime)
+	RETURNS INT
+	BEGIN
+	INSERT INTO setoran(tanggal, berat, subtotal, status, jadwal_jemput, id_sampah, id_mitra) VALUES (NOW(), berat_param, subtotal_param, "Penjemputan", jadwal_jemput_param, id_sampah_param, id_mitra_param);
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_setoran(id_setor_param int, berat_param float, subtotal_param float, id_sampah_param int, jadwal_jemput_param datetime)
+	RETURNS INT
+	BEGIN
+	UPDATE setoran SET berat=berat_param, subtotal=subtotal_param, id_sampah=id_sampah_param, jadwal_jemput=jadwal_jemput_param WHERE id_setor=id_setor_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION tambah_penjemputan(tanggal_param datetime, status_param bool, id_setor_param int)
+	RETURNS INT
+	BEGIN
+	INSERT INTO penjemputan(tanggal, status, id_setor) VALUES (tanggal_param, status_param, id_setor_param);
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION tambah_pembayaran(total_bayar_param int(10), rek_tujuan_param varchar(20), status_param bool, id_jemput_param int)
+	RETURNS INT
+	BEGIN
+	INSERT INTO pembayaran(total_bayar, rek_tujuan, status, id_jemput) VALUES (total_bayar_param, rek_tujuan_param, status_param, id_jemput_param);
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_jenis(id_jenis_param int, jenis_sampah_param varchar(100))
+	RETURNS INT
+	BEGIN
+	UPDATE jenis SET jenis_sampah=jenis_sampah_param WHERE id_jenis=id_jenis_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_edukasi(id_edu_param int, judul_param varchar(100), tempat_param text, mulai_param datetime, selesai_param datetime, ket_param text, id_user_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE edukasi SET judul=judul_param, tempat=tempat_param, mulai=mulai_param, selesai=selesai_param, ket=ket_param, id_user=id_user_param WHERE id_edu=id_edu_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_sampah(id_sampah_param int, nama_param varchar(100), harga_param int(5), gambar_param varchar(100), id_jenis_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE sampah SET nama=nama_param, harga=harga_param, gambar=gambar_param, id_jenis=id_jenis_param WHERE id_sampah=id_sampah_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_pembeli(id_pembeli_param int, nama_param varchar(100), no_telp_param varchar(12), alamat_param text)
+	RETURNS INT
+	BEGIN
+	UPDATE pembeli SET nama=nama_param, no_telp=no_telp_param, alamat=alamat_param WHERE id_pembeli=id_pembeli_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_penjualan(id_jual_param int, harga_param int(6), berat_param float, subtotal_param float, id_sampah_param int, id_pembeli_param int, id_user_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE penjualan SET harga=harga_param, berat=berat_param, subtotal=subtotal_param, id_sampah=id_sampah_param, id_pembeli=id_pembeli_param, id_user=id_user_param WHERE id_jual=id_jual_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_profil_user(id_user_param int, username_param varchar(100), no_telp_param varchar(12), foto_param varchar(100))
+	RETURNS INT
+	BEGIN
+	UPDATE user SET username=username_param, no_telp=no_telp_param, foto=foto_param WHERE id_user=id_user_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_profil_mitra(id_mitra_param int, username_param varchar(100), alamat_param text, no_telp_param varchar(12), foto_param varchar(100), jadwal_jemput_param datetime)
+	RETURNS INT
+	BEGIN
+	UPDATE mitra SET username=username_param, alamat=alamat_param, no_telp=no_telp_param, foto=foto_param, jadwal_jemput=jadwal_jemput_param WHERE id_mitra=id_mitra_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_password_user(id_user_param int, new_password_param varchar(256))
+	RETURNS INT
+	BEGIN
+	UPDATE user SET password=new_password_param WHERE id_user=id_user_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_password_mitra(id_mitra_param int, new_password_param varchar(256))
+	RETURNS INT
+	BEGIN
+	UPDATE mitra SET password=new_password_param WHERE id_mitra=id_mitra_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_struktur(id_struktur_param int, ketua_param varchar(100), sekretaris_param varchar(100), bendahara_param varchar(100), anggota_param text, total_nsb_param int(5))
+	RETURNS INT
+	BEGIN
+	UPDATE struktur SET ketua=ketua_param, sekretaris=sekretaris_param, bendahara=bendahara_param, anggota=anggota_param, total_nsb=total_nsb_param WHERE id_struktur=id_struktur_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ubah_rekening(id_rek_param int, bank_param varchar(100), atas_nama_param varchar(150), no_rek_param varchar(20))
+	RETURNS INT
+	BEGIN
+	UPDATE rekening SET bank=bank_param, atas_nama=atas_nama_param, no_rek=no_rek_param WHERE id_rek=id_rek_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION konfirmasi_penjualan(id_jual_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE penjualan SET status=1, tgl_konfirmasi=NOW() WHERE id_jual=id_jual_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION konfirmasi_penjemputan(id_jemput_param int, id_setor_param int, id_user_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE penjemputan SET status=1, id_user=id_user_param, tanggal=NOW() WHERE id_jemput=id_jemput_param;
+	UPDATE setoran SET status="Pembayaran" WHERE id_setor=id_setor_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION konfirmasi_pembayaran(id_bayar_param int, bukti_param varchar(100), id_setor_param int, id_user_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE pembayaran SET tanggal=NOW(), status=1, bukti=bukti_param, id_user=id_user_param WHERE id_bayar=id_bayar_param;
+	UPDATE setoran SET status="Selesai" WHERE id_setor=id_setor_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION hapus_edukasi(id_edu_param int)
+	RETURNS INT
+	BEGIN
+	DELETE FROM edukasi WHERE id_edu=id_edu_param;
+	RETURN 1;
+	END$$
+	
+	CREATE FUNCTION hapus_mitra(id_mitra_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE mitra SET status=0 WHERE id_mitra=id_mitra_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION hapus_admin(id_user_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE user SET status=0 WHERE id_user=id_user_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION hapus_jenis(id_jenis_param int)
+	RETURNS INT
+	BEGIN
+	DELETE FROM jenis WHERE id_jenis=id_jenis_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION hapus_sampah(id_sampah_param int)
+	RETURNS INT
+	BEGIN
+	DELETE FROM sampah WHERE id_sampah=id_sampah_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION hapus_pembeli(id_pembeli_param int)
+	RETURNS INT
+	BEGIN
+	DELETE FROM pembeli WHERE id_pembeli=id_pembeli_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION hapus_penjualan(id_jual_param int)
+	RETURNS INT
+	BEGIN
+	DELETE FROM penjualan WHERE id_jual=id_jual_param AND status=0;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION hapus_setoran(id_setor_param int)
+	RETURNS INT
+	BEGIN
+	DELETE FROM setoran WHERE id_setor=id_setor_param AND status="Penjemputan";
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION ikut_edukasi(id_mitra_param int, id_edu_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE mitra SET id_edu=id_edu_param WHERE id_mitra=id_mitra_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION batal_edukasi(id_mitra_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE mitra SET id_edu=NULL WHERE id_mitra=id_mitra_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION aktifkan_admin(id_user_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE user SET status=1 WHERE id_user=id_user_param;
+	RETURN 1;
+	END$$
+
+	CREATE FUNCTION aktifkan_mitra(id_mitra_param int)
+	RETURNS INT
+	BEGIN
+	UPDATE mitra SET status=1 WHERE id_mitra=id_mitra_param;
+	RETURN 1;
+	END$$
+	DELIMITER ;
+
+
+
+-> STORED PROCEDURE
+	DELIMITER $$
+	CREATE PROCEDURE tambah_user(IN email_param varchar(100), IN password_param varchar(256), IN username_param varchar(100), IN no_telp_param varchar(12), IN id_role_param int)
+	BEGIN
+	INSERT INTO user (email, password, username, tgl_daftar, no_telp, status, id_role) VALUES (email_param, password_param, username_param, NOW(), no_telp_param, 1, id_role_param);
+	END$$
+	
+	CREATE PROCEDURE tambah_mitra(IN email_param varchar(100), IN password_param varchar(256), IN username_param varchar(100), IN alamat_param text, IN no_telp_param varchar(12), IN jadwal_jemput_param datetime, IN id_tipe_param int)
+	BEGIN
+	INSERT INTO mitra (email, password, username, tgl_daftar, alamat, no_telp, status, jadwal_jemput, id_tipe) VALUES (email_param, password_param, username_param, NOW(), alamat_param, no_telp_param, 1, jadwal_jemput_param, id_tipe_param);
+	END$$
+	 
+	CREATE PROCEDURE tampil_profil_user(IN email_param varchar(100))
+	BEGIN
+	SELECT * FROM data_user WHERE email=email_param;
+	END$$
+
+	CREATE PROCEDURE tampil_profil_mitra(IN email_param varchar(100))
+	BEGIN
+	SELECT * FROM data_mitra WHERE email=email_param;
+	END$$
+	
+	CREATE PROCEDURE tampil_detail_rekening(IN id_mitra_param int)
+	BEGIN
+	SELECT * FROM rekening WHERE id_mitra=id_mitra_param;
+	END$$
+	
+	CREATE PROCEDURE tampil_setoran_mitra(IN id_mitra_param int)
+	BEGIN
+	SELECT * FROM data_setoran WHERE id_mitra=id_mitra_param;
+	END$$
+	DELIMITER ;
+
+
+-> TRIGGER
+	DELIMITER $$
+	CREATE TRIGGER tambah_rekening AFTER INSERT ON mitra FOR EACH ROW
+	BEGIN
+	INSERT INTO rekening(atas_nama, id_mitra) VALUES (NEW.username, NEW.id_mitra);
+	END$$
+
+	CREATE TRIGGER tambah_struktur AFTER INSERT ON mitra FOR EACH ROW BEGIN IF NEW.id_tipe=1 THEN BEGIN INSERT INTO struktur(ketua, id_mitra) VALUES (NEW.username, NEW.id_mitra); END; END IF; END$$
+
+	CREATE TRIGGER tambah_penjemputan AFTER INSERT ON setoran FOR EACH ROW
+	BEGIN
+	INSERT INTO penjemputan(status, jadwal_jemput, id_setor) VALUES (0, NEW.jadwal_jemput, NEW.id_setor);
+	END$$
+
+	CREATE TRIGGER hapus_penjemputan BEFORE DELETE ON setoran FOR EACH ROW
+	BEGIN
+	DELETE FROM penjemputan WHERE id_setor=OLD.id_setor;
+	END$$
+	DELIMITER ;
