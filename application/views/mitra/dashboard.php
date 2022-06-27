@@ -10,6 +10,10 @@
     </div>
     <?= $this->session->flashdata('message') ?>
 
+    <?php
+    $pass = "Ketua123";
+    var_dump(password_hash($pass, PASSWORD_DEFAULT));
+    ?>
     <section class="section dashboard">
         <div class="row">
 
@@ -152,29 +156,39 @@
                                     <th scope="col">Total</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                $no = 0;
-                                for ($i = 0; $i < 5; $i++) : ?>
+                            <?php if (empty($top_setoran)) : ?>
+                                <tbody>
                                     <tr>
-                                        <th scope="row">
-                                            <?= ++$no ?>
+                                        <th scope="row" colspan="5">
+                                            Data Setoran was NOT FOUND!
                                         </th>
-                                        <td class="text-start">
-                                            <?= $top_setoran[$i]['nama_sampah'] ?>
-                                        </td>
-                                        <td>
-                                            <?= $top_setoran[$i]['jenis_sampah'] ?>
-                                        </td>
-                                        <td>
-                                            <?= $top_setoran[$i]['berat'] ?>
-                                        </td>
-                                        <td class="fw-bold text-end">
-                                            Rp <?= number_format($top_setoran[$i]['subtotal'], 0, '.', ',') ?>
-                                        </td>
                                     </tr>
-                                <?php endfor ?>
-                            </tbody>
+                                </tbody>
+                            <?php else : ?>
+                                <tbody>
+                                    <?php
+                                    $no = 0;
+                                    for ($i = 0; $i < 5; $i++) : ?>
+                                        <tr>
+                                            <th scope="row">
+                                                <?= ++$no ?>
+                                            </th>
+                                            <td class="text-start">
+                                                <?= $top_setoran[$i]['nama_sampah'] ?>
+                                            </td>
+                                            <td>
+                                                <?= $top_setoran[$i]['jenis_sampah'] ?>
+                                            </td>
+                                            <td>
+                                                <?= $top_setoran[$i]['berat'] ?>
+                                            </td>
+                                            <td class="fw-bold text-end">
+                                                Rp <?= number_format($top_setoran[$i]['subtotal'], 0, '.', ',') ?>
+                                            </td>
+                                        </tr>
+                                    <?php endfor ?>
+                                </tbody>
+                            <?php endif ?>
                         </table>
 
                     </div>

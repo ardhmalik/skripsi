@@ -70,7 +70,9 @@ class Mitra extends CI_Controller
 			'month' => $this->db->get('month')->result_array(),
 			'setoran' => $this->tmodel->get_data_setoran(),
 			'top_setoran' => $this->tmodel->top_setoran(),
-			'setor_per_month' => []
+			'setor_per_month' => [],
+			'total_setoran' => 0,
+			'total_pendapatan' => 0
 		];
 
 		# Looping to insert array data to $data['new_setor']

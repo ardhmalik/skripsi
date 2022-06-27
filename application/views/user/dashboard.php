@@ -410,29 +410,39 @@
                                     <th scope="col">Total</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                $no = 0;
-                                for ($i = 0; $i < 5; $i++) : ?>
-                                    <tr>
-                                        <th scope="row">
-                                            <?= ++$no ?>
-                                        </th>
-                                        <td class="text-start">
-                                            <?= $top_penjualan[$i]['nama_sampah'] ?>
-                                        </td>
-                                        <td>
-                                            <?= $top_penjualan[$i]['jenis_sampah'] ?>
-                                        </td>
-                                        <td>
-                                            <?= $top_penjualan[$i]['berat'] ?>
-                                        </td>
-                                        <td class="fw-bold text-end">
-                                            Rp <?= number_format($top_penjualan[$i]['subtotal'], 0, '.', ',') ?>
-                                        </td>
-                                    </tr>
-                                <?php endfor ?>
-                            </tbody>
+                            <?php if (empty($top_penjualan)) : ?>
+                                <tbody>
+                                        <tr>
+                                            <th scope="row" colspan="5">
+                                                Belum ada data penjualan!
+                                            </th>
+                                        </tr>
+                                </tbody>
+                            <?php else : ?>
+                                <tbody>
+                                    <?php
+                                    $no = 0;
+                                    for ($i = 0; $i < 5; $i++) : ?>
+                                        <tr>
+                                            <th scope="row">
+                                                <?= ++$no ?>
+                                            </th>
+                                            <td class="text-start">
+                                                <?= $top_penjualan[$i]['nama_sampah'] ?>
+                                            </td>
+                                            <td>
+                                                <?= $top_penjualan[$i]['jenis_sampah'] ?>
+                                            </td>
+                                            <td>
+                                                <?= $top_penjualan[$i]['berat'] ?>
+                                            </td>
+                                            <td class="fw-bold text-end">
+                                                Rp <?= number_format($top_penjualan[$i]['subtotal'], 0, '.', ',') ?>
+                                            </td>
+                                        </tr>
+                                    <?php endfor ?>
+                                </tbody>
+                            <?php endif ?>
                         </table>
                     </div>
                 </div>
@@ -454,29 +464,39 @@
                                     <th scope="col">Total</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                $no = 0;
-                                for ($i = 0; $i < 5; $i++) : ?>
-                                    <tr>
-                                        <th scope="row">
-                                            <?= ++$no ?>
-                                        </th>
-                                        <td class="text-start">
-                                            <?= $top_setoran[$i]['nama_sampah'] ?>
-                                        </td>
-                                        <td>
-                                            <?= $top_setoran[$i]['jenis_sampah'] ?>
-                                        </td>
-                                        <td>
-                                            <?= $top_setoran[$i]['berat'] ?>
-                                        </td>
-                                        <td class="fw-bold text-end">
-                                            Rp <?= number_format($top_setoran[$i]['subtotal'], 0, '.', ',') ?>
-                                        </td>
-                                    </tr>
-                                <?php endfor ?>
-                            </tbody>
+                            <?php if (empty($top_setoran)) : ?>
+                                <tbody>
+                                        <tr>
+                                            <th scope="row" colspan="5">
+                                                Belum ada data setoran!
+                                            </th>
+                                        </tr>
+                                </tbody>
+                            <?php else : ?>
+                                <tbody>
+                                    <?php
+                                    $no = 0;
+                                    for ($i = 0; $i < 5; $i++) : ?>
+                                        <tr>
+                                            <th scope="row">
+                                                <?= ++$no ?>
+                                            </th>
+                                            <td class="text-start">
+                                                <?= $top_setoran[$i]['nama_sampah'] ?>
+                                            </td>
+                                            <td>
+                                                <?= $top_setoran[$i]['jenis_sampah'] ?>
+                                            </td>
+                                            <td>
+                                                <?= $top_setoran[$i]['berat'] ?>
+                                            </td>
+                                            <td class="fw-bold text-end">
+                                                Rp <?= number_format($top_setoran[$i]['subtotal'], 0, '.', ',') ?>
+                                            </td>
+                                        </tr>
+                                    <?php endfor ?>
+                                </tbody>
+                            <?php endif ?>
                         </table>
 
                     </div>
