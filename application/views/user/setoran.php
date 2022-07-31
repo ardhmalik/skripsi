@@ -61,6 +61,13 @@
                                             </td>
                                             <td class="text-center">
                                                 <?php
+                                                $now = time();
+                                                $jadwal_jemput = strtotime($setoran['jadwal_jemput']);
+
+                                                if ($setoran['status'] == 'Penjemputan' && $now > $jadwal_jemput) {
+                                                    $setoran['status'] = 'Jadwal Ulang';
+                                                }
+
                                                 switch ($setoran['status']) {
                                                     case 'Penjemputan':
                                                         echo '<span class="badge rounded-pill bg-danger"><i class="bi bi-truck"></i> Penjemputan</span>';
@@ -71,9 +78,11 @@
                                                     case 'Selesai':
                                                         echo '<span class="badge rounded-pill bg-success"><i class="bi bi-check-circle me-1"></i> Selesai</span>';
                                                         break;
-                                                    
+                                                    case 'Jadwal Ulang':
+                                                        echo '<span class="badge rounded-pill bg-dark"><i class="bi bi-clock"></i> Jadwal Ulang</span>';
+                                                        break;
                                                     default:
-                                                        # code...
+                                                        echo '<span class="badge rounded-pill bg-danger"><i class="bi bi-truck"></i> Penjemputan</span>';
                                                         break;
                                                 }
                                                 ?>

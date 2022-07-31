@@ -69,6 +69,13 @@
                                             </td>
                                             <td class="text-center">
                                                 <?php
+                                                $now = time();
+                                                $jadwal_jemput = strtotime($setor['jadwal_jemput']);
+
+                                                if ($setor['status'] == 'Penjemputan' && $now > $jadwal_jemput) {
+                                                    $setor['status'] = 'Jadwal Ulang';
+                                                }
+
                                                 switch ($setor['status']) {
                                                     case 'Penjemputan':
                                                         echo '<span class="badge rounded-pill bg-danger"><i class="bi bi-truck"></i> Penjemputan</span>';
@@ -79,6 +86,9 @@
                                                     case 'Selesai':
                                                         echo '<span class="badge rounded-pill bg-success"><i class="bi bi-check-circle me-1"></i> Selesai</span>';
                                                         break;
+                                                    case 'Jadwal Ulang':
+                                                        echo '<span class="badge rounded-pill bg-dark"><i class="bi bi-clock"></i> Jadwal Ulang</span>';
+                                                        break;
                                                     default:
                                                         echo '<span class="badge rounded-pill bg-danger"><i class="bi bi-truck"></i> Penjemputan</span>';
                                                         break;
@@ -86,7 +96,7 @@
                                                 ?>
                                             </td>
                                             <td>
-                                                <?php if ($setor['status'] == "Penjemputan") : ?>
+                                                <?php if ($setor['status'] == "Penjemputan" || $setor['status'] == "Jadwal Ulang") : ?>
                                                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editSetor-<?= $setor['id_setor'] ?>" title="Edit">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
