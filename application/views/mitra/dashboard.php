@@ -11,8 +11,8 @@
     <?= $this->session->flashdata('message') ?>
 
     <?php
-    $pass = "Ketua123";
-    var_dump(password_hash($pass, PASSWORD_DEFAULT));
+    // $pass = "Ketua123";
+    // var_dump(password_hash($pass, PASSWORD_DEFAULT));
     ?>
     <section class="section dashboard">
         <div class="row">
